@@ -70,9 +70,9 @@ BOUNCES_AND_COMPLAINTS_EMAIL = os.getenv(
 LOGIN_DISABLED = False
 
 # AWS Configuration for DEV ONLY. Other values will be used for staging / prod.
-AWS_ACCESS_KEY_ID = 'AKIAJ3VSO2QA7BQYXGZQ'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_REGION_NAME = 'ap-northeast-1'
+AWS_ACCESS_KEY_ID = 'AKIAJAM3R7UAJOHLF37Q'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_REGION_NAME = 'us-east-1'
 
 # AWS S3 Bucket for environment should be an env variable.
-AWS_S3_BUCKET = os.getenv('AWS_S3_BUCKET', 'skynet-dev')
+AWS_S3_BUCKET = os.getenv('AWS_S3_BUCKET', 'skynet-app-dev')
