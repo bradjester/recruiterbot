@@ -8,6 +8,7 @@
 import logging
 import sys
 
+from app.modules.frontend.views import frontend_bp
 from app.modules.users import init_security
 from app.services import users_service, static_storage_service, aws_ses_service
 from flask import Flask, render_template
@@ -20,6 +21,7 @@ from app.extensions import db, migrate
 from app.middleware import HTTPMethodOverrideMiddleware
 
 BLUEPRINTS = [
+    frontend_bp,
 ]
 
 LOG_FORMAT = "%(asctime)s %(levelname)s %(name)s %(message)s"
