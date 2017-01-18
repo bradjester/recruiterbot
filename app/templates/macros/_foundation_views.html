@@ -1,0 +1,59 @@
+{% macro render_labeled_data(label, data) -%}
+  <b>{{ label }}</b>
+  <br/>
+  {% if data %}
+    {{ data }}
+  {% else %}
+    None
+  {% endif %}
+  <br/>
+  <br/>
+{%- endmacro %}
+
+{% macro render_labeled_line(label, data) -%}
+  <div class="row labelled_line">
+    <div class="columns medium-5"><b>{{ label }}</b></div>
+    <div class="columns medium-7">
+      {% if data %}
+        {{ data }}
+      {% else %}
+        None
+      {% endif %}</div>
+  </div>
+{%- endmacro %}
+
+{% macro render_document(label, doc, doc_type, edit_url=None) -%}
+  {% if doc %}
+    <a href="{{ generate_signed_url(doc.key) }}"><i class="fi-page-pdf highlight"></i></a>
+    <span class="documents button secondary dropdown" data-dropdown="{{ doc_type }}">{{ label }}</span>
+
+    <div id="{{ doc_type }}" data-dropdown-content class="f-dropdown content" aria-hidden="true" tabindex="-1">
+      <ul></ul>
+    </div>
+  {% elif edit_url %}
+    <a href="{{ edit_url + '#drop-' + doc_type }}"><i class="fi-upload-cloud"></i></a>
+    <span class="documents">{{ label }}</span>
+  {% else %}
+    <b>{{ label }}</b>
+    <br/>
+    None
+  {% endif %}
+  <br/>
+  <br/>
+{%- endmacro %}
+
+{% macro render_single_document_key(label, doc_key, doc_type, edit_url=None) -%}
+  {% if doc_key %}
+    <a href="{{ generate_signed_url(doc_key) }}"><i class="fi-page-pdf highlight"></i></a>
+    <span class="documents">{{ label }}</span>
+  {% elif edit_url %}
+    <a href="{{ edit_url + '#drop-' + doc_type }}"><i class="fi-upload-cloud"></i></a>
+    <span class="documents">{{ label }}</span>
+  {% else %}
+    <b>{{ label }}</b>
+    <br/>
+    None
+  {% endif %}
+  <br/>
+  <br/>
+{%- endmacro %}
