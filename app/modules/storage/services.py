@@ -66,7 +66,7 @@ class StaticStorageService(object):
 
     @property
     def _bucket(self):
-        return current_app.config.get('AWS_S3_BUCKET')
+        return current_app.config.get('APP_AWS_S3_BUCKET')
 
     @property
     def _mime(self):

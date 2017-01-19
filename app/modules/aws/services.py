@@ -131,10 +131,10 @@ class AWSService(object):
         key_id = None
         secret = None
         if config.get('IS_DEV'):
-            key_id = config.get('AWS_ACCESS_KEY_ID')
-            secret = config.get('AWS_SECRET_ACCESS_KEY')
+            key_id = config.get('APP_AWS_ACCESS_KEY_ID')
+            secret = config.get('APP_AWS_SECRET_ACCESS_KEY')
             # Similar for region, but allow it to be overridden.
-            region = region if region else config.get('AWS_REGION_NAME')
+            region = region if region else config.get('APP_AWS_REGION_NAME')
         return boto3.Session(
             aws_access_key_id=key_id, aws_secret_access_key=secret,
             region_name=region)
