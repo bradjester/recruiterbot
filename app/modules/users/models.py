@@ -53,6 +53,15 @@ class User(UserMixin, Base):
     last_login_ip = db.Column(db.String(100))
     current_login_ip = db.Column(db.String(100))
     login_count = db.Column(db.Integer)
+    company_id = db.Column(
+        db.Integer,
+        db.ForeignKey('companies.id', name='user_company_fk',
+                      onupdate='CASCADE', ondelete='SET NULL'))
+
+    company = db.relationship(
+        "Company",
+        single_parent=True,
+        foreign_keys=company_id)
 
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
@@ -72,3 +81,16 @@ class User(UserMixin, Base):
     @property
     def is_admin(self):
         return self.has_role(ADMIN_ROLE_NAME)
+
+
+class Company(Base):
+    __tablename__ = 'companies'
+
+    name = db.Column(db.String(100), unique=True)
+
+    @property
+    def display_name(self):
+        return self.name
+
+    def __str__(self):
+        return self.name
