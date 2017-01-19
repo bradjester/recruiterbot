@@ -100,7 +100,7 @@ class AWSSESService(object):
 
 class AWSService(object):
     _default_session = None
-    _us_west_session = None
+    _ses_session = None
 
     @property
     def s3(self):
@@ -108,7 +108,7 @@ class AWSService(object):
 
     @property
     def ses(self):
-        return self._us_west_aws_session.client('ses')
+        return self._ses_aws_session.client('ses')
 
     @property
     def _default_aws_session(self):
@@ -117,10 +117,11 @@ class AWSService(object):
         return self._default_session
 
     @property
-    def _us_west_aws_session(self):
-        if not self._us_west_session:
-            self._us_west_session = self._create_session(region='us-west-2')
-        return self._us_west_session
+    def _ses_aws_session(self):
+        if not self._ses_session:
+            self._ses_session = self._create_session(
+                region=current_app.config.get('APP_SES_REGION_NAME'))
+        return self._ses_session
 
     @staticmethod
     def _create_session(region=None):

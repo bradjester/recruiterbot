@@ -62,21 +62,22 @@ SECURITY_EMAIL_SUBJECT_PASSWORD_RESET = u'Instructions to reset your ' \
 
 
 # Mail configuration
+# TODO: Change the email address to admin@precruiter.co when AWS approves.
 BOUNCES_AND_COMPLAINTS_EMAIL = os.getenv(
-    'BOUNCES_AND_COMPLAINTS_EMAIL', 'admin@precruiter.co')
+    'BOUNCES_AND_COMPLAINTS_EMAIL', 'phwm@droste.hk')
 
 # Flask-Login
 # https://flask-login.readthedocs.org/en/latest/#protecting-views
 LOGIN_DISABLED = False
 
-# AWS Configuration for DEV ONLY. Other values will be used for staging / prod.
-APP_AWS_ACCESS_KEY_ID = os.getenv('APP_AWS_ACCESS_KEY_ID',
-                                  'AKIAJAM3R7UAJOHLF37Q')
-APP_AWS_SECRET_ACCESS_KEY = os.getenv(
-    'APP_AWS_SECRET_ACCESS_KEY',
-    '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'
-)
-APP_AWS_REGION_NAME = os.getenv('APP_AWS_REGION_NAME', 'us-east-1')
+# AWS Configuration for local DEV ONLY. Values on EC2 will come from the
+# EC2 Metadata service via a role that is associated with the EC2 instance.
+APP_AWS_ACCESS_KEY_ID = 'AKIAJAM3R7UAJOHLF37Q'
+APP_AWS_SECRET_ACCESS_KEY = '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'
+APP_AWS_REGION_NAME = 'us-east-1'
 
-# AWS S3 Bucket for environment should be an env variable.
+# The SES region may be different from the region our instance is in.
+APP_SES_REGION_NAME = 'us-east-1'
+
+# AWS S3 Bucket will change per environment.
 APP_AWS_S3_BUCKET = os.getenv('APP_AWS_S3_BUCKET', 'skynet-app-dev')
