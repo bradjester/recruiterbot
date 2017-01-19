@@ -8,9 +8,6 @@
 import logging
 import sys
 
-from app.modules.frontend.views import frontend_bp
-from app.modules.users import init_security
-from app.services import users_service, static_storage_service, aws_ses_service
 from flask import Flask, render_template
 from flask_babel import Babel
 from flask_login import current_user
@@ -19,6 +16,10 @@ from flask_security import logout_user
 from app import assets
 from app.extensions import db, migrate
 from app.middleware import HTTPMethodOverrideMiddleware
+from app.modules.admin import init_admin
+from app.modules.frontend.views import frontend_bp
+from app.modules.users import init_security
+from app.services import users_service, static_storage_service, aws_ses_service
 
 BLUEPRINTS = [
     frontend_bp,
@@ -46,6 +47,7 @@ def create_app(config=None):
     init_security_send_mail(app)
     configure_error_handlers(app)
     configure_blueprints(app)
+    init_admin(app)
     init_view_helpers(app)
 
     return app
