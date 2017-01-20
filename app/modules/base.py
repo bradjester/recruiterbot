@@ -30,12 +30,11 @@ class Base(db.Model):
 
     # Timestamp for when this instance was created (via the app), in UTC
     created_at = db.Column(
-        UTCDateTime(timezone=True), default=func.current_timestamp(),
+        UTCDateTime(), default=func.current_timestamp(),
         server_default=func.current_timestamp(), nullable=False)
 
     # Timestamp for when this instance was last updated (via the app), in UTC
-    updated_at = db.Column(UTCDateTime(timezone=True),
-                           default=func.current_timestamp(),
+    updated_at = db.Column(UTCDateTime(), default=func.current_timestamp(),
                            server_default=func.current_timestamp(),
                            onupdate=func.current_timestamp(), nullable=False)
 
