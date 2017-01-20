@@ -1,4 +1,4 @@
-"""empty message
+"""added roles table
 
 Revision ID: a10dc0b07f07
 Revises: f34188271745

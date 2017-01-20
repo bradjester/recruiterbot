@@ -60,23 +60,10 @@ class User(UserMixin, Base):
 
     company = db.relationship(
         "Company",
-        single_parent=True,
         foreign_keys=company_id)
 
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
-
-    @property
-    def display_name(self):
-        return self.get_display_name()
-
-    def get_display_name(self, include_id=False, include_email=False):
-        name = u'{} {}'.format(self.first_name, self.surname)
-        if include_id:
-            name = u'{}: {}'.format(self.id, name)
-        if include_email:
-            name = u'{} <{}>'.format(name, self.email)
-        return name
 
     @property
     def is_admin(self):
@@ -86,11 +73,4 @@ class User(UserMixin, Base):
 class Company(Base):
     __tablename__ = 'companies'
 
-    name = db.Column(db.String(100), unique=True)
-
-    @property
-    def display_name(self):
-        return self.name
-
-    def __str__(self):
-        return self.name
+    name = db.Column(db.String(100), unique=True, nullable=False)
