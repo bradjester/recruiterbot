@@ -53,22 +53,24 @@ class User(UserMixin, Base):
     last_login_ip = db.Column(db.String(100))
     current_login_ip = db.Column(db.String(100))
     login_count = db.Column(db.Integer)
+    company_id = db.Column(
+        db.Integer,
+        db.ForeignKey('companies.id', name='user_company_fk',
+                      onupdate='CASCADE', ondelete='SET NULL'))
+
+    company = db.relationship(
+        "Company",
+        foreign_keys=company_id)
 
     roles = db.relationship('Role', secondary=roles_users,
                             backref=db.backref('users', lazy='dynamic'))
 
     @property
-    def display_name(self):
-        return self.get_display_name()
-
-    def get_display_name(self, include_id=False, include_email=False):
-        name = u'{} {}'.format(self.first_name, self.surname)
-        if include_id:
-            name = u'{}: {}'.format(self.id, name)
-        if include_email:
-            name = u'{} <{}>'.format(name, self.email)
-        return name
-
-    @property
     def is_admin(self):
         return self.has_role(ADMIN_ROLE_NAME)
+
+
+class Company(Base):
+    __tablename__ = 'companies'
+
+    name = db.Column(db.String(100), unique=True, nullable=False)
