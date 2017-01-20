@@ -26,7 +26,7 @@ class Job(Base):
 
     title = db.Column(db.String(255), nullable=False)
     is_published = db.Column(db.Boolean, server_default=sa.text("'0'"), default=False, nullable=False)
-    uuid = db.Column(db.String(11), nullable=False)  # keyspace : [0-9A-Za-z_-]
+    uuid = db.Column(db.String(36), unique=True, nullable=False)
     jd_file_url = db.Column(db.String(1024))
 
 

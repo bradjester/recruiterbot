@@ -23,7 +23,7 @@ class Bot(Base):
         "Job",
         foreign_keys=job_id)
 
-    bot_id = db.Column(db.BigInteger, unique=True, nullable=False)  # To be extracted from the bot's url params
+    bot_id = db.Column(db.BigInteger, unique=True, nullable=False)
     bot_url = db.Column(db.String(1024), nullable=False)
     channel_type = db.Column(db.String(255), nullable=False)
     chat_type = db.Column(db.String(255), nullable=False)
@@ -52,12 +52,12 @@ class Message(Base):
         "Candidate",
         foreign_keys=candidate_id)
 
-    received_at = db.Column(DATETIME(fsp=3), nullable=False)  # millisecond precision
+    received_at = db.Column(DATETIME(fsp=3), nullable=False)
     sender = db.Column(db.String(255), nullable=False)
     receiver = db.Column(db.String(255), nullable=False)
     reply = db.Column(TEXT, nullable=False)
-    reply_data = db.Column(db.String(1024))  # 1024 chars should be enough for parsed fields
+    reply_data = db.Column(db.String(1024))
     module_id = db.Column(db.Integer, nullable=False)
-    direction = db.Column(db.String(3), nullable=False)  # Should be `in` or `out`
+    direction = db.Column(db.String(3), nullable=False)
     attached_media_url = db.Column(db.String(1024))
     secret = db.Column(db.String(1024), nullable=False)
