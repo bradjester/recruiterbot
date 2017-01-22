@@ -2,6 +2,8 @@
 from app.modules.aws.services import AWSService, AWSS3Service, AWSSESService
 from app.modules.storage.services import StaticStorageService
 from app.modules.users.services import RolesService, UsersService
+from app.modules.motionai.services import WebhookService
+
 
 # User Services
 roles_service = RolesService()
@@ -14,3 +16,6 @@ aws_ses_service = AWSSESService(aws_service)
 
 # Static Storage Service
 static_storage_service = StaticStorageService(aws_s3_service)
+
+# MotionAI Webhook Service
+webhook_service = WebhookService()
