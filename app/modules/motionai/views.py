@@ -15,10 +15,10 @@ import logging
 webhook_bp = Blueprint('webhook', __name__)
 
 
-@route(webhook_bp, '/webhook', methods=['POST'])
+@webhook_bp.route('/webhook', methods=['POST'], endpoint='webhook')
 def webhook_handler():
     if request.method == 'POST':
-        form = MotionAIWebhookForm(request.form)
+        form = MotionAIWebhookForm(request.form, csrf_enabled=False)
         if not form.validate():
             logging.error('Error while validating forms with the following data: {}'.format(str(request.form)))
             # Doesn't matter what we return, but necessary to log the error
