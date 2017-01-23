@@ -15,7 +15,7 @@ import logging
 webhook_bp = Blueprint('webhook', __name__)
 
 
-@webhook_bp.route('/webhook', methods=['GET', 'POST'])
+@webhook_bp.route('/webhook', methods=['POST'])
 def webhook_handler():
     if request.method == 'POST':
         message_dict = dict_from_form(request.form)

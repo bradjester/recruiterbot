@@ -16,7 +16,7 @@
           {% for candidate in candidates %}
             <tr>
               <td>
-                  <!--<a href = "{{url_for(candidate.show, id=candidate.id)}}">!-->{{ candidate.display_name }}<!--</a>-->
+                  <a href = "{{url_for(candidate.show, id=candidate.id)}}">{{ candidate.display_name }}</a>
               </td>
                 <td>{{candidate.bot.channel_type}}</td>
                 <td>{{candidate.bot.rating}}</td>

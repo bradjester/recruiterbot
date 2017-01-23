@@ -17,10 +17,6 @@ class CandidatesService(Service):
     def find_candidate_by_sessionid(self, session_id):
         return self.first(session_id=session_id)
 
-    # When this service is triggered, we should try and populate the name of the candidate from the application
-    # Logic : filter candidates by job, for each candidate query the messages_table
-    #   Search for string What is your full name?
-
     def find_noname_candidates_by_jobid(self, job_id):
         model = self.__model__
         # Filtering candidates by name == NULL and job_id
