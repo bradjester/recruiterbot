@@ -46,3 +46,6 @@ class Candidate(Base):
     name = db.Column(db.String(255))
     resume_url = db.Column(db.String(1024))
     session_id = db.Column(db.String(1024), nullable=False)
+    status = db.Column(db.String(255), default="New", nullable=False)
+    rating = db.Column(db.Integer())
+

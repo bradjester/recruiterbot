@@ -1,4 +1,4 @@
-"""empty message
+"""Added tables - companies, jobs, candidates, messages, bots
 
 Revision ID: bd32bfd34482
 Revises: a10dc0b07f07

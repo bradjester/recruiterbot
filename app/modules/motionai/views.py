@@ -7,29 +7,27 @@
 """
 from flask import Blueprint, render_template, request, url_for, redirect, \
     jsonify
-from app.helpers import route
-from .forms import MotionAIWebhookForm
+
+from .helpers import webhook_dict_to_model, dict_from_form
 from app.services import webhook_service
 import logging
 
 webhook_bp = Blueprint('webhook', __name__)
 
 
-@webhook_bp.route('/webhook', methods=['POST'], endpoint='webhook')
+@webhook_bp.route('/webhook', methods=['GET', 'POST'])
 def webhook_handler():
     if request.method == 'POST':
-        form = MotionAIWebhookForm(request.form, csrf_enabled=False)
-        if not form.validate():
-            logging.error('Error while validating forms with the following data: {}'.format(str(request.form)))
-            # Doesn't matter what we return, but necessary to log the error
-            return jsonify({'message': 'Error while parsing form data'})
-        message = webhook_service.new()
-        _save_message(message, form)
-        return jsonify({'message': 'Message Parsed Successfully'})
+        message_dict = dict_from_form(request.form)
+        message_obj = webhook_dict_to_model(message_dict)
+
+        if message_obj is None:
+            logging.error("MotionAI Secret Key Mismatch")
+            return jsonify({'message': 'Secret Key did not match'})
+
+        webhook_service.save(message_obj, commit=True)
+
+        # The responses don't matter
+        return jsonify({'message': 'Message Parsed Successfully and saved to DB'})
     else:
         return jsonify({'message': 'GET Request not allowed'})
-
-
-def _save_message(message, form):
-    form.populate_obj(message)
-    webhook_service.save(message, commit=True)

@@ -27,6 +27,10 @@ BLUEPRINTS = [
     webhook_bp
 ]
 
+BLUEPRINTS_NO_CSRF = [
+    webhook_bp
+]
+
 LOG_FORMAT = "%(asctime)s %(levelname)s %(name)s %(message)s"
 logging.basicConfig(level=logging.INFO, stream=sys.stderr, format=LOG_FORMAT)
 
@@ -45,7 +49,7 @@ def create_app(config=None):
     Babel(app)
     init_db(app)
     assets.init_app(app)
-    init_security(app, users_service)
+    init_security(app, users_service, BLUEPRINTS_NO_CSRF)
     init_security_send_mail(app)
     configure_error_handlers(app)
     configure_blueprints(app)
