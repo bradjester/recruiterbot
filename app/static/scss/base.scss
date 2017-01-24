@@ -1,0 +1,414 @@
+@import 'style_guide';
+
+// FOUNDATION CONFIG
+
+@import '../vendor/foundation/foundation/_functions.scss'; // Utility Functions
+
+@font-face {
+    font-family: 'pf_encore_sans_probook';
+    src: url('../fonts/pfencoresanspro-book-webfont.woff2') format('woff2'),
+         url('../fonts/pfencoresanspro-book-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pf_encore_sans_probook';
+    src: url('../fonts/pfencoresanspro-bookitalic-webfont.woff2') format('woff2'),
+         url('../fonts/pfencoresanspro-bookitalic-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: italic;
+
+}
+
+@font-face {
+    font-family: 'pf_encore_sans_probook';
+    src: url('../fonts/pfencoresanspro-bold-webfont.woff2') format('woff2'),
+         url('../fonts/pfencoresanspro-bold-webfont.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'pf_encore_sans_probook';
+    src: url('../fonts/pfencoresanspro-bolditalic-webfont.woff2') format('woff2'),
+         url('../fonts/pfencoresanspro-bolditalic-webfont.woff') format('woff');
+    font-weight: bold;
+    font-style: italic;
+}
+
+
+// b. Grid
+$row-width: rem-calc(1380); // 1440px - 2 * $column-gutter
+$aside-width: rem-calc(360); // $column-width * 3
+
+// c. Global
+$font-family-sans-serif: "pf_encore_sans_probook", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif;
+$font-family-monospace: "Source Code Pro", Consolas, "Liberation Mono", "Courier New", monospace;
+$form-spacing: rem-calc(9.35);
+$switch-height-med: 1.5rem;
+$switch-bottom-margin: 0;
+
+$primary-color: $phwm-blue;
+$header-font-color: $phwm-blue;
+
+// 09. Dropdown Buttons
+
+$f-dropdown-max-width: 360px;
+$f-dropdown-height: auto;
+$f-dropdown-max-height: 520px;
+$f-dropdown-content-padding: rem-calc(10);
+
+// 22. Pricing Tables
+$price-desc-align: left;
+$price-item-align: left;
+$price-item-padding: rem-calc(15);
+$price-item-font-size: rem-calc(14);
+
+
+// 34. Top Bar
+$topbar-margin-bottom: rem-calc(45);
+$topbar-bg-color: $phwm-blue; // Nav background
+$topbar-link-bg-hover: $phwm-blue-hover; // hover over Logout/Login button
+$topbar-dropdown-link-bg: $phwm-blue; // dropdown link bg color
+$topbar-dropdown-link-bg-hover: $phwm-blue-hover; // dropdown link hover bg color
+
+@import '../vendor/foundation/foundation';
+
+// Icons
+$fi-path: '../fonts/foundation-icons';
+@import '../vendor/foundation-icons';
+
+// FONT-AWESOME
+@import "fa/font-awesome";
+
+// CORE
+
+// Navigation
+.top-bar .title-area .name:hover {
+	background-color: $phwm-blue-hover; // hover color for Upper left logo text
+}
+
+.top-bar {
+  margin-bottom: 12px;
+}
+
+// Tables
+table {
+  width: 100%;
+  clear: both;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-wrap:break-word;
+}
+
+table tr th,
+table tr td {
+  padding: 0.1rem;
+  text-align: center;
+}
+
+// LAYOUT
+
+.row-max-width {
+  @extend .row;
+  max-width: 100%;
+  padding-right: 1%;
+  padding-left: 1%;
+}
+
+.row-compensate-footer {
+  padding-bottom: rem-calc(17 * 3);
+}
+
+main.has_sidebar {
+  padding-right: $aside-width + $column-gutter;
+}
+
+aside.sidebar {
+  position: absolute;
+  width: $aside-width;
+  right: 0;
+  top: 45px;
+}
+
+footer { // put the footer on the bottom and style the links
+	position: fixed;
+	bottom: 0;
+	background-color: $phwm-blue;
+	color: $white;
+	a, a:hover {
+		color: $white;
+	}
+	a:hover {
+		color: scale-color($white, $lightness: -20%);
+	}
+}
+
+.condensed-form fieldset {
+  margin: 0;
+}
+
+// TYPOGRAPHY
+
+// Page Titles
+
+.page-title {
+  text-align: center;
+  margin-bottom: -50px;
+  line-height: 41px;
+  span.warning {
+    color: $phwm-red-0;
+  }
+}
+
+.row-max-width {
+   .page-title {
+    margin-bottom: -46px;
+    line-height: 44px;
+  }
+}
+
+// No Resource Message
+
+h1.new {
+    text-align: center;
+    margin-top: 100px;
+}
+
+
+// COMPONENTS
+
+// Landing Page
+
+#home {
+  background: url("../images/banner-landing.jpg");
+  background-size: cover;
+  .heading {
+    text-align: center;
+    margin-top: 4rem;
+  }
+  .cta {
+    margin-top: 5rem;
+  }
+}
+
+// Client Sidebar
+
+.pricing-table * {
+  line-height: 1.5rem;
+}
+
+.mandate {
+  @include panel(
+    // Sets the panel background color. Default: $panel-pg
+    $bg: $phwm-red,
+    // Sets the panel padding amount. Default: $panel-padding
+    $padding:1rem,
+    // Sets the font color based on the darkness of the bg & resets header line-heights for panels. Default: $panel-header-adjust
+    $adjust:true
+  );
+  color: $white;
+  line-height: 1.4rem;
+  padding: 0.5rem 1rem;
+  border-top: none;
+  border-right: none;
+
+    > div {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    text-align: center;
+    font-weight: bold;
+    > span.label {
+      margin-left: 0.3rem;
+      background: $white;
+      color: $black;
+    }
+  }
+}
+
+.avatar > div {
+  overflow: hidden;
+  height: $aside-width / 2;
+  background-color: $iron;
+  border-right: none;
+  div.parent {
+    width: $aside-width / 2;
+    height: $aside-width / 2;
+    //float: left;
+    position: relative;
+    overflow: hidden;
+  }
+  div.child {
+    position: absolute;
+    top: -100%;
+    bottom: -100%;
+    left: -100%;
+    right: -100%;
+    margin: auto;
+  }
+  img {
+    display: block;
+    height: $aside-width / 2;
+    margin: 0 auto;
+    margin-top: $aside-width / 2;
+    text-align: center;
+  }
+}
+
+.pricing-table {
+  border-right: none;
+}
+.pricing-table .highlight {
+  font-size: 1.8rem;
+  color: $phwm-red;
+}
+
+.pricing-table {
+  .title a.button {
+    padding: 0 3px;
+    margin-left: 5px;
+  }
+}
+
+i {
+  font-size: 1.3rem;
+  color: $charcoal;
+  &.right {
+    margin-left: 1rem;
+  }
+  + span {
+      margin-left: 1rem;
+  }
+}
+
+.last-top-up {
+  margin-top: -10px;
+  text-align: right;
+  color: $phwm-red;
+}
+
+
+.documents.button {
+  padding: 1px 16px;
+  padding-right: 42px;
+  height: 24px;
+  margin: 0;
+}
+
+i.highlight {
+  height: 24px;
+}
+
+
+
+ul.document-list {
+  margin:0;
+  div:focus {
+    outline: none;
+  }
+}
+
+li.document-row {
+   a {
+    display: inline-block;
+    color: $phwm-blue-2;
+    line-height: 28px;
+    vertical-align: bottom;
+    width: 230px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0;
+    padding-left: 6px;
+  }
+  span {
+    line-height: 28px;
+  }
+}
+
+// Show section top bar
+.edit-header {
+  h3 {
+    display: inline-block;
+  }
+  .button.alert {
+    padding: 0 2px;
+    margin-left: 4px;
+    top: -8px;
+  }
+}
+
+// Custodian Fund Forms
+.custodian-fund-remove {
+  margin-top: -17px; // remove some space on top
+}
+
+@import 'datatables';
+
+// Date-picker
+@import '../vendor/foundation-datepicker/foundation-datepicker';
+
+// Dropzone
+@import '../vendor/dropzone-4.2.0/dropzone';
+
+.dropzone {
+  border: 2px dashed $phwm-grey-2;
+  color: $phwm-grey-2;
+  text-align: center;
+  display: flex;
+  height: 144.365px;
+  justify-content: center; /* align horizontal */
+  align-items: center; /* align vertical */
+  transition: border-color 1s ease;
+  &:hover {
+    border: 2px solid $phwm-blue-2;
+  }
+}
+
+    // MODULES
+
+    // Autocomplete
+  .autocomplete-suggestions {
+    border: 1px solid $aluminum;
+    background: $white;
+    overflow: auto;
+  }
+  .autocomplete-suggestion {
+    padding: 2px 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    strong {
+      font-weight: normal;
+      color: $phwm-blue-2;
+    }
+  }
+  .autocomplete-selected {
+    background: $ghost;
+  }
+  .autocomplete-group {
+    padding: 2px 5px;
+    strong {
+      display: block;
+      border-bottom: 1px solid $black;
+    }
+  }
+
+// Ladda
+@import '../vendor/ladda-0.9.8/ladda';
+
+// Slick
+$slick-font-path: '../fonts/slick/';
+$slick-loader-path: "../images/slick/";
+$slick-arrow-color: $phwm-blue;
+@import '../vendor/slick-1.5.9/slick';
+@import '../vendor/slick-1.5.9/slick-theme';
+
+// inlTelInput
+$flagsImagePath: '/static/images/intlTelInput/';
+@import '../vendor/intlTelInput-7.0.2/intlTelInput';
+.intl-tel-input {
+  width: 100%;
+  margin-bottom: 8px;
+}
