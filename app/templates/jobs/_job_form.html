@@ -1,0 +1,23 @@
+{% from 'macros/_foundation_forms.html' import render_field, render_checkbox_field %}
+
+<form name="job-form" method="POST" action="{{ url_for('job.index') }}{% if job_id %}{{ job_id }}?__METHOD__=PUT{% endif %}" role="form">
+    {{ form.hidden_tag() if form.hidden_tag }}
+    <div class="row">
+      <div class="columns medium-6">
+        {{ render_field(form.title) }}
+      </div>
+    </div>
+    <br>
+    <div class="row">
+      <div class="column medium-12">
+        <button type="submit" class="button primary right">
+            {% if job_id %}
+                Update
+            {% else %}
+                Create
+            {% endif %}
+            Job
+        </button>
+      </div>
+    </div>
+</form>
