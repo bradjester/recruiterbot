@@ -25,6 +25,9 @@ class Job(Base):
         foreign_keys=company_id)
 
     title = db.Column(db.String(255), nullable=False)
+    location = db.Column(db.String(255))
+    work_type = db.Column(db.String(255))
+    expected_salary = db.Column(db.BigInteger)  # HKD annual?
     is_published = db.Column(db.Boolean, server_default=sa.text("'0'"), default=False, nullable=False)
     uuid = db.Column(db.String(36), unique=True, nullable=False)
     jd_file_url = db.Column(db.String(1024))
@@ -48,4 +51,3 @@ class Candidate(Base):
     session_id = db.Column(db.String(1024), nullable=False)
     status = db.Column(db.String(255), default="New", nullable=False)
     rating = db.Column(db.Integer())
-

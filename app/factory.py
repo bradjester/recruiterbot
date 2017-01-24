@@ -27,7 +27,7 @@ from app.services import users_service, static_storage_service, aws_ses_service
 BLUEPRINTS = [
     frontend_bp,
     webhook_bp,
-    candidate_bp
+    candidates_bp
 ]
 
 BLUEPRINTS_NO_CSRF = [
