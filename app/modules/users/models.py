@@ -74,3 +74,6 @@ class Company(Base):
     __tablename__ = 'companies'
 
     name = db.Column(db.String(100), unique=True, nullable=False)
+
+    def __str__(self):
+        return self.name

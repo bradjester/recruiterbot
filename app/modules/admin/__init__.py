@@ -8,7 +8,8 @@
 from flask_admin import Admin
 from flask_admin.base import MenuLink
 
-from .views import AppAdminIndexView, UserModelView, RoleModelView
+from .views import AppAdminIndexView, UserModelView, RoleModelView, \
+    CompanyModelView, JobModelView
 
 
 def init_admin(app):
@@ -16,4 +17,6 @@ def init_admin(app):
                   index_view=AppAdminIndexView())
     admin.add_view(UserModelView())
     admin.add_view(RoleModelView())
+    admin.add_view(CompanyModelView())
+    admin.add_view(JobModelView())
     admin.add_link(MenuLink(name='Back to Main Site', url='/'))

@@ -7,15 +7,20 @@
 """
 from datetime import datetime
 
+from flask_admin import expose
 from flask_admin import AdminIndexView
 from flask_admin.contrib import sqla
 from flask_admin.contrib.sqla import typefmt as sqla_typefmt
 from flask_admin.model import typefmt
 from flask_security import current_user
+from sqlalchemy import func
 
 from app.extensions import db
 from app.helpers import format_datetime
 from app.models import User, Role
+from app.modules.jobs.models import Job, Candidate
+from app.modules.motionai.models import Bot
+from app.modules.users.models import Company
 
 
 class AdminBlocker(object):
@@ -73,6 +78,7 @@ class UserModelView(AdminBlocker, sqla.ModelView):
         User.email.name,
         User.active.name,
         User.roles.key,
+        User.company.key,
         User.login_count.name,
         User.current_login_at.name,
         User.last_login_at.name,
@@ -95,7 +101,8 @@ class UserModelView(AdminBlocker, sqla.ModelView):
         User.first_name.name,
         User.surname.name,
         User.active.name,
-        User.roles.key
+        User.roles.key,
+        User.company.key,
     )
 
     form_excluded_columns = (
@@ -107,7 +114,7 @@ class UserModelView(AdminBlocker, sqla.ModelView):
         User.current_login_ip.name,
         User.last_login_ip.name,
         User.created_at.name,
-        User.updated_at.name
+        User.updated_at.name,
     )
 
     # Only show users with the social login type in the admin view.
@@ -140,3 +147,71 @@ class RoleModelView(AdminBlocker, sqla.ModelView):
         created_at=u'Created Timestamp',
         updated_at=u'Updated Timestamp'
     )
+
+
+class CompanyModelView(AdminBlocker, sqla.ModelView):
+    def __init__(self):
+        super(CompanyModelView, self).__init__(
+            Company, db.session, name=u'Companies')
+
+    can_delete = False
+    can_create = True
+    can_edit = True
+
+    column_type_formatters = DEFAULT_FORMATTERS
+
+    column_list = (
+        Company.name.name,
+        Company.created_at.name,
+        Company.updated_at.name,
+    )
+
+    column_labels = dict(
+        created_at=u'Created Timestamp',
+        updated_at=u'Updated Timestamp'
+    )
+
+    form_columns = (
+        Company.name.name,
+    )
+
+    form_excluded_columns = (
+        Company.created_at.name,
+        Company.updated_at.name,
+    )
+
+
+class JobModelView(AdminBlocker, sqla.ModelView):
+    def __init__(self):
+        super(JobModelView, self).__init__(
+            Job, db.session, name=u'Jobs', endpoint='job_admin')
+
+    can_delete = False
+    can_create = False
+    can_edit = True
+
+    column_type_formatters = DEFAULT_FORMATTERS
+
+    column_list = (
+        "company_name",
+        "candidate_count",
+        "title",
+    )
+
+    def get_query(self):
+        return (
+            self.session.query(
+                Job.id.label("id"),
+                Job.title.label("title"),
+                Company.name.label("company_name"),
+                func.count(Candidate.id).label("candidate_count"),
+            )
+            .join(Company)
+            .join(Bot)
+            .join(Candidate)
+            .group_by(Job.id)
+        )
+
+    @expose('/edit/', methods=('GET', 'POST'))
+    def edit_job(self):
+        return self.render('/admin/job_edit.html')

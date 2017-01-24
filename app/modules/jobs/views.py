@@ -18,8 +18,6 @@ job_bp = Blueprint('job', __name__, template_folder="templates",
 
 @route(job_bp, '/', methods=['GET', 'POST'], endpoint='index')
 def job_index():
-    cur_company = current_user.company
-
     if request.method == 'POST':
         form = JobForm(request.form)
         if not form.validate():
@@ -30,15 +28,13 @@ def job_index():
 
         # Generate a UUID for the job and set company to current before save.
         job.uuid = uuid.uuid4()
-        job.company = cur_company
+        job.company = current_user.company
         jobs_service.save(job)
 
         # Redirect to GET to prevent a form resubmission on refresh
         return redirect(url_for("job.index"))
 
-    jobs_data = []
-    if cur_company:
-        jobs_data = jobs_service.get_jobs_data(cur_company.id)
+    jobs_data = jobs_service.get_jobs_data(current_user.company_id)
 
     return render_template('jobs/job_index.html', jobs=jobs_data)
 
@@ -55,8 +51,7 @@ def _show_job_new_template(form):
 
 @route(job_bp, '/<int:id>', methods=['PUT'], endpoint='update')
 def job_update(id):
-    cur_company = current_user.company
-    job = jobs_service.find_by_id_company(id, cur_company.id)
+    job = jobs_service.find_by_id_company(id, current_user.company_id)
 
     form = JobForm(request.form)
 
@@ -71,7 +66,7 @@ def job_update(id):
 
 @route(job_bp, '/<int:id>/edit', endpoint='edit')
 def job_edit(id):
-    job = jobs_service.find_by_id_company(id, current_user.company.id)
+    job = jobs_service.find_by_id_company(id, current_user.company_id)
     form = JobForm(obj=job)
     return _show_job_edit_template(form, job)
 

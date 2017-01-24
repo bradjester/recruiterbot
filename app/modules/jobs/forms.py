@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask.ext.wtf import FlaskForm
+from flask_wtf import FlaskForm
 from wtforms import validators
 
 from app.modules.forms import NullStringField
