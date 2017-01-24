@@ -41,7 +41,13 @@ class Candidate(Base):
 
     bot = db.relationship(
         "Bot",
-        foreign_keys=bot_id)
+        foreign_keys=bot_id,
+        backref=db.backref(
+            'candidates',
+            lazy='dynamic',
+            cascade="all, delete-orphan"
+        )
+    )
 
     name = db.Column(db.String(255))
     resume_url = db.Column(db.String(1024))
