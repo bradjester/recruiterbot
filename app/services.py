@@ -18,17 +18,17 @@ aws_ses_service = AWSSESService(aws_service)
 # Static Storage Service
 static_storage_service = StaticStorageService(aws_s3_service)
 
-# MotionAI Webhook Service
-webhook_service = WebhookService()
-
-# Candidates Service
-candidates_service = CandidatesService()
-
 # Bots Service
 bots_service = BotsService()
 
 # Messages Service
 messages_service = MessagesService()
+
+# Candidates Service
+candidates_service = CandidatesService(messages_service)
+
+# MotionAI Webhook Service
+webhook_service = WebhookService(bots_service, candidates_service)
 
 # Jobs Service
 jobs_service = JobsService()

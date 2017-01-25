@@ -19,6 +19,3 @@ class UsersService(Service):
 
 class CompaniesService(Service):
     __model__ = Company
-
-    def find_company_by_title(self, title):
-        return self.first(title=title)

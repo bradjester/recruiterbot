@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    app.modules.users.errors
+    app.modules.motionai.errors
     ~~~~~~~~~~~~~~~~~~~~~
 
     User errors

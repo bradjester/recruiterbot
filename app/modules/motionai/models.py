@@ -21,7 +21,18 @@ class Bot(Base):
 
     job = db.relationship(
         "Job",
-        foreign_keys=job_id)
+        foreign_keys=job_id,
+    )
+
+    company_id = db.Column(
+        db.Integer,
+        db.ForeignKey('companies.id', name='bot_company_fk',
+                      onupdate='CASCADE', ondelete='CASCADE'),
+        nullable=False)
+
+    company = db.relationship(
+        "Company",
+        foreign_keys=company_id)
 
     bot_id = db.Column(db.BigInteger, unique=True, nullable=False)
     bot_url = db.Column(db.String(1024), nullable=False)
@@ -40,7 +51,13 @@ class Message(Base):
 
     bot = db.relationship(
         "Bot",
-        foreign_keys=bot_id)
+        foreign_keys=bot_id,
+        backref=db.backref(
+            'bots',
+            lazy='dynamic',
+            cascade="all, delete-orphan"
+        )
+    )
 
     candidate_id = db.Column(
         db.Integer,
@@ -50,7 +67,23 @@ class Message(Base):
 
     candidate = db.relationship(
         "Candidate",
-        foreign_keys=candidate_id)
+        foreign_keys=candidate_id,
+        backref=db.backref(
+            'candidate',
+            lazy='dynamic',
+            cascade="all, delete-orphan"
+        )
+    )
+
+    company_id = db.Column(
+        db.Integer,
+        db.ForeignKey('companies.id', name='message_company_fk',
+                      onupdate='CASCADE', ondelete='CASCADE'),
+        nullable=False)
+
+    company = db.relationship(
+        "Company",
+        foreign_keys=company_id)
 
     received_at = db.Column(DATETIME(fsp=3), nullable=False)
     sender = db.Column(db.String(255), nullable=False)

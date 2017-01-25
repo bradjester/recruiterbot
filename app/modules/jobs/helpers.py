@@ -7,12 +7,12 @@
 """
 
 
-def get_candidateid_to_msgs_dict(message_list):
+def get_candidate_id_to_msgs(message_list):
     candidate_messages = {}
     for message in message_list:
         if not message.id in candidate_messages.keys():
-            candidate_messages[message.id] = [message]
+            candidate_messages[message.candidate_id] = [message]
         else:
-            candidate_messages[message.id].append(message)
+            candidate_messages[message.candidate_id].append(message)
 
     return candidate_messages
