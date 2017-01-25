@@ -76,5 +76,5 @@ class Company(Base):
     name = db.Column(db.String(100), unique=True, nullable=False)
 
     @property
-    def __unicode__(self):
+    def __str__(self):
         return self.name
