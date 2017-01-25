@@ -40,7 +40,8 @@ def job_index():
     if cur_company:
         jobs_data = jobs_service.get_jobs_data(cur_company.id)
 
-    return render_template('jobs/job_index.html', jobs=jobs_data)
+    return render_template('jobs/job_index.html', jobs=jobs_data,
+                           company=cur_company)
 
 
 @route(job_bp, '/new', endpoint='new')

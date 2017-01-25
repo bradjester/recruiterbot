@@ -1,0 +1,158 @@
+@import "style_guide";
+@import '../vendor/foundation/foundation';
+
+// Icons
+$fi-path: '../fonts/foundation-icons';
+@import '../vendor/foundation-icons';
+
+// FONT-AWESOME
+@import "fa/font-awesome";
+
+// DataTables
+@import '../vendor/datatables-1.10.10/dataTables.foundation';
+@import '../vendor/datatables-1.10.10/buttons.dataTables';
+
+table.dataTable {
+  margin-bottom: 1rem !important;
+}
+
+.dataTables_wrapper {
+  margin-top: 60px;
+  padding-bottom: 90px;
+
+  .dt-buttons {
+    position: absolute;
+  }
+
+  .pending-filter, .open-filter {
+    padding-left: 10px;
+  }
+
+  .warning {
+    background-color: #ffae00;
+  }
+}
+
+// Buttons
+
+.button i { // style up the button icons
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+// Group Buttons
+
+.dt-buttons .button {
+  border-right: solid 1px $jobrobin-grey;
+  margin-bottom: 12px;
+  &:last-child {
+    border-right: none;
+  }
+}
+
+.datatables-list .row:first-child {
+  > div {
+      height: 50px;
+      display: flex;
+      align-items: center;
+  }
+  .dataTables_length {
+    margin-bottom: 0;
+  }
+  .dataTables_filter {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+.dataTables_filter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 44px;
+  }
+
+.dataTables_filter > label {
+  font-size: 1rem;
+  margin-top: 0;
+}
+
+.controls .button {
+  margin-bottom: 0;
+}
+
+.dataTables_filter > label {
+    @extend h4;
+    vertical-align: bottom;
+    input {
+      margin-left: 20px;
+    }
+}
+
+.pending-filter, .event-over-filter, .open-filter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 44px;
+    > h4 {
+      margin: 0;
+      font-size: 1rem;
+      padding-right: 12px;
+    }
+    // Filters
+    .switch {
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      height: 44px;
+    }
+}
+
+table.dataTable thead > tr > th {
+  //overflow:hidden;
+  white-space: pre-line;
+  //text-overflow: ellipsis;
+}
+
+.dataTables_length {
+	margin-bottom: 10px; // give some space between the table and the toolbar on top
+}
+
+table.dataTable tbody td.focus {
+  outline: 2px solid $blue-3;
+}
+
+table.dataTable tbody td.error {
+  color: $snow;
+  background-color: $red-2;
+  outline: inset 1px $red-1;
+}
+
+div.dataTables_info {
+  float: left;
+  color: $smoke;
+}
+
+// DataTables fields
+
+table.dataTable a.button {
+  margin: 0;
+  text-align: center;
+  vertical-align: middle;
+}
+
+table.dataTable tr {
+  border-bottom: 1px solid $gainsboro;
+}
+
+table.dataTable td {
+  height: 42px;
+  padding: 0.1rem 0.625rem;
+}
+
+.dt-left {
+  text-align: left;
+}

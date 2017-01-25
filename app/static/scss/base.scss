@@ -2,41 +2,8 @@
 
 // FOUNDATION CONFIG
 
+
 @import '../vendor/foundation/foundation/_functions.scss'; // Utility Functions
-
-@font-face {
-    font-family: 'pf_encore_sans_probook';
-    src: url('../fonts/pfencoresanspro-book-webfont.woff2') format('woff2'),
-         url('../fonts/pfencoresanspro-book-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'pf_encore_sans_probook';
-    src: url('../fonts/pfencoresanspro-bookitalic-webfont.woff2') format('woff2'),
-         url('../fonts/pfencoresanspro-bookitalic-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-
-}
-
-@font-face {
-    font-family: 'pf_encore_sans_probook';
-    src: url('../fonts/pfencoresanspro-bold-webfont.woff2') format('woff2'),
-         url('../fonts/pfencoresanspro-bold-webfont.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'pf_encore_sans_probook';
-    src: url('../fonts/pfencoresanspro-bolditalic-webfont.woff2') format('woff2'),
-         url('../fonts/pfencoresanspro-bolditalic-webfont.woff') format('woff');
-    font-weight: bold;
-    font-style: italic;
-}
-
 
 // b. Grid
 $row-width: rem-calc(1380); // 1440px - 2 * $column-gutter
@@ -50,8 +17,8 @@ $form-spacing: rem-calc(9.35);
 $switch-height-med: 1.5rem;
 $switch-bottom-margin: 0;
 
-$primary-color: $phwm-blue;
-$header-font-color: $phwm-blue;
+$primary-color: $jobrobin-orange;
+$header-font-color: $jobrobin-grey;
 
 // 09. Dropdown Buttons
 
@@ -69,10 +36,10 @@ $price-item-font-size: rem-calc(14);
 
 // 34. Top Bar
 $topbar-margin-bottom: rem-calc(45);
-$topbar-bg-color: $phwm-blue; // Nav background
-$topbar-link-bg-hover: $phwm-blue-hover; // hover over Logout/Login button
-$topbar-dropdown-link-bg: $phwm-blue; // dropdown link bg color
-$topbar-dropdown-link-bg-hover: $phwm-blue-hover; // dropdown link hover bg color
+$topbar-bg-color: $jobrobin-orange; // Nav background
+$topbar-link-bg-hover: $blue-3; // hover over Logout/Login button
+$topbar-dropdown-link-bg: $jobrobin-orange; // dropdown link bg color
+$topbar-dropdown-link-bg-hover: $blue-3; // dropdown link hover bg color
 
 @import '../vendor/foundation/foundation';
 
@@ -87,7 +54,7 @@ $fi-path: '../fonts/foundation-icons';
 
 // Navigation
 .top-bar .title-area .name:hover {
-	background-color: $phwm-blue-hover; // hover color for Upper left logo text
+	background-color: $jobrobin-orange; // hover color for Upper left logo text
 }
 
 .top-bar {
@@ -136,7 +103,7 @@ aside.sidebar {
 footer { // put the footer on the bottom and style the links
 	position: fixed;
 	bottom: 0;
-	background-color: $phwm-blue;
+	background-color: $jobrobin-orange;
 	color: $white;
 	a, a:hover {
 		color: $white;
@@ -159,7 +126,7 @@ footer { // put the footer on the bottom and style the links
   margin-bottom: -50px;
   line-height: 41px;
   span.warning {
-    color: $phwm-red-0;
+    color: $red-1;
   }
 }
 
@@ -183,7 +150,6 @@ h1.new {
 // Landing Page
 
 #home {
-  background: url("../images/banner-landing.jpg");
   background-size: cover;
   .heading {
     text-align: center;
@@ -198,34 +164,6 @@ h1.new {
 
 .pricing-table * {
   line-height: 1.5rem;
-}
-
-.mandate {
-  @include panel(
-    // Sets the panel background color. Default: $panel-pg
-    $bg: $phwm-red,
-    // Sets the panel padding amount. Default: $panel-padding
-    $padding:1rem,
-    // Sets the font color based on the darkness of the bg & resets header line-heights for panels. Default: $panel-header-adjust
-    $adjust:true
-  );
-  color: $white;
-  line-height: 1.4rem;
-  padding: 0.5rem 1rem;
-  border-top: none;
-  border-right: none;
-
-    > div {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    text-align: center;
-    font-weight: bold;
-    > span.label {
-      margin-left: 0.3rem;
-      background: $white;
-      color: $black;
-    }
-  }
 }
 
 .avatar > div {
@@ -262,7 +200,7 @@ h1.new {
 }
 .pricing-table .highlight {
   font-size: 1.8rem;
-  color: $phwm-red;
+  color: $jobrobin-orange;
 }
 
 .pricing-table {
@@ -283,13 +221,6 @@ i {
   }
 }
 
-.last-top-up {
-  margin-top: -10px;
-  text-align: right;
-  color: $phwm-red;
-}
-
-
 .documents.button {
   padding: 1px 16px;
   padding-right: 42px;
@@ -301,8 +232,6 @@ i.highlight {
   height: 24px;
 }
 
-
-
 ul.document-list {
   margin:0;
   div:focus {
@@ -313,7 +242,7 @@ ul.document-list {
 li.document-row {
    a {
     display: inline-block;
-    color: $phwm-blue-2;
+    color: $blue-3;
     line-height: 28px;
     vertical-align: bottom;
     width: 230px;
@@ -340,11 +269,10 @@ li.document-row {
   }
 }
 
-// Custodian Fund Forms
-.custodian-fund-remove {
-  margin-top: -17px; // remove some space on top
-}
+// Handsontable
+@import "handsontable.full";
 
+// Datatables
 @import 'datatables';
 
 // Date-picker
@@ -354,8 +282,8 @@ li.document-row {
 @import '../vendor/dropzone-4.2.0/dropzone';
 
 .dropzone {
-  border: 2px dashed $phwm-grey-2;
-  color: $phwm-grey-2;
+  border: 2px dashed $jumbo;
+  color: $jumbo;
   text-align: center;
   display: flex;
   height: 144.365px;
@@ -363,52 +291,6 @@ li.document-row {
   align-items: center; /* align vertical */
   transition: border-color 1s ease;
   &:hover {
-    border: 2px solid $phwm-blue-2;
+    border: 2px solid $blue-3;
   }
-}
-
-    // MODULES
-
-    // Autocomplete
-  .autocomplete-suggestions {
-    border: 1px solid $aluminum;
-    background: $white;
-    overflow: auto;
-  }
-  .autocomplete-suggestion {
-    padding: 2px 5px;
-    white-space: nowrap;
-    overflow: hidden;
-    strong {
-      font-weight: normal;
-      color: $phwm-blue-2;
-    }
-  }
-  .autocomplete-selected {
-    background: $ghost;
-  }
-  .autocomplete-group {
-    padding: 2px 5px;
-    strong {
-      display: block;
-      border-bottom: 1px solid $black;
-    }
-  }
-
-// Ladda
-@import '../vendor/ladda-0.9.8/ladda';
-
-// Slick
-$slick-font-path: '../fonts/slick/';
-$slick-loader-path: "../images/slick/";
-$slick-arrow-color: $phwm-blue;
-@import '../vendor/slick-1.5.9/slick';
-@import '../vendor/slick-1.5.9/slick-theme';
-
-// inlTelInput
-$flagsImagePath: '/static/images/intlTelInput/';
-@import '../vendor/intlTelInput-7.0.2/intlTelInput';
-.intl-tel-input {
-  width: 100%;
-  margin-bottom: 8px;
 }

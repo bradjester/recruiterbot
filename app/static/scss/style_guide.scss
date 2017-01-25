@@ -2,65 +2,49 @@
 
 // Colour Scheme
 
+$jobrobin-orange : #EF5714;
+$jobrobin-grey : #817F7F;
+
 // Reds
-$phwm-red-0 : #BA0F26;
-$phwm-red-1 : #D8202E;
-$phwm-red-2 : #FF3F49;
+$red-0 : #BA0F26;
+$red-1 : #D8202E;
+$red-2 : #FF3F49;
 
 // Greens
-$phwm-green-0 : #28942E;
-$phwm-green-1 : #4ABA64;
-$phwm-green-2 : #7BCB8D;
-$phwm-green-3 : #A7DCB3;
-$phwm-green-4 : #D3EDD9;
-$phwm-green-5 : #FFFFFF;
+$green-0 : #28942E;
+$green-1 : #4ABA64;
+$green-2 : #7BCB8D;
+$green-3 : #A7DCB3;
+$green-4 : #D3EDD9;
+$green-5 : #FFFFFF;
 
 // Blues
-$phwm-blue-0 : #134177;
-$phwm-blue-1 : #00529b;
-$phwm-blue-2 : #0094FF;
-$phwm-blue-3 : #38A4FF;
-$phwm-blue-4 : #94CDFF;
-$phwm-blue-5 : #D7ECFD;
-$phwm-blue-6 : #063E89;
-$phwm-blue-7 : #0F7DFF;
-$phwm-pale-blue : #ECF0F3;
+$blue-0 : #134177;
+$blue-1 : #00529b;
+$blue-2 : #0094FF;
+$blue-3 : #38A4FF;
+$blue-4 : #94CDFF;
+$blue-5 : #D7ECFD;
+$blue-6 : #063E89;
+$blue-7 : #0F7DFF;
 
 // Greyscale
 $white       : #FFFFFF;
-$phwm-grey-5  : #FFFFFF;
 $ghost       : #FAFAFA;
 $snow        : #F9F9F9;
 $vapor       : #F6F6F6;
 $white-smoke : #F5F5F5;
 $silver      : #EFEFEF;
-$phwm-grey-4  : #E6E9EB;
 $smoke       : #EEEEEE;
 $gainsboro   : #DDDDDD;
-$phwm-grey-3  : #CAD0D5;
 $iron        : #CCCCCC;
 $base        : #AAAAAA;
-$phwm-grey-2  : #8F9AA6;
 $aluminum    : #999999;
 $jumbo       : #888888;
 $monsoon     : #777777;
 $steel       : #666666;
-$phwm-grey-1  : #585F65;
 $charcoal    : #555555;
-$phwm-grey-0  : #42474B;
 $tuatara     : #444444;
 $oil         : #333333;
 $jet         : #222222;
 $black       : #000000;
-
-// Color Aliases
-$phwm-blue: $phwm-blue-1;
-$phwm-blue-hover: $phwm-blue-2;
-$phwm-green: $phwm-green-1;
-$phwm-green-hover: $phwm-green-2;
-$phwm-red : $phwm-red-1;
-$phwm-red-hover : $phwm-red-2;
-
-$eval-top: $phwm-blue-6;
-$eval-left: $phwm-blue-7;
-$eval-center: $phwm-grey-3;

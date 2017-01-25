@@ -19,24 +19,12 @@
       {% endif %}
       <div class="columns medium-8">
         {% if field.errors %}
-            {% if field.type == 'DateField' %}
-                {{ field(class_="fdatepicker error " + presetClass, **kwargs) }}
-            {% elif field.type == 'DateTimeField' %}
-                {{ field(class_="fdatetimepicker error " + presetClass, **kwargs) }}
-            {% else %}
-                {{ field(class_="error " + presetClass, **kwargs) }}
-            {% endif %}
+            {{ field(class_="error " + presetClass, **kwargs) }}
             {% for e in field.errors if e not in ignore_errors %}
                 <small class="error">{{ e }}</small>
             {% endfor %}
         {% else %}
-            {% if field.type == 'DateField' %}
-                {{ field(class_="fdatepicker " + presetClass, **kwargs) }}
-            {% elif field.type == 'DateTimeField' %}
-                {{ field(class_="fdatetimepicker " + presetClass, **kwargs) }}
-            {% else %}
-                {{ field(**kwargs) }}
-            {% endif %}
+            {{ field(**kwargs) }}
         {% endif %}
       </div>
     </div>

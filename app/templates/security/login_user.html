@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+{% from 'macros/_foundation_forms.html' import render_field, render_checkbox_field %}
+
+{% set page_title = 'Login' %}
+
+{% block body %}
+    <div class="columns medium-4 medium-offset-4 end">
+        <b>Please Sign In or <a href="{{ url_for_security('register') }}">Register</a></b>
+        <br/>
+        <br/>
+        <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form">
+          {{ login_user_form.hidden_tag() }}
+          {{ render_field(login_user_form.email) }}
+          {{ render_field(login_user_form.password) }}
+          {{ render_checkbox_field(login_user_form.remember) }}
+          <a href="{{ url_for_security('forgot_password') }}">Forgot Password?</a>
+          <br/>
+          <br/>
+          <button type="submit" class="button tiny radius">Sign in</button>
+        </form>
+    </div>
+{% endblock %}

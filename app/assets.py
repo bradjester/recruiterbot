@@ -10,6 +10,7 @@ from flask_assets import Environment, Bundle
 
 # Other Assets.
 app_css = Bundle(
+    "scss/base.scss",
     filters=("libsass", "cssmin"),
     output="cssmin/app.min.css"
 )
@@ -19,11 +20,15 @@ app_js = Bundle(
     "vendor/lodash.js",
     "vendor/foundation/foundation.min.js",
     "vendor/foundation-datepicker/foundation-datepicker.js",
+    "vendor/datatables-1.10.10/dataTables.js",
+    "vendor/datatables-1.10.10/dataTables.foundation.js",
+    "vendor/datatables-1.10.10/dataTables.buttons.js",
+    "vendor/datatables-1.10.10/dataTables.buttons.html5.js",
     "vendor/dropzone-4.2.0/dropzone.js",
     'vendor/autosize-3.0.14.js',
     'vendor/notify/notify.js',
     'vendor/string-format.js',
-    'vendor/handsontable.full.min.js',
+    'vendor/handsontable.full.js',
     filters="jsmin",
     output="jsmin/app.min.js"
 )
@@ -39,7 +44,7 @@ admin_js = Bundle(
     "vendor/jquery-2.1.4.js",
     "vendor/lodash.js",
     'vendor/string-format.js',
-    'vendor/handsontable.full.min.js',
+    'vendor/handsontable.full.js',
     filters="jsmin",
     output="jsmin/admin.min.js"
 )

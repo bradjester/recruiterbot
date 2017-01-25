@@ -1,0 +1,17 @@
+{% macro messages() %}
+  {% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+      {% for category, m in messages %}
+        {% if category %}
+          {% set mapping = {'message': 'info', 'error': 'alert'} %}
+          <div data-alert class="alert-box {{ mapping.get(category, category) }}" tabindex="0" aria-live="assertive" role="alertdialog">
+        {% else %}
+          <div data-alert class="alert-box" tabindex="0" aria-live="assertive" role="alertdialog">
+        {% endif %}
+        <button tabindex="0" class="close" aria-label="Close Alert">&times;</button>
+        {{ m }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+{% endmacro %}
