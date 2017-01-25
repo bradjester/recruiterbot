@@ -25,8 +25,6 @@ def webhook_handler():
 
         # These custom variables can be used by MotionAI Modules for creating customized messages and building urls
         return jsonify({'job_uuid': msg.bot.job.uuid,
-                        'session': msg.candidate.session_id,
-                        'job_title': msg.bot.job.title,
-                        'company_name': msg.bot.company.name}), 200
+                        'session': msg.candidate.session_id}), 200
     else:
         return '', 405
