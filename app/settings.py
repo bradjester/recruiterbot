@@ -81,3 +81,6 @@ APP_SES_REGION_NAME = 'us-east-1'
 
 # AWS S3 Bucket will change per environment.
 APP_AWS_S3_BUCKET = os.getenv('APP_AWS_S3_BUCKET', 'skynet-app-dev')
+
+# the same key must be set on MotionAI's account settings
+WEBHOOK_SECRET_KEY = os.getenv('WEBHOOK_SECRET_KEY', 'precruiter_jobrobin')

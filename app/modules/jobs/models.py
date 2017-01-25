@@ -22,9 +22,14 @@ class Job(Base):
 
     company = db.relationship(
         "Company",
-        foreign_keys=company_id)
+        foreign_keys=company_id,
+    )
 
     title = db.Column(db.String(255), nullable=False)
+    hiring_company = db.Column(db.String(255))
+    location = db.Column(db.String(255))
+    work_type = db.Column(db.String(255))
+    expected_salary = db.Column(db.BigInteger)  # HKD annual?
     is_published = db.Column(db.Boolean, server_default=sa.text("'0'"), default=False, nullable=False)
     uuid = db.Column(db.String(36), unique=True, nullable=False)
     jd_file_url = db.Column(db.String(1024))
@@ -41,8 +46,27 @@ class Candidate(Base):
 
     bot = db.relationship(
         "Bot",
-        foreign_keys=bot_id)
+        foreign_keys=bot_id,
+        backref=db.backref(
+            'candidates',
+            lazy='dynamic',
+            cascade="all, delete-orphan"
+        )
+    )
+
+    company_id = db.Column(
+        db.Integer,
+        db.ForeignKey('companies.id', name='candidate_company_fk',
+                      onupdate='CASCADE', ondelete='CASCADE'),
+        nullable=False)
+
+    company = db.relationship(
+        "Company",
+        foreign_keys=company_id,
+    )
 
     name = db.Column(db.String(255))
     resume_url = db.Column(db.String(1024))
     session_id = db.Column(db.String(1024), nullable=False)
+    status = db.Column(db.String(255), default="New", nullable=False)
+    rating = db.Column(db.Integer())
