@@ -18,7 +18,7 @@ $switch-height-med: 1.5rem;
 $switch-bottom-margin: 0;
 
 $primary-color: $jobrobin-orange;
-$header-font-color: $jobrobin-grey;
+$header-font-color: $jobrobin-orange;
 
 // 09. Dropdown Buttons
 
@@ -36,9 +36,9 @@ $price-item-font-size: rem-calc(14);
 
 // 34. Top Bar
 $topbar-margin-bottom: rem-calc(45);
-$topbar-bg-color: $jobrobin-orange; // Nav background
-$topbar-link-bg-hover: $blue-3; // hover over Logout/Login button
-$topbar-dropdown-link-bg: $jobrobin-orange; // dropdown link bg color
+$topbar-bg-color: $jobrobin-grey; // Nav background
+$topbar-link-bg-hover: $jobrobin-orange; // hover over Logout/Login button
+$topbar-dropdown-link-bg: $jobrobin-grey; // dropdown link bg color
 $topbar-dropdown-link-bg-hover: $blue-3; // dropdown link hover bg color
 
 @import '../vendor/foundation/foundation';
@@ -103,7 +103,7 @@ aside.sidebar {
 footer { // put the footer on the bottom and style the links
 	position: fixed;
 	bottom: 0;
-	background-color: $jobrobin-orange;
+	background-color: $jobrobin-grey;
 	color: $white;
 	a, a:hover {
 		color: $white;
@@ -269,9 +269,6 @@ li.document-row {
   }
 }
 
-// Handsontable
-@import "handsontable.full";
-
 // Datatables
 @import 'datatables';
 
@@ -292,5 +289,21 @@ li.document-row {
   transition: border-color 1s ease;
   &:hover {
     border: 2px solid $blue-3;
+  }
+}
+
+tr.not-published {
+  td {
+    color: $jobrobin-grey;
+  }
+}
+
+td > span.button{
+  margin-bottom: 0px;
+  &.fb {
+    background-color: $blue-2;
+    &:hover, &:focus {
+      background-color: $blue-1;
+    }
   }
 }

@@ -2,102 +2,116 @@
 
 {% set page_title = 'Vacancy list for ' + company.name %}
 {% block body %}
-  <div class="columns datatables-list medium-8 medium-offset-2">
-    <h3 class="page-title">{{ page_title }}</h3>
-    <div class="columns controls small-2">
-      <a class="button tiny primary radius" href="{{ url_for('job.new') }}">New</a>
+    <div class="columns datatables-list medium-8 medium-offset-2">
+        <h3 class="page-title">{{ page_title }}</h3>
+        <div class="columns controls small-2">
+            <a class="button tiny primary radius"
+               href="{{ url_for('job.new') }}">New</a>
+        </div>
+        {% if jobs %}
+            <table id="vacancies" style="position: relative; right: -25600px">
+                <thead>
+                <tr>
+                    <th>Vacancy Title</th>
+                    <th>Candidate Total</th>
+                    <th>Candidate List</th>
+                    <th>Passive Bot</th>
+                    <th>Active Bot</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for job in jobs %}
+                    <tr {% if not job.is_published %}class="not-published"{% endif %}>
+                        {# TODO: Get link to JD from service #}
+                        <td>{{ job.title }}</td>
+                        <td>{{ job.candidate_count }}</td>
+                        <td>{% if job.is_published %}
+                            {# TODO: Get link to candidate list from service #}
+                            <a href="/">View list</a>
+                        {% else %}
+                            Empty
+                        {% endif %}
+                        </td>
+                        <td>{% if job.is_published %}
+                            {% if job['web_passive_url'] %}
+                                <span class="button tiny radius clip"
+                                      data-clipboard-text="{{ job['web_passive_url'] }}"><i
+                                        class="fi-web"></i></span>
+                            {% endif %}
+                            {% if job['fb_passive_url'] %}
+                                <span class="button tiny radius fb clip"
+                                      data-clipboard-text="{{ job['fb_passive_url'] }}"><i
+                                        class="fi-social-facebook"></i></span>
+                            {% endif %}
+                        {% else %}
+                            Not yet posted
+                        {% endif %}
+                        </td>
+
+                        <td>{% if job.is_published %}
+                            {% if job['web_active_url'] %}
+                                <span class="button tiny radius clip"
+                                      data-clipboard-text="{{ job['web_active_url'] }}"><i
+                                        class="fi-web"></i></span>
+                            {% endif %}
+                            {% if job['fb_active_url'] %}
+                                <span class="button tiny radius fb clip"
+                                      data-clipboard-text="{{ job['fb_active_url'] }}"><i
+                                        class="fi-social-facebook"></i></span>
+                            {% endif %}
+                        {% else %}
+                            Not yet posted
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <h1 class="new">No jobs exist!</h1>
+        {% endif %}
     </div>
-    {% if jobs %}
-      <table id="vacancies" style="position: relative; right: -25600px">
-        <thead>
-          <tr>
-            <th>Vacancy Title</th>
-            <th>Candidate Total</th>
-            <th>Candidate List</th>
-            <th>Passive Bot</th>
-            <th>Active Bot</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for job in jobs %}
-            <tr {% if not job.is_published %}class="not-published"{%  endif %}>
-              <td>{{ job.title }}</td>
-              <td>{{ job.candidate_count }}</td>
-              <td>TODO</td>
-
-              <td>{%  if job.is_published %}
-                      {% if job['web_passive_url'] %}
-                      {{ job['web_passive_url'] }}
-                      {% endif %}
-                      {% if job['fb_passive_url'] %}
-                      {{ job['fb_passive_url'] }}
-                      {% endif %}
-                  {%  else  %}
-                      Not yet posted
-                  {% endif %}
-              </td>
-
-              <td>{%  if job.is_published %}
-                      {% if job['web_active_url'] %}
-                      {{ job['web_active_url'] }}
-                      {% endif %}
-                      {% if job['fb_active_url'] %}
-                      {{ job['fb_active_url'] }}
-                      {% endif %}
-                  {%  else  %}
-                      Not yet posted
-                  {% endif %}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    {% else %}
-      <h1 class="new">No jobs exist!</h1>
-    {% endif %}
-  </div>
 {% endblock %}
 
 {% block extra_js %}
-  <script type="text/javascript">
-    $( function () {
-        var $table = $('#vacancies'),
-            table;
+    <script type="text/javascript">
+        $( function () {
+            var $table = $( '#vacancies' );
 
-        var columnsOptions = [
-          {
-            title: "Vacancy list",
-            className: "dt-left",
-            width: "150px"
-          },
-          {
-            title: "Candidate Total"
-          },
-          {
-            title: "Candidate List",
-            orderable: false
-          },
-          {
-            title: "Passive Bot",
-            orderable: false
-          },
-          {
-            title: "Active Bot",
-            orderable: false
-          }
-        ];
+            var columnsOptions = [
+                {
+                    title: "Vacancy list",
+                    className: "dt-left",
+                    width: "150px"
+                },
+                {
+                    title: "Candidate Total"
+                },
+                {
+                    title: "Candidate List",
+                    orderable: false
+                },
+                {
+                    title: "Passive Bot",
+                    orderable: false
+                },
+                {
+                    title: "Active Bot",
+                    orderable: false
+                }
+            ];
 
-        table = $table.css('right', '0').dataTable({
-          scrollX: false,
-          "pageLength": 10,
-          "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-          "order" : [ [ 0, 'asc' ] ],
-          "columns" : columnsOptions,
+            $table.css( 'right', '0' ).dataTable( {
+                scrollX: false,
+                "pageLength": 10,
+                "lengthMenu": [ [ 10, 25, 50, -1 ], [ 10, 25, 50, "All" ] ],
+                "order": [ [ 0, 'asc' ] ],
+                "columns": columnsOptions,
+            } );
+
+            var clipboard = new Clipboard( '.clip' );
+
         } );
-{#        table.columns.adjust().draw();#}
-
-
-    } );
-  </script>
-  {% include 'snippets/_insert_controls_datatables_top_row.html' %}
+    </script>
+    {% include 'snippets/_insert_controls_datatables_top_row.html' %}
 {% endblock %}

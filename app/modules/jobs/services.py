@@ -13,7 +13,7 @@ class JobsService(Service):
     @staticmethod
     def _get_job_data(job):
         candidate_count = 0
-        job_data = dict(id=job.id, title=job.title)
+        job_data = dict(id=job.id, title=job.title, is_published=job.is_published)
         for bot in job.bots:
             candidate_count += bot.candidates.count()
             url_key = bot.channel_type + '_' + bot.chat_type + '_url'
