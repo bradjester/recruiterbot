@@ -34,11 +34,11 @@ class CandidatesService(Service):
 
     def update_candidates_with_no_name(self, job_id):
         unnamed_candidates = self._find_no_name_candidates_by_job_id(job_id)
-        candidate_ids = [x.id for x in unnamed_candidates]
-        messages = self.messages_service.get_sorted_messages_by_candidate_ids(candidate_ids)
-
         # Dictionary of candidate.id : candidate
         candidate_id_to_candidate = dict([(x.id, x) for x in unnamed_candidates])
+
+        messages = self.messages_service.get_sorted_messages_by_candidate_ids(candidate_id_to_candidate.keys())
+
         # grouping messages like this : {candidate_id : [messages for candidate]}
         candidate_id_to_messages = get_candidate_id_to_msgs(messages)
 

@@ -34,14 +34,14 @@ class WebhookService(Service):
         if candidate is None:
             # Create candidate with existing session_id
             candidate = self.candidates_service.create(bot_id=bot.id, session_id=session_id,
-                                                       company_id=bot.job.company_id)
+                                                       company_id=bot.job.company_id, commit=False)
         # optional fields
         if 'replyData' not in data_dict:
             data_dict['replyData'] = None
         if 'attachedMedia' not in data_dict:
             data_dict['attachedMedia'] = None
 
-        self.create(
+        msg = self.create(
             secret=data_dict.get('secret'),
             received_at=datetime.strptime(data_dict.get('updatedAt'), "%Y-%m-%dT%H:%M:%S.%fZ"),
             bot_id=bot_id,
@@ -55,7 +55,7 @@ class WebhookService(Service):
             module_id=data_dict.get('moduleID'),
             direction=data_dict.get('direction'),
             company_id=bot.job.company_id)
-
+        return msg
 
 class BotsService(Service):
     __model__ = Bot
@@ -70,12 +70,15 @@ class MessagesService(Service):
     @staticmethod
     def get_sorted_messages_by_candidate_ids(candidate_list):
         # Data is ordered by (candidate_id , received_at)
-        return MessagesService.query.filter(
-            MessagesService.candidate_id.in_(candidate_list)).orderby(MessagesService.candidate_id, MessagesService.received_at).all()
+        return Message.query\
+            .filter(Message.candidate_id.in_(candidate_list))\
+            .orderby(Message.candidate_id, Message.received_at)\
+            .all()
 
     @staticmethod
     def get_sorted_messages_by_candidate_id(candidate_id, company_id):
         # Data is ordered by received_at
-        return MessagesService.query.filter(
-            MessagesService.candidate_id == candidate_id, MessagesService.company_id == company_id).orderby(
-            MessagesService.received_at).all()
+        return Message.query\
+            .filter_by(candidate_id=candidate_id, company_id=company_id)\
+            .orderby(Message.received_at)\
+            .all()

@@ -18,10 +18,15 @@ def webhook_handler():
     if request.method == 'POST':
         message_dict = request.form.to_dict()
         try:
-            webhook_service.create_message(message_dict)
+            msg = webhook_service.create_message(message_dict)
         except MotionAISecretKeyMismatch:
             logging.error("MotionAI Secret Key Mismatch")
             return jsonify({'message': 'Secret Key did not match'})
-        return '', 200
+
+        # These custom variables can be used by MotionAI Modules for creating customized messages and building urls
+        return jsonify({'job_uuid': msg.bot.job.uuid,
+                        'session': msg.candidate.session_id,
+                        'job_title': msg.bot.job.title,
+                        'company_name': msg.bot.company.name}), 200
     else:
         return '', 405
