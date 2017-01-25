@@ -1,13 +1,15 @@
 {% extends 'layouts/base.html' %}
 
-{% set page_title = 'Vacancy list for ' + company.name %}
+{% set page_title = 'Vacancy list for ' + company.name if company != None else 'Unknown Company' %}
 {% block body %}
     <div class="columns datatables-list medium-8 medium-offset-2">
         <h3 class="page-title">{{ page_title }}</h3>
-        <div class="columns controls small-2">
-            <a class="button tiny primary radius"
-               href="{{ url_for('job.new') }}">New</a>
-        </div>
+        {% if company != None %}
+          <div class="columns controls small-2">
+              <a class="button tiny primary radius"
+                 href="{{ url_for('job.new') }}">New</a>
+          </div>
+        {% endif %}
         {% if jobs %}
             <table id="vacancies" style="position: relative; right: -25600px">
                 <thead>

@@ -207,8 +207,8 @@ class JobModelView(AdminBlocker, sqla.ModelView):
                 func.count(Candidate.id).label("candidate_count"),
             )
             .join(Company)
-            .join(Bot)
-            .join(Candidate)
+            .join(Bot, isouter=True)
+            .join(Candidate, isouter=True)
             .group_by(Job.id)
         )
 

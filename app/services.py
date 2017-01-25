@@ -1,16 +1,11 @@
 # -*- coding: utf-8 -*-
 from app.modules.aws.services import AWSService, AWSS3Service, AWSSESService
-from app.modules.jobs.services import JobsService
-from app.modules.storage.services import StaticStorageService
-<<<<<<< HEAD
-from app.modules.users.services import RolesService, UsersService
 from app.modules.jobs.services import CandidatesService, JobsService
-from app.modules.motionai.services import WebhookService, BotsService, MessagesService
-
-=======
+from app.modules.motionai.services import WebhookService, BotsService, \
+    MessagesService
+from app.modules.storage.services import StaticStorageService
 from app.modules.users.services import RolesService, UsersService, \
     CompaniesService
->>>>>>> feature/jobs-view
 
 # User Services
 roles_service = RolesService()
@@ -39,6 +34,3 @@ candidates_service = CandidatesService(messages_service)
 
 # MotionAI Webhook Service
 webhook_service = WebhookService(bots_service, candidates_service)
-
-# Jobs Service
-jobs_service = JobsService()

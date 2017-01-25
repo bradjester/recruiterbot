@@ -67,12 +67,12 @@ def job_index():
     jobs_data = jobs_service.get_jobs_data(current_user.company_id)
 
     return render_template('jobs/job_index.html', jobs=jobs_data,
-                           company=cur_company)
+                           company=current_user.company)
 
 
 @route(job_bp, '/new', endpoint='new')
 def job_new():
-    form = JobForm(company=current_user.company.id)
+    form = JobForm()
     return _show_job_new_template(form)
 
 
