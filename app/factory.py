@@ -18,13 +18,21 @@ from app.extensions import db, migrate
 from app.middleware import HTTPMethodOverrideMiddleware
 from app.modules.admin import init_admin
 from app.modules.frontend.views import frontend_bp
+from app.modules.motionai.views import webhook_bp
+from app.modules.jobs.views import candidates_bp
 from app.modules.jobs.views import job_bp
 from app.modules.users import init_security
 from app.services import users_service, static_storage_service, aws_ses_service
 
 BLUEPRINTS = [
     frontend_bp,
+    webhook_bp,
+    candidates_bp,
     job_bp,
+]
+
+BLUEPRINTS_NO_CSRF = [
+    webhook_bp
 ]
 
 LOG_FORMAT = "%(asctime)s %(levelname)s %(name)s %(message)s"
@@ -45,7 +53,7 @@ def create_app(config=None):
     Babel(app)
     init_db(app)
     assets.init_app(app)
-    init_security(app, users_service)
+    init_security(app, users_service, BLUEPRINTS_NO_CSRF)
     init_security_send_mail(app)
     configure_error_handlers(app)
     configure_blueprints(app)
