@@ -20,14 +20,15 @@ from app.modules.admin import init_admin
 from app.modules.frontend.views import frontend_bp
 from app.modules.motionai.views import webhook_bp
 from app.modules.jobs.views import candidates_bp
-
+from app.modules.jobs.views import job_bp
 from app.modules.users import init_security
 from app.services import users_service, static_storage_service, aws_ses_service
 
 BLUEPRINTS = [
     frontend_bp,
     webhook_bp,
-    candidates_bp
+    candidates_bp,
+    job_bp,
 ]
 
 BLUEPRINTS_NO_CSRF = [

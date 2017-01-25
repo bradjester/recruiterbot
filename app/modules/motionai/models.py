@@ -22,6 +22,7 @@ class Bot(Base):
     job = db.relationship(
         "Job",
         foreign_keys=job_id,
+        backref=db.backref('bots', cascade="all, delete-orphan")
     )
 
     company_id = db.Column(
@@ -32,7 +33,8 @@ class Bot(Base):
 
     company = db.relationship(
         "Company",
-        foreign_keys=company_id)
+        foreign_keys=company_id
+    )
 
     bot_id = db.Column(db.BigInteger, unique=True, nullable=False)
     bot_url = db.Column(db.String(1024), nullable=False)

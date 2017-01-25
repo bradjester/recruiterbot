@@ -1,0 +1,62 @@
+{% set page_title = 'Jobs' %}
+{% block body %}
+  <div class="columns datatables-list medium-8 medium-offset-2">
+    <h3 class="page-title">{{ page_title }}</h3>
+    <div class="columns controls small-2">
+      <a class="button small primary" href="{{ url_for('job.new') }}">New</a>
+    </div>
+    {% if jobs %}
+      <table class="datatable">
+        <thead>
+          <tr>
+            <th>Vacancy Title</th>
+            <th>Candidate Total</th>
+            <th>Candidate List</th>
+            <th>Passive Web Bot</th>
+            <th>Active Web Bot</th>
+            <th>Passive FB Bot</th>
+            <th>Active FB Bot</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for job in jobs %}
+            <tr>
+              <td>{{ job.title }}</td>
+              <td>{{ job.candidate_count }}</td>
+              <td>TODO</td>
+
+              {% if job['web_passive_url'] %}
+                <td>{{ job['web_passive_url'] }}</td>
+              {% else %}
+                <td></td>
+              {% endif %}
+
+              {% if job['web_active_url'] %}
+                <td>{{ job['web_active_url'] }}</td>
+              {% else %}
+                <td></td>
+              {% endif %}
+
+              {% if job['fb_passive_url'] %}
+                <td>{{ job['fb_passive_url'] }}</td>
+              {% else %}
+                <td></td>
+              {% endif %}
+
+              {% if job['fb_active_url'] %}
+                <td>{{ job['fb_active_url'] }}</td>
+              {% else %}
+                <td></td>
+              {% endif %}
+
+              <td><a class="button alert small radius" href="{{ url_for('job.edit', id=job.id) }}">Edit</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <h1 class="new">No jobs exist!</h1>
+    {% endif %}
+  </div>
+{% endblock %}

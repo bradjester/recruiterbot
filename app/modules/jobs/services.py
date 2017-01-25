@@ -6,8 +6,8 @@
     Jobs module services
 """
 from app.core import Service
-from app.modules.jobs.models import Candidate, Job
 from .helpers import get_candidate_id_to_msgs
+from .models import Candidate, Job
 
 
 class CandidatesService(Service):
@@ -26,20 +26,26 @@ class CandidatesService(Service):
     @staticmethod
     def _find_no_name_candidates_by_job_id(job_id):
         # Filtering candidates by name == NULL and job_id
-        return Candidate.query.filter(Candidate.bot.job_id == job_id, Candidate.name is None).all()
+        return Candidate.query\
+            .filter(Candidate.bot.job_id == job_id, Candidate.name is None)\
+            .all()
 
     @staticmethod
     def find_candidates_by_job_id(job_id, company_id):
-        return Candidate.query.filter(Candidate.bot.job_id == job_id, company_id=company_id).all()
+        return Candidate.query\
+            .filter(Candidate.bot.job_id == job_id, company_id=company_id)\
+            .all()
 
     def update_candidates_with_no_name(self, job_id):
         unnamed_candidates = self._find_no_name_candidates_by_job_id(job_id)
         # Dictionary of candidate.id : candidate
-        candidate_id_to_candidate = dict([(x.id, x) for x in unnamed_candidates])
+        candidate_id_to_candidate = {x.id: x for x in unnamed_candidates}
 
-        messages = self.messages_service.get_sorted_messages_by_candidate_ids(candidate_id_to_candidate.keys())
+        messages = self.messages_service.get_sorted_messages_by_candidate_ids(
+            candidate_id_to_candidate.keys())
 
-        # grouping messages like this : {candidate_id : [messages for candidate]}
+        # grouping messages like this:
+        # {candidate_id : [messages for candidate]}
         candidate_id_to_messages = get_candidate_id_to_msgs(messages)
 
         named_candidates = []
@@ -50,8 +56,10 @@ class CandidatesService(Service):
                     next_message_is_name = True
                     continue
                 if next_message_is_name:
-                    candidate_id_to_candidate[candidate_id].name = message.reply
-                    named_candidates.append(candidate_id_to_candidate[candidate_id])
+                    candidate_id_to_candidate[candidate_id].name = \
+                        message.reply
+                    named_candidates.append(
+                        candidate_id_to_candidate[candidate_id])
                     break
 
         self.save_all(named_candidates)
@@ -65,7 +73,7 @@ class JobsService(Service):
         return [self._get_job_data(j) for j in jobs]
 
     @staticmethod
-    def _get_job_data(job, company_id):
+    def _get_job_data(job):
         candidate_count = 0
         job_data = dict(id=job.id, title=job.title)
         for bot in job.bots:
