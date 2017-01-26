@@ -1,0 +1,8 @@
+{% extends 'layouts/base.html' %}
+
+{% set page_title = candidate.name + ' for ' + job_title %}
+{% block body %}
+  <div class="columns datatables-list medium-8 medium-offset-2">
+    <h3 class="page-title">{{ page_title }}</h3>
+  </div>
+{% endblock %}

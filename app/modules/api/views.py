@@ -15,8 +15,7 @@ api_bp = Blueprint('api', __name__, template_folder="templates",
                    url_prefix="/api")
 
 
-@route(api_bp,
-       '/job_description/<uuid>/signed-post/<filename>')
+@route(api_bp, '/job_description/<uuid>/signed-post/<filename>')
 def get_job_description_signed_post(uuid, filename):
     content_type = request.args.get('content-type')
     # Always overwrite existing individual images.

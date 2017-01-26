@@ -57,6 +57,7 @@ class WebhookService(Service):
             company_id=bot.job.company_id)
         return msg
 
+
 class BotsService(Service):
     __model__ = Bot
 
@@ -72,7 +73,7 @@ class MessagesService(Service):
         # Data is ordered by (candidate_id , received_at)
         return Message.query\
             .filter(Message.candidate_id.in_(candidate_list))\
-            .orderby(Message.candidate_id, Message.received_at)\
+            .order_by(Message.candidate_id, Message.received_at)\
             .all()
 
     @staticmethod
@@ -80,5 +81,5 @@ class MessagesService(Service):
         # Data is ordered by received_at
         return Message.query\
             .filter_by(candidate_id=candidate_id, company_id=company_id)\
-            .orderby(Message.received_at)\
+            .order_by(Message.received_at)\
             .all()

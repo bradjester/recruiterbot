@@ -21,25 +21,31 @@ candidates_bp = Blueprint('candidates', __name__, template_folder="templates",
                           url_prefix='/candidates')
 
 
-@candidates_bp.route('/<string:job_uuid>', methods=['GET'], endpoint='index')
-def job_candidates_index(job_uuid,):
-    job = jobs_service.find_job_by_uuid(job_uuid, current_user.company_id)
+@candidates_bp.route('/job/<string:job_id>', methods=['GET'],
+                     endpoint='index')
+def job_candidate_index(job_id):
+    job = jobs_service.find_by_id_company(job_id, current_user.company_id)
     candidates_service.update_candidates_with_no_name(job.id)
-    candidates = candidates_service.find_candidates_by_jobid(
+    candidates = candidates_service.find_candidates_by_job_id(
         job.id, current_user.company_id)
-    return render_template('candidates/candidates.html', candidates=candidates)
+    return render_template('candidates/job_candidates_index.html',
+                           candidates=candidates, job_title=job.title)
 
 
-@candidates_bp.route('/<int:candidate_id>/', methods=['GET'], endpoint='show')
-def candidate_with_messages_show(candidate_id):
+@candidates_bp.route('/<int:candidate_id>', methods=['GET'], endpoint='show')
+def candidate_show(candidate_id):
     candidate = candidates_service.find_by_id_company(
         candidate_id, current_user.company_id)
     messages = messages_service.get_sorted_messages_by_candidate_id(
         candidate_id, current_user.company_id)
     # Could possible convert messages into json
     # ({message.received_at : message}) rather than a list of messages
-    return render_template('candidate/candidate_show.html',
-                           candidate=candidate, messages=messages)
+    return render_template(
+        'candidates/candidate_show.html',
+        candidate=candidate,
+        job_title=candidate.bot.job.title,
+        messages=messages
+    )
 
 
 job_bp = Blueprint('job', __name__, template_folder="templates",

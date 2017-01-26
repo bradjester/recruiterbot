@@ -5,12 +5,11 @@
 
     Jobs module services
 """
-from flask import url_for
-
 from app.core import Service
+from app.modules.motionai.models import Bot
 from .helpers import get_candidate_id_to_msgs
 from .models import Candidate, Job
-from app.modules.motionai.models import Bot
+
 
 class CandidatesService(Service):
     __model__ = Candidate
@@ -29,13 +28,15 @@ class CandidatesService(Service):
     def _find_no_name_candidates_by_job_id(job_id):
         # Filtering candidates by name == NULL and job_id
         return Candidate.query\
-            .filter(Candidate.bot.job_id == job_id, Candidate.name is None)\
+            .filter(Bot.job_id == job_id, Candidate.name is None)\
+            .join(Bot, Bot.id == Candidate.bot_id)\
             .all()
 
     @staticmethod
     def find_candidates_by_job_id(job_id, company_id):
         return Candidate.query\
-            .filter(Candidate.bot.job_id == job_id, company_id=company_id)\
+            .filter(Bot.job_id == job_id, Candidate.company_id == company_id)\
+            .join(Bot, Bot.id == Candidate.bot_id)\
             .all()
 
     def update_candidates_with_no_name(self, job_id):
