@@ -54,6 +54,7 @@ class WebhookService(Service):
             reply_data=data_dict.get('replyData'),
             module_id=data_dict.get('moduleID'),
             direction=data_dict.get('direction'),
+            attached_media_url=data_dict.get('attachedMedia'),
             company_id=bot.job.company_id)
         return msg
 
