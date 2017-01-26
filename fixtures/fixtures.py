@@ -52,7 +52,8 @@ def _create_job(company, title, hiring_company, is_published=True,
         expected_salary="50000",
         is_published=is_published,
         uuid=uuid4(),
-        jd_file_url="https://isotropic.org/papers/chicken.pdf",
+        jd_file_key="job_description/59d870a7-0493-48be-8c51-c94ac8e2bb5f/"
+                    "chicken.pdf",
         commit=False,
     )
 
