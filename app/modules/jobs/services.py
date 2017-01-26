@@ -8,7 +8,7 @@
 from app.core import Service
 from .helpers import get_candidate_id_to_msgs
 from .models import Candidate, Job
-
+from app.modules.motionai.models import Bot
 
 class CandidatesService(Service):
     __model__ = Candidate
@@ -68,6 +68,10 @@ class CandidatesService(Service):
 class JobsService(Service):
     __model__ = Job
 
+    def __init__(self, candidates_service):
+        super(JobsService, self).__init__()
+        self.candidates_service = candidates_service
+
     def get_jobs_data(self, company_id):
         jobs = self.find_all_by_company(company_id)
         return [self._get_job_data(j) for j in jobs]
@@ -91,3 +95,10 @@ class JobsService(Service):
 
     def find_by_uuid(self, uuid, company_id):
         return self.first(uuid=uuid, company_id=company_id)
+
+    def get_by_session_id(self, session_id):
+        candidate = self.candidates_service.find_candidate_by_session_id(session_id)
+        if candidate is not None:
+            return candidate.bot.job
+        else:
+            return None

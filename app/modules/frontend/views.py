@@ -7,6 +7,7 @@
 """
 from flask import Blueprint, url_for, redirect
 from flask_security import current_user, url_for_security
+
 frontend_bp = Blueprint('frontend', __name__, template_folder="templates")
 
 
