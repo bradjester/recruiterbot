@@ -13,7 +13,7 @@
       {% for message in messages %}
         <div class="message {{ message.direction }}">
           {% if message.attached_media_url %}
-            <a class="message_media">{{ message.attached_media_url }}</a>
+            <a class="message_media" href="{{ message.attached_media_url }}">Download Media</a>
           {% else %}
             <div class="message_reply">{{ message.reply }}</div>
           {% endif %}
