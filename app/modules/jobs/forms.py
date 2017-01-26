@@ -13,7 +13,7 @@ class JobForm(FlaskForm):
             validators.Length(max=255)
         ]
     )
-    jd_file_url = HiddenField(
+    jd_file_key = HiddenField(
         label=u'Job Description Key',
         validators=[validators.DataRequired(), validators.Length(max=1024)])
     uuid = HiddenField(

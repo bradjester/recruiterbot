@@ -80,17 +80,17 @@ class JobsService(Service):
 
     def _get_job_data(self, job):
         candidate_count = 0
-        if job.jd_file_url is not None:
-            jd_file_url = self.static_storage_service.generate_signed_url(
-                job.jd_file_url)
+        if job.jd_file_key is not None:
+            jd_file_key = self.static_storage_service.generate_signed_url(
+                job.jd_file_key)
         else:
-            jd_file_url = None
+            jd_file_key = None
 
         job_data = dict(
             id=job.id,
             title=job.title,
             is_published=job.is_published,
-            jd_file_url=jd_file_url
+            jd_file_key=jd_file_key
             )
         for bot in job.bots:
             candidate_count += bot.candidates.count()

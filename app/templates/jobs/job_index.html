@@ -32,10 +32,10 @@
                         {% endif %}
                         </td><td>{{ job.candidate_count }}</td>
                         <td>
-                            {% if not job.jd_file_url %}
+                            {% if not job.jd_file_key %}
                                 None
                             {% else %}
-                                <a href="{{ job.jd_file_url }}" download>View</a>
+                                <a href="{{ job.jd_file_key }}" download>View</a>
                             {% endif %}
                         </td>
                         <td>{% if job.is_published %}
@@ -121,6 +121,7 @@
 
             $table.css( 'right', '0' ).dataTable( {
                 scrollX: false,
+
                 "pageLength": 10,
                 "lengthMenu": [ [ 10, 25, 50, -1 ], [ 10, 25, 50, "All" ] ],
                 "order": [ [ 0, 'asc' ] ],
