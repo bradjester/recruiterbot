@@ -5,6 +5,8 @@
 
     Jobs module services
 """
+from flask import url_for
+
 from app.core import Service
 from .helpers import get_candidate_id_to_msgs
 from .models import Candidate, Job
@@ -68,18 +70,29 @@ class CandidatesService(Service):
 class JobsService(Service):
     __model__ = Job
 
-    def __init__(self, candidates_service):
+    def __init__(self, candidates_service, static_storage_service):
         super(JobsService, self).__init__()
         self.candidates_service = candidates_service
+        self.static_storage_service = static_storage_service
 
     def get_jobs_data(self, company_id):
         jobs = self.find_all_by_company(company_id)
         return [self._get_job_data(j) for j in jobs]
 
-    @staticmethod
-    def _get_job_data(job):
+    def _get_job_data(self, job):
         candidate_count = 0
-        job_data = dict(id=job.id, title=job.title, is_published=job.is_published)
+        if job.jd_file_url is not None:
+            jd_file_url = self.static_storage_service.generate_signed_url(
+                job.jd_file_url)
+        else:
+            jd_file_url = None
+
+        job_data = dict(
+            id=job.id,
+            title=job.title,
+            is_published=job.is_published,
+            jd_file_url=jd_file_url
+            )
         for bot in job.bots:
             candidate_count += bot.candidates.count()
             url_key = bot.channel_type + '_' + bot.chat_type + '_url'

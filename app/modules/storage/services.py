@@ -10,7 +10,7 @@ import os
 import magic
 from flask import current_app
 
-from .constants import USER_CV_PATH_FMT
+from .constants import USER_CV_PATH_FMT, JOB_DESCRIPTION_PATH_FMT
 from .errors import AppUploadFailedFileExistsError
 
 
@@ -23,6 +23,16 @@ class StaticStorageService(object):
 
     def generate_signed_url(self, key):
         return self.s3_service.generate_object_signed_url(self._bucket, key)
+
+    def generate_job_description_signed_post(
+            self, uuid, file_name, overwrite=False, content_type=None):
+        key = self.get_job_description_key(uuid, file_name)
+        return self.generate_signed_post(
+            key, overwrite=overwrite, content_type=content_type)
+
+    def get_job_description_key(self, uuid, file_name):
+        return JOB_DESCRIPTION_PATH_FMT.format(
+            uuid, self.s3_service.sanitize_key(file_name))
 
     def generate_user_cv_signed_post(
             self, client, file_name, overwrite=False, content_type=None):

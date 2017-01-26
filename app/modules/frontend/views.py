@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-    phwm.modules.frontend.views
+    recruiterbot.modules.frontend.views
     ~~~~~~~~~~~~~
 
     views module for the frontend

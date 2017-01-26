@@ -6,6 +6,7 @@
     Jobs module models
 """
 import sqlalchemy as sa
+from sqlalchemy.dialects import mysql
 
 from app.extensions import db
 from app.modules.base import Base
@@ -29,7 +30,8 @@ class Job(Base):
     hiring_company = db.Column(db.String(255))
     location = db.Column(db.String(255))
     work_type = db.Column(db.String(255))
-    expected_salary = db.Column(db.BigInteger)  # HKD annual?
+    expected_salary = db.Column(db.String(255))
+    description = db.Column(mysql.MEDIUMTEXT)
     is_published = db.Column(
         db.Boolean,
         server_default=sa.text("'0'"),
@@ -37,7 +39,7 @@ class Job(Base):
         nullable=False
     )
     uuid = db.Column(db.String(36), unique=True, nullable=False)
-    jd_file_url = db.Column(db.String(1024))
+    jd_file_key = db.Column(db.String(1024))
 
 
 class Candidate(Base):
@@ -71,7 +73,7 @@ class Candidate(Base):
     )
 
     name = db.Column(db.String(255))
-    resume_url = db.Column(db.String(1024))
+    resume_key = db.Column(db.String(1024))
     session_id = db.Column(db.String(1024), nullable=False)
     status = db.Column(db.String(255), default="New", nullable=False)
     rating = db.Column(db.Integer())
