@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-    recruiterbot.modules.frontend
+    recruiterbot.modules.api
     ~~~~~~~~~~~~~~~~~~
 
-    frontend module
+    api module
 """

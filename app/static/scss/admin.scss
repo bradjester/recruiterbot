@@ -1,23 +1,23 @@
 @import 'style_guide';
-$navbar-default-bg: $phwm-green-0;
-$navbar-default-border: $phwm-green;
+$navbar-default-bg: $recruiterbot-green-0;
+$navbar-default-border: $recruiterbot-green;
 $navbar-default-link-color: $white;
 $navbar-default-brand-color: $white;
-$navbar-default-brand-hover-bg: $phwm-green-hover;
+$navbar-default-brand-hover-bg: $recruiterbot-green-hover;
 $navbar-default-brand-hover-color: $white;
-$navbar-default-link-hover-bg: $phwm-green-hover;
+$navbar-default-link-hover-bg: $recruiterbot-green-hover;
 $navbar-default-link-hover-color: $white;
 $navbar-default-link-active-color: $white;
-$navbar-default-link-active-bg: $phwm-green-hover;
+$navbar-default-link-active-bg: $recruiterbot-green-hover;
 
 // buttons
 $brand-danger: #cf2a0e;
-$brand-primary: $phwm-blue;
+$brand-primary: $recruiterbot-blue;
 $btn-default-bg: #e7e7e7;
 @import '../vendor/bootstrap-3.3.5/bootstrap';
 
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
-    background-color: $phwm-green-0;
+    background-color: $recruiterbot-green-0;
 }
 
 .navbar-default .navbar-nav>.active>a {

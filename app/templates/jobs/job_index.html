@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 
-{% set page_title = 'Vacancy list for ' + company.name if company != None else 'Unknown Company' %}
+{% set page_title = 'Vacancy List for ' + company.name if company != None else 'Unknown Company' %}
 {% block body %}
     <div class="columns datatables-list medium-8 medium-offset-2">
         <h3 class="page-title">{{ page_title }}</h3>
@@ -16,33 +16,47 @@
                 <tr>
                     <th>Vacancy Title</th>
                     <th>Candidate Total</th>
-                    <th>Candidate List</th>
-                    <th>Passive Bot</th>
-                    <th>Active Bot</th>
+                    <th>Job Description</th>
+                    <th>Passive Bots</th>
+                    <th>Active Bots</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for job in jobs %}
                     <tr {% if not job.is_published %}class="not-published"{% endif %}>
-                        {# TODO: Get link to JD from service #}
-                        <td>{{ job.title }}</td>
-                        <td>{{ job.candidate_count }}</td>
                         <td>{% if job.is_published %}
                             {# TODO: Get link to candidate list from service #}
-                            <a href="/">View list</a>
+                            <a href="/jobs" class="job_title">{{ job.title }}</a>
                         {% else %}
-                            Empty
+                            {{ job.title }}
                         {% endif %}
+                        </td><td>{{ job.candidate_count }}</td>
+                        <td>
+                            {% if not job.jd_file_url %}
+                                None
+                            {% else %}
+                                <a href="{{ job.jd_file_url }}" download>View</a>
+                            {% endif %}
                         </td>
                         <td>{% if job.is_published %}
+                                <span class="button tiny radius clip bot"
+                                      data-clipboard-text="Fake Web URL"
+                                      title="Fake Web URL"><i
+                                        class="fi-web"></i></span>
+                                <span class="button tiny radius fb clip bot"
+                                      data-clipboard-text="Fake FB URL"
+                                      title="Fake FB URL"><i
+                                        class="fi-social-facebook"></i></span>
                             {% if job['web_passive_url'] %}
-                                <span class="button tiny radius clip"
-                                      data-clipboard-text="{{ job['web_passive_url'] }}"><i
+                                <span class="button tiny radius clip bot"
+                                      data-clipboard-text="{{ job['web_passive_url'] }}"
+                                      title="{{ job['web_passive_url'] }}"><i
                                         class="fi-web"></i></span>
                             {% endif %}
                             {% if job['fb_passive_url'] %}
-                                <span class="button tiny radius fb clip"
-                                      data-clipboard-text="{{ job['fb_passive_url'] }}"><i
+                                <span class="button tiny radius fb clip bot"
+                                      data-clipboard-text="{{ job['fb_passive_url'] }}"
+                                      title="{{ job['fb_passive_url'] }}"><i
                                         class="fi-social-facebook"></i></span>
                             {% endif %}
                         {% else %}
@@ -52,13 +66,15 @@
 
                         <td>{% if job.is_published %}
                             {% if job['web_active_url'] %}
-                                <span class="button tiny radius clip"
-                                      data-clipboard-text="{{ job['web_active_url'] }}"><i
+                                <span class="button tiny radius clip bot"
+                                      data-clipboard-text="{{ job['web_active_url'] }}"
+                                      title="{{ job['web_active_url'] }}"><i
                                         class="fi-web"></i></span>
                             {% endif %}
                             {% if job['fb_active_url'] %}
-                                <span class="button tiny radius fb clip"
-                                      data-clipboard-text="{{ job['fb_active_url'] }}"><i
+                                <span class="button tiny radius fb clip bot"
+                                      data-clipboard-text="{{ job['fb_active_url'] }}"
+                                      title="{{ job['fb_active_url'] }}"><i
                                         class="fi-social-facebook"></i></span>
                             {% endif %}
                         {% else %}
@@ -82,7 +98,7 @@
 
             var columnsOptions = [
                 {
-                    title: "Vacancy list",
+                    title: "Vacancy Title",
                     className: "dt-left",
                     width: "150px"
                 },
@@ -90,15 +106,15 @@
                     title: "Candidate Total"
                 },
                 {
-                    title: "Candidate List",
+                    title: "Job Description",
                     orderable: false
                 },
                 {
-                    title: "Passive Bot",
+                    title: "Passive Bots",
                     orderable: false
                 },
                 {
-                    title: "Active Bot",
+                    title: "Active Bots",
                     orderable: false
                 }
             ];
@@ -112,6 +128,9 @@
             } );
 
             var clipboard = new Clipboard( '.clip' );
+            $(".clip").on('click', function() {
+                $(this).notify("Bot URL copied to clipboard","info")
+            })
 
         } );
     </script>

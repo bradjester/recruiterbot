@@ -12,9 +12,6 @@ roles_service = RolesService()
 users_service = UsersService()
 companies_service = CompaniesService()
 
-# Job Services
-jobs_service = JobsService()
-
 # AWS Services
 aws_service = AWSService()
 aws_s3_service = AWSS3Service(aws_service)
@@ -34,3 +31,6 @@ candidates_service = CandidatesService(messages_service)
 
 # MotionAI Webhook Service
 webhook_service = WebhookService(bots_service, candidates_service)
+
+# Job Services
+jobs_service = JobsService(static_storage_service)

@@ -1,18 +1,114 @@
 {% from 'macros/_foundation_forms.html' import render_field, render_checkbox_field %}
 
-<form name="job-form" method="POST" action="{{ url_for('job.index') }}{% if job_id %}{{ job_id }}?__METHOD__=PUT{% endif %}" role="form">
+<form name="job-form" id="job-form" method="POST" action="{{ url_for('job.index') }}{% if job_id %}{{ job_id }}?__METHOD__=PUT{% endif %}" role="form">
     {{ form.hidden_tag() if form.hidden_tag }}
     <div class="row">
       <div class="columns medium-6">
         {{ render_field(form.title) }}
       </div>
     </div>
-    <br>
+</form>
+<div class="row">
+    <div class="columns medium-6">
+      <fieldset>
+        <legend>Job Description</legend>
+        <span id="file-name"></span>
+        <form action="/" id="drop" class="dropzone columns medium-12">
+          <div class="dz-message" data-dz-message><span>Drop job description here.</span></div>
+        </form>
+      </fieldset>
+    </div>
+</div>
     <div class="row">
       <div class="column medium-6">
-        <button type="submit" class="button primary right tiny radius">
+        <button type="button" id="submit-job" class="button primary right tiny radius">
             Create Job
         </button>
       </div>
     </div>
-</form>
+
+{% include 'errors/_upload_errors.html' %}
+
+<script type="text/javascript">
+  (function(){
+    document.addEventListener("DOMContentLoaded", function(event) {
+
+        Dropzone.options.drop = false;
+
+        var $DROP = $("form#drop"),
+            $FILE_URL = $("input#jd_file_url"),
+            $FILE_NAME = $("#file-name"),
+            drop;
+
+        var uuid = "{{ form.uuid.data }}";
+
+        function get_filename(url) {
+            var i = url.lastIndexOf('/');
+            return i >= 0 ? url.slice(i + 1) : url;
+        }
+
+        // FILE UPLOADS
+        // This process needs two steps:
+        // 1. Get an AWS signed post that contains the Key and access information.
+        //    This is done through a get requests to the API
+        // 2. Once this information has been obtained, dropzone can initiate the
+        //    actual upload to the S3 servers.
+        drop = $DROP.dropzone( {
+            init: function () {
+                this.on( "addedfile", function ( file ) {
+                    this.options.url = "/api/job_description/{}/signed-post/{}?content-type={}".format(
+                            uuid, file.name, file.type );
+                    $.getJSON( this.options.url )
+                            .done( _onRequestDone )
+                            .fail( _onRequestFail );
+                } );
+            },
+            autoProcessQueue: false,
+            uploadMultiple: false,
+            maxFiles: 1,
+            success: function ( file ) {
+                $DROP.notify( "File uploaded.", "success" );
+                $FILE_URL.val( fields.key );
+                $FILE_NAME.text(get_filename( fields.key ));
+            },
+            error: function ( file ) {
+                this.removeFile( file );
+                fields = null;
+                $DROP.notify( "File upload failed.", "error" );
+            },
+            sending: function ( file, xhr, formData ) {
+                // Set the needed params for S3
+                for ( var prop in fields ) {
+                    if ( fields.hasOwnProperty( prop ) ) {
+                        formData.append( prop, fields[ prop ] );
+                    }
+                }
+            }
+        } ).get( 0 ).dropzone;
+
+        function _onRequestDone( json ) {
+            fields = json.data.fields;
+            drop.options.url = json.data.url;
+            drop.processQueue();
+        }
+
+        function _onRequestFail() {
+            this.removeFile( file );
+            fields = null;
+            $DROP.notify( "File upload failed.", "error" )
+        }
+
+        if ( $FILE_URL.val().length > 0 ) {
+            $FILE_NAME.text(get_filename( $FILE_URL.val() ));
+        }
+
+        $("#submit-job").on('click', function() {
+            if ( $FILE_URL.val().length < 1) {
+                $DROP.notify( "You must add a job description", "error" )
+            } else {
+                $("#job-form").submit();
+            }
+        });
+    });
+  })();
+</script>

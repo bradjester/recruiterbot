@@ -2,7 +2,6 @@
 
 // FOUNDATION CONFIG
 
-
 @import '../vendor/foundation/foundation/_functions.scss'; // Utility Functions
 
 // b. Grid
@@ -10,7 +9,7 @@ $row-width: rem-calc(1380); // 1440px - 2 * $column-gutter
 $aside-width: rem-calc(360); // $column-width * 3
 
 // c. Global
-$font-family-sans-serif: "pf_encore_sans_probook", Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-sans-serif: Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif;
 $font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif;
 $font-family-monospace: "Source Code Pro", Consolas, "Liberation Mono", "Courier New", monospace;
 $form-spacing: rem-calc(9.35);
@@ -18,7 +17,7 @@ $switch-height-med: 1.5rem;
 $switch-bottom-margin: 0;
 
 $primary-color: $jobrobin-orange;
-$header-font-color: $jobrobin-orange;
+$header-font-color: $charcoal;
 
 // 09. Dropdown Buttons
 
@@ -36,10 +35,10 @@ $price-item-font-size: rem-calc(14);
 
 // 34. Top Bar
 $topbar-margin-bottom: rem-calc(45);
-$topbar-bg-color: $jobrobin-grey; // Nav background
+$topbar-bg-color: $charcoal; // Nav background
 $topbar-link-bg-hover: $jobrobin-orange; // hover over Logout/Login button
-$topbar-dropdown-link-bg: $jobrobin-grey; // dropdown link bg color
-$topbar-dropdown-link-bg-hover: $blue-3; // dropdown link hover bg color
+$topbar-dropdown-link-bg: $charcoal; // dropdown link bg color
+$topbar-dropdown-link-bg-hover: $jobrobin-orange; // dropdown link hover bg color
 
 @import '../vendor/foundation/foundation';
 
@@ -162,54 +161,6 @@ h1.new {
 
 // Client Sidebar
 
-.pricing-table * {
-  line-height: 1.5rem;
-}
-
-.avatar > div {
-  overflow: hidden;
-  height: $aside-width / 2;
-  background-color: $iron;
-  border-right: none;
-  div.parent {
-    width: $aside-width / 2;
-    height: $aside-width / 2;
-    //float: left;
-    position: relative;
-    overflow: hidden;
-  }
-  div.child {
-    position: absolute;
-    top: -100%;
-    bottom: -100%;
-    left: -100%;
-    right: -100%;
-    margin: auto;
-  }
-  img {
-    display: block;
-    height: $aside-width / 2;
-    margin: 0 auto;
-    margin-top: $aside-width / 2;
-    text-align: center;
-  }
-}
-
-.pricing-table {
-  border-right: none;
-}
-.pricing-table .highlight {
-  font-size: 1.8rem;
-  color: $jobrobin-orange;
-}
-
-.pricing-table {
-  .title a.button {
-    padding: 0 3px;
-    margin-left: 5px;
-  }
-}
-
 i {
   font-size: 1.3rem;
   color: $charcoal;
@@ -221,40 +172,8 @@ i {
   }
 }
 
-.documents.button {
-  padding: 1px 16px;
-  padding-right: 42px;
-  height: 24px;
-  margin: 0;
-}
-
 i.highlight {
   height: 24px;
-}
-
-ul.document-list {
-  margin:0;
-  div:focus {
-    outline: none;
-  }
-}
-
-li.document-row {
-   a {
-    display: inline-block;
-    color: $blue-3;
-    line-height: 28px;
-    vertical-align: bottom;
-    width: 230px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    padding: 0;
-    padding-left: 6px;
-  }
-  span {
-    line-height: 28px;
-  }
 }
 
 // Show section top bar
@@ -288,7 +207,7 @@ li.document-row {
   align-items: center; /* align vertical */
   transition: border-color 1s ease;
   &:hover {
-    border: 2px solid $blue-3;
+    border: 2px solid $jobrobin-orange;
   }
 }
 
@@ -301,9 +220,19 @@ tr.not-published {
 td > span.button{
   margin-bottom: 0px;
   &.fb {
-    background-color: $blue-2;
+    background-color: $charcoal;
     &:hover, &:focus {
-      background-color: $blue-1;
+      background-color: $tuatara;
     }
   }
+  &.bot{
+    padding: 0.2rem 1.25rem 0.1rem 1.25rem;
+    i {
+      font-size: 1.4rem;
+    }
+  }
+}
+
+a.job_title {
+  font-weight: bold;
 }
