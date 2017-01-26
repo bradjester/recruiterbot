@@ -103,7 +103,7 @@ def _create_candidate(bot, company, status="New", rating=None):
         bot=bot,
         company=company,
         name="Candidate {}".format(_create_candidate.counter),
-        resume_url="http://resumes/{}".format(_create_candidate.counter),
+        resume_key="http://resumes/{}".format(_create_candidate.counter),
         session_id="{}".format(_create_candidate.counter),
         status=status,
         rating=rating,
