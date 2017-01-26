@@ -98,7 +98,5 @@ class JobsService(Service):
 
     def get_by_session_id(self, session_id):
         candidate = self.candidates_service.find_candidate_by_session_id(session_id)
-        if candidate is not None:
-            return candidate.bot.job
-        else:
-            return None
+        return candidate.bot.job if candidate else None
+
