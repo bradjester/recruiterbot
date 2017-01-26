@@ -84,7 +84,7 @@ class JobsService(Service):
             jd_file_url = self.static_storage_service.generate_signed_url(
                 job.jd_file_url)
         else:
-            jd_file_url = url_for('job.index')
+            jd_file_url = None
 
         job_data = dict(
             id=job.id,

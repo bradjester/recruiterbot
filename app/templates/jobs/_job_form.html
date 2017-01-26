@@ -7,16 +7,12 @@
         {{ render_field(form.title) }}
       </div>
     </div>
-    <br>
 </form>
 <div class="row">
     <div class="columns medium-6">
       <fieldset>
         <legend>Job Description</legend>
         <span id="file-name"></span>
-        {% if form.jd_file_url.data %}
-            <span>{{ form.jd_file_url.data }}</span>
-        {% endif %}
         <form action="/" id="drop" class="dropzone columns medium-12">
           <div class="dz-message" data-dz-message><span>Drop job description here.</span></div>
         </form>
@@ -51,60 +47,58 @@
             return i >= 0 ? url.slice(i + 1) : url;
         }
 
-        if (uuid) {
-            // FILE UPLOADS
-            // This process needs two steps:
-            // 1. Get an AWS signed post that contains the Key and access information.
-            //    This is done through a get requests to the API
-            // 2. Once this information has been obtained, dropzone can initiate the
-            //    actual upload to the S3 servers.
-            drop = $DROP.dropzone( {
-                init: function () {
-                    this.on( "addedfile", function ( file ) {
-                        this.options.url = "/api/job_description/{}/signed-post/{}?content-type={}".format(
-                                uuid, file.name, file.type );
-                        $.getJSON( this.options.url )
-                                .done( _onRequestDone )
-                                .fail( _onRequestFail );
-                    } );
-                },
-                autoProcessQueue: false,
-                uploadMultiple: false,
-                maxFiles: 1,
-                success: function ( file ) {
-                    $DROP.notify( "File uploaded.", "success" );
-                    $FILE_URL.val( fields.key );
-                    $FILE_NAME.text(get_filename( fields.key ));
-                },
-                error: function ( file ) {
-                    this.removeFile( file );
-                    fields = null;
-                    $DROP.notify( "File upload failed.", "error" );
-                },
-                sending: function ( file, xhr, formData ) {
-                    // Set the needed params for S3
-                    for ( var prop in fields ) {
-                        if ( fields.hasOwnProperty( prop ) ) {
-                            formData.append( prop, fields[ prop ] );
-                        }
-                    }
-                }
-            } ).get( 0 ).dropzone;
-
-            function _onRequestDone( json ) {
-                fields = json.data.fields;
-                drop.options.url = json.data.url;
-                drop.processQueue();
-            }
-
-            function _onRequestFail() {
+        // FILE UPLOADS
+        // This process needs two steps:
+        // 1. Get an AWS signed post that contains the Key and access information.
+        //    This is done through a get requests to the API
+        // 2. Once this information has been obtained, dropzone can initiate the
+        //    actual upload to the S3 servers.
+        drop = $DROP.dropzone( {
+            init: function () {
+                this.on( "addedfile", function ( file ) {
+                    this.options.url = "/api/job_description/{}/signed-post/{}?content-type={}".format(
+                            uuid, file.name, file.type );
+                    $.getJSON( this.options.url )
+                            .done( _onRequestDone )
+                            .fail( _onRequestFail );
+                } );
+            },
+            autoProcessQueue: false,
+            uploadMultiple: false,
+            maxFiles: 1,
+            success: function ( file ) {
+                $DROP.notify( "File uploaded.", "success" );
+                $FILE_URL.val( fields.key );
+                $FILE_NAME.text(get_filename( fields.key ));
+            },
+            error: function ( file ) {
                 this.removeFile( file );
                 fields = null;
-                $DROP.notify( "File upload failed.", "error" )
+                $DROP.notify( "File upload failed.", "error" );
+            },
+            sending: function ( file, xhr, formData ) {
+                // Set the needed params for S3
+                for ( var prop in fields ) {
+                    if ( fields.hasOwnProperty( prop ) ) {
+                        formData.append( prop, fields[ prop ] );
+                    }
+                }
             }
+        } ).get( 0 ).dropzone;
+
+        function _onRequestDone( json ) {
+            fields = json.data.fields;
+            drop.options.url = json.data.url;
+            drop.processQueue();
         }
 
-        if ( $FILE_URL.val().length < 1) {
+        function _onRequestFail() {
+            this.removeFile( file );
+            fields = null;
+            $DROP.notify( "File upload failed.", "error" )
+        }
+
+        if ( $FILE_URL.val().length > 0 ) {
             $FILE_NAME.text(get_filename( $FILE_URL.val() ));
         }
 

@@ -32,7 +32,11 @@
                         {% endif %}
                         </td><td>{{ job.candidate_count }}</td>
                         <td>
-                            <a href="{{ job.jd_file_url }}" download>View</a>
+                            {% if not job.jd_file_url %}
+                                None
+                            {% else %}
+                                <a href="{{ job.jd_file_url }}" download>View</a>
+                            {% endif %}
                         </td>
                         <td>{% if job.is_published %}
                                 <span class="button tiny radius clip bot"
@@ -124,6 +128,9 @@
             } );
 
             var clipboard = new Clipboard( '.clip' );
+            $(".clip").on('click', function() {
+                $(this).notify("Bot URL copied to clipboard","info")
+            })
 
         } );
     </script>
