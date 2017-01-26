@@ -92,7 +92,6 @@ class Message(Base):
     receiver = db.Column(db.String(255), nullable=False)
     reply = db.Column(TEXT, nullable=False)
     reply_data = db.Column(db.String(1024))
-    module_id = db.Column(db.Integer, nullable=False)
+    module_id = db.Column(db.String(255), nullable=False)
     direction = db.Column(db.String(3), nullable=False)
     attached_media_url = db.Column(db.String(1024))
-    secret = db.Column(db.String(1024), nullable=False)

@@ -33,4 +33,5 @@ candidates_service = CandidatesService(messages_service)
 jobs_service = JobsService(candidates_service, static_storage_service)
 
 # MotionAI Webhook Service
-webhook_service = WebhookService(bots_service, candidates_service)
+webhook_service = WebhookService(bots_service, candidates_service,
+                                 messages_service)

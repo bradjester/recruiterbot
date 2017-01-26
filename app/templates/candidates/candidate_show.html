@@ -2,7 +2,23 @@
 
 {% set page_title = candidate.name + ' for ' + job_title %}
 {% block body %}
-  <div class="columns datatables-list medium-8 medium-offset-2">
+  <div>
     <h3 class="page-title">{{ page_title }}</h3>
+    <h5 class="auto-rating">Auto Rating: 0</h5>
+    <h5 class="manual-rating">Manual Rating: {{ candidate.rating }}</h5>
+    <div class="downloads">
+      <a href="{{ candidate.resume_key }}" download>Download Resume</a>
+    </div>
+    <div class="messages">
+      {% for message in messages %}
+        <div class="message {{ message.direction }}">
+          {% if message.attached_media_url %}
+            <a class="message_media">{{ message.attached_media_url }}</a>
+          {% else %}
+            <div class="message_reply">{{ message.reply }}</div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
   </div>
 {% endblock %}
