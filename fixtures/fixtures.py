@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import json
+import os
 from uuid import uuid4
 
 from flask_security.utils import encrypt_password
@@ -6,10 +8,11 @@ from flask_security.utils import encrypt_password
 from app.extensions import db
 from app.helpers import utc_now
 from app.services import users_service, companies_service, roles_service, \
-    jobs_service, bots_service, candidates_service
+    jobs_service, bots_service, candidates_service, webhook_service
 
+MESSAGES_FILE = os.path.join(os.path.dirname(__file__), 'data/messages.json')
 
-bots_data = [
+BOTS_DATA = [
     dict(
         bot_url="http://facebook.com/{}/{}-passive-bot",
         channel_type="fb",
@@ -41,8 +44,13 @@ def static_vars(**kwargs):
     return decorate
 
 
+def _load_messages():
+    with open(MESSAGES_FILE) as data_file:
+        return json.load(data_file)["messages"]
+
+
 def _create_job(company, title, hiring_company, is_published=True,
-                candidates_per_job=0):
+                candidates_per_job=0, messages=None):
     job = jobs_service.create(
         company=company,
         title=title,
@@ -57,10 +65,10 @@ def _create_job(company, title, hiring_company, is_published=True,
         commit=False,
     )
 
-    for bot_data in bots_data:
+    for bot_data in BOTS_DATA:
         bot = _create_bot(job, company, bot_data)
         for _ in range(candidates_per_job):
-            _create_candidate(bot, company)
+            _create_candidate(bot, company, messages=messages)
 
     return job
 
@@ -97,21 +105,32 @@ def _create_bot(job, company, bot_data):
 
 
 @static_vars(counter=0)
-def _create_candidate(bot, company, status="New", rating=None):
+def _create_candidate(bot, company, status="New", rating=None, messages=None):
     _create_candidate.counter += 1
-    return candidates_service.create(
+    candidate = candidates_service.create(
         bot=bot,
         company=company,
         name="Candidate {}".format(_create_candidate.counter),
-        resume_key="http://resumes/{}".format(_create_candidate.counter),
+        resume_key="job_description/59d870a7-0493-48be-8c51-c94ac8e2bb5f/"
+                   "chicken.pdf",
         session_id="{}".format(_create_candidate.counter),
         status=status,
         rating=rating,
         commit=False,
     )
 
+    for message in messages:
+        webhook_service.create_message_from_data(
+            bot,
+            candidate,
+            company,
+            message,
+            commit=False,
+        )
+
 
 def load_fixtures():
+    messages = _load_messages()
     admin_role = roles_service.create(name="admin", commit=False)
     user_role = roles_service.create(name="user", commit=False)
 
@@ -158,6 +177,7 @@ def load_fixtures():
         "Published Job",
         "IBM",
         candidates_per_job=2,
+        messages=messages,
     )
 
     _create_job(
@@ -199,6 +219,7 @@ def load_fixtures():
         "Data Engineer",
         "Droste",
         candidates_per_job=4,
+        messages=messages,
     )
 
     _create_job(

@@ -1,0 +1,145 @@
+{
+  "messages": [
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:35.513Z",
+      "from": "27833",
+      "to": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "reply": "Great! It was a pleasure talking to you. We will be getting back to you soon. For any enquiries, please contact us at enquiries@precruiter.co",
+      "replyData": null,
+      "moduleID": 351002,
+      "direction": "out"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:33.510Z",
+      "from": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "to": "27833",
+      "reply": "nope",
+      "replyData": "no",
+      "moduleID": 351001,
+      "direction": "in"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:30.792Z",
+      "from": "27833",
+      "to": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "reply": "Thanks. Btw, I am a bot. Is this you first time chatting with a bot?",
+      "replyData": null,
+      "moduleID": 351001,
+      "direction": "out"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:28.790Z",
+      "from": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "to": "27833",
+      "reply": "yes",
+      "replyData": "yes",
+      "moduleID": 351068,
+      "direction": "in"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:26.248Z",
+      "from": "27833",
+      "to": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "reply": "Are you done uploading your resume?",
+      "replyData": null,
+      "moduleID": 0,
+      "direction": "out"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:20.611Z",
+      "from": "27833",
+      "to": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "reply": "Please upload your Resume here : dev.precruiter.co\\/jobs\\/unique_id_from_db?session_id=6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "replyData": null,
+      "moduleID": 0,
+      "direction": "out"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:18.609Z",
+      "from": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "to": "27833",
+      "reply": "shivam@droste.hk",
+      "replyData": "shivam@droste.hk",
+      "moduleID": 350998,
+      "direction": "in"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:09.714Z",
+      "from": "27833",
+      "to": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "reply": "Cool, what is your email address?",
+      "replyData": null,
+      "moduleID": 0,
+      "direction": "out"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:04.246Z",
+      "from": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "to": "27833",
+      "reply": "undefined",
+      "replyData": "no",
+      "moduleID": 351068,
+      "direction": "in"
+      "attachedMedia": "https://cdn.fbsbx.com/v/t59.3654-21/16265091_10154466306913250_903144520412037120_n.mp4/audioclip-1485420449000-4224.mp4?oh=0b0caffbce0e5837debf4e5aeb4b6da2&oe=588B4065"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:35:01.714Z",
+      "from": "27833",
+      "to": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "reply": "Hi Shivam Gaur! So, tell me, why do you think that you are the right candidate for this job?",
+      "replyData": null,
+      "moduleID": 0,
+      "direction": "out"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:34:59.712Z",
+      "from": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "to": "27833",
+      "reply": "Shivam Gaur",
+      "replyData": null,
+      "moduleID": 353737,
+      "direction": "in"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:34:56.433Z",
+      "from": "27833",
+      "to": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "reply": "What is your full name?",
+      "replyData": null,
+      "moduleID": 353737,
+      "direction": "out"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:34:54.430Z",
+      "from": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "to": "27833",
+      "reply": "immediateNext",
+      "replyData": null,
+      "moduleID": 353689,
+      "direction": "in"
+    },
+    {
+      "botID": 27833,
+      "updatedAt": "2017-01-26T05:34:53.238Z",
+      "from": "6cc0326eaa1ca3c59e6f94c59b2d10a0",
+      "to": "27833",
+      "reply": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkhlbGxvIE1vdGlvbiBBZG1pbiIsImFkbWluIjp0cnVlfQ.d0WFRzYOwq3dRjW3VyjjBMKc297RPmpQRCbcbZugmd4",
+      "replyData": null,
+      "moduleID": 0,
+      "direction": "in"
+    }
+  ]
+}

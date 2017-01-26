@@ -5,58 +5,69 @@
 
     MotionAI module services
 """
-from app.core import Service
-from app.modules.motionai.models import Message, Bot
-from .models import Message
-from .errors import MotionAISecretKeyMismatch
 from datetime import datetime
+
 from flask import current_app
+
+from app.core import Service
+from app.modules.motionai.models import Bot
+from .errors import MotionAISecretKeyMismatch
+from .models import Message
 
 
 class WebhookService(Service):
     __model__ = Message
 
-    def __init__(self, bots_service, candidates_service):
+    def __init__(self, bots_service, candidates_service, messages_service):
         super(WebhookService, self).__init__()
         self.bots_service = bots_service
         self.candidates_service = candidates_service
+        self.messages_service = messages_service
 
     def create_message(self, data_dict):
         if data_dict['secret'] != current_app.config.get('WEBHOOK_SECRET_KEY'):
             raise MotionAISecretKeyMismatch
 
-        bot_id = data_dict['botID']
-        bot = self.bots_service.find_bot_by_motionai_bot_id(bot_id)
+        bot = self.bots_service.find_bot_by_motionai_bot_id(
+            data_dict.get('botID'))
 
-        session_id = data_dict['session']
-        candidate = self.candidates_service.find_candidate_by_session_id(session_id)
+        session_id = data_dict.get('session')
+        candidate = self.candidates_service.find_candidate_by_session_id(
+            session_id)
 
         if candidate is None:
             # Create candidate with existing session_id
-            candidate = self.candidates_service.create(bot_id=bot.id, session_id=session_id,
-                                                       company_id=bot.job.company_id, commit=False)
-        # optional fields
-        if 'replyData' not in data_dict:
-            data_dict['replyData'] = None
-        if 'attachedMedia' not in data_dict:
-            data_dict['attachedMedia'] = None
+            candidate = self.candidates_service.create(
+                bot_id=bot.id,
+                session_id=session_id,
+                company_id=bot.job.company_id,
+                commit=False
+            )
 
-        msg = self.create(
-            secret=data_dict.get('secret'),
-            received_at=datetime.strptime(data_dict.get('updatedAt'), "%Y-%m-%dT%H:%M:%S.%fZ"),
-            bot_id=bot_id,
+        return self.create_message_from_data(
+            bot,
+            candidate,
+            bot.job.company,
+            data_dict,
+        )
+
+    def create_message_from_data(self, bot, candidate, company, data,
+                                 commit=True):
+        return self.messages_service.create(
             bot=bot,
-            candidate_id=candidate.id,
+            company=company,
             candidate=candidate,
-            sender=data_dict.get('from'),
-            receiver=data_dict.get('to'),
-            reply=data_dict.get('reply'),
-            reply_data=data_dict.get('replyData'),
-            module_id=data_dict.get('moduleID'),
-            direction=data_dict.get('direction'),
-            attached_media_url=data_dict.get('attachedMedia'),
-            company_id=bot.job.company_id)
-        return msg
+            received_at=datetime.strptime(data.get('updatedAt'),
+                                          "%Y-%m-%dT%H:%M:%S.%fZ"),
+            sender=data.get('from'),
+            receiver=data.get('to'),
+            reply=data.get('reply'),
+            reply_data=data.get('replyData'),
+            module_id=data.get('moduleID'),
+            direction=data.get('direction'),
+            attached_media_url=data.get('attachedMedia'),
+            commit=commit,
+        )
 
 
 class BotsService(Service):
