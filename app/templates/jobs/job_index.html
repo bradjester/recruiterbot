@@ -25,8 +25,7 @@
                 {% for job in jobs %}
                     <tr {% if not job.is_published %}class="not-published"{% endif %}>
                         <td>{% if job.is_published %}
-                            {# TODO: Get link to candidate list from service #}
-                            <a href="/jobs" class="job_title">{{ job.title }}</a>
+                            <a class="job_title" href={{ url_for("candidates.index", job_id=job.id) }}>{{ job.title }}</a>
                         {% else %}
                             {{ job.title }}
                         {% endif %}
@@ -39,14 +38,6 @@
                             {% endif %}
                         </td>
                         <td>{% if job.is_published %}
-                                <span class="button tiny radius clip bot"
-                                      data-clipboard-text="Fake Web URL"
-                                      title="Fake Web URL"><i
-                                        class="fi-web"></i></span>
-                                <span class="button tiny radius fb clip bot"
-                                      data-clipboard-text="Fake FB URL"
-                                      title="Fake FB URL"><i
-                                        class="fi-social-facebook"></i></span>
                             {% if job['web_passive_url'] %}
                                 <span class="button tiny radius clip bot"
                                       data-clipboard-text="{{ job['web_passive_url'] }}"
@@ -125,7 +116,7 @@
                 "pageLength": 10,
                 "lengthMenu": [ [ 10, 25, 50, -1 ], [ 10, 25, 50, "All" ] ],
                 "order": [ [ 0, 'asc' ] ],
-                "columns": columnsOptions,
+                "columns": columnsOptions
             } );
 
             var clipboard = new Clipboard( '.clip' );

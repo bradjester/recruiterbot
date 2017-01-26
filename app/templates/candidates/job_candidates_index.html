@@ -1,0 +1,74 @@
+{% extends 'layouts/base.html' %}
+
+{% set page_title = 'Candidate List - ' + job_title %}
+{% block body %}
+    <div class="columns datatables-list medium-8 medium-offset-2">
+        <h3 class="page-title">{{ page_title }}</h3>
+        {% if candidates %}
+            <table id="candidates" style="position: relative; right: -25600px">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Candidate Type</th>
+                    <th>Auto Rating</th>
+                    <th>Manual Rating</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for candidate in candidates %}
+                    <tr>
+                        <td>
+                          <a class="candidate_name" href={{ url_for("candidates.show", candidate_id=candidate.id) }}>{% if candidate.name %} {{ candidate.name }} {% else %} Not Given {% endif %}</a>
+                        </td>
+                        <td>{{ candidate.bot.chat_type|title }}</td>
+                        <td>0</td>
+                        <td>{{ candidate.bot.rating }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <h1 class="new">No candidates exist!</h1>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script type="text/javascript">
+        $( function () {
+            var $table = $( '#candidates' );
+
+            var columnsOptions = [
+                {
+                    title: "Name",
+                    className: "dt-left",
+                    width: "150px",
+                    orderable: true
+                },
+                {
+                    title: "Candidate Type",
+                    orderable: true
+                },
+                {
+                    title: "Auto Rating",
+                    orderable: true
+                },
+                {
+                    title: "Manual Rating",
+                    orderable: true
+                }
+            ];
+
+            $table.css( 'right', '0' ).dataTable( {
+                scrollX: false,
+
+                "pageLength": 10,
+                "lengthMenu": [ [ 10, 25, 50, -1 ], [ 10, 25, 50, "All" ] ],
+                "order": [ [ 0, 'asc' ] ],
+                "columns": columnsOptions
+            } );
+
+        } );
+    </script>
+    {% include 'snippets/_insert_controls_datatables_top_row.html' %}
+{% endblock %}
