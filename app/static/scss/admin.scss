@@ -1,23 +1,23 @@
 @import 'style_guide';
-$navbar-default-bg: $recruiterbot-green-0;
-$navbar-default-border: $recruiterbot-green;
+
+$navbar-default-bg: $charcoal;
 $navbar-default-link-color: $white;
 $navbar-default-brand-color: $white;
-$navbar-default-brand-hover-bg: $recruiterbot-green-hover;
+$navbar-default-brand-hover-bg: $jobrobin-orange;
 $navbar-default-brand-hover-color: $white;
-$navbar-default-link-hover-bg: $recruiterbot-green-hover;
+$navbar-default-link-hover-bg: $tuatara;
 $navbar-default-link-hover-color: $white;
-$navbar-default-link-active-color: $white;
-$navbar-default-link-active-bg: $recruiterbot-green-hover;
+$navbar-default-link-active-color: $jobrobin-orange;
+$navbar-default-link-active-bg: $tuatara;
 
 // buttons
 $brand-danger: #cf2a0e;
-$brand-primary: $recruiterbot-blue;
-$btn-default-bg: #e7e7e7;
+$brand-primary: $jobrobin-orange;
+$btn-default-bg: $smoke;
 @import '../vendor/bootstrap-3.3.5/bootstrap';
 
 .navbar-default .navbar-collapse, .navbar-default .navbar-form {
-    background-color: $recruiterbot-green-0;
+    background-color: $charcoal;
 }
 
 .navbar-default .navbar-nav>.active>a {

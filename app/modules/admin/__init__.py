@@ -19,4 +19,4 @@ def init_admin(app):
     admin.add_view(RoleModelView())
     admin.add_view(CompanyModelView())
     admin.add_view(JobModelView())
-    admin.add_link(MenuLink(name='Back to Main Site', url='/'))
+    admin.add_link(MenuLink(name='Logout!', url='/logout'))

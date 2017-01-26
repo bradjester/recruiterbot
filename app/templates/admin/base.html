@@ -19,11 +19,7 @@
         {% assets "admin_css" -%}
           <link rel="stylesheet" href="{{ ASSET_URL }}">
         {%- endassets %}
-        <style>
-        body {
-            padding-top: 4px;
-        }
-        </style>
+
     {% endblock %}
     {% block head %}
     {% endblock %}
@@ -43,7 +39,7 @@
             <span class="icon-bar"></span>
           </button>
           {% block brand %}
-          <a class="navbar-brand" href="/">PHWM</a>
+          <a class="navbar-brand" href="/">JobRobin</a>
           {% endblock %}
         </div>
         <!-- navbar content -->
@@ -70,8 +66,8 @@
 
       {# store the jinja2 context for form_rules rendering logic #}
       {% set render_ctx = h.resolve_ctx() %}
+        {% block body %}{% endblock %}
 
-      {% block body %}{% endblock %}
     </div>
     {% endblock %}
 
@@ -82,7 +78,6 @@
     <script src="{{ admin_static.url(filename='vendor/jquery.min.js', v='2.1.4') }}" type="text/javascript"></script>
     <script src="{{ admin_static.url(filename='bootstrap/bootstrap3/js/bootstrap.min.js', v='3.3.5') }}" type="text/javascript"></script>
     <script src="{{ admin_static.url(filename='vendor/moment.min.js', v='2.9.0') }}" type="text/javascript"></script>
-    <script src="{{ admin_static.url(filename='vendor/select2/select2.min.js', v='3.5.2') }}" type="text/javascript"></script>
     {% endblock %}
 
     {% block tail %}
