@@ -57,7 +57,7 @@ def job_index():
         form.populate_obj(job)
 
         # Generate a UUID for the job and set company to current before save.
-        job.uuid = uuid.uuid4()
+        # job.uuid = uuid.uuid4()
         job.company = current_user.company
         jobs_service.save(job)
 
@@ -73,6 +73,7 @@ def job_index():
 @route(job_bp, '/new', endpoint='new')
 def job_new():
     form = JobForm()
+    form.uuid.data = uuid.uuid4()
     return _show_job_new_template(form)
 
 

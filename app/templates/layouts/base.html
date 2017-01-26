@@ -65,15 +65,16 @@
       </ul>
       <ul class="left">
         {% if current_user.is_authenticated %}
-          {% if current_user.is_employee %}
-          {% endif %}
+          <li>
+            <a href="{{ url_for('job.index') }}">Vacancies</a>
+          </li>
         {% endif %}
       </ul>
     </section>
   </nav>
 {% endblock %}
   <!-- Fluid by default -->
-  <div class="row row-max-width row-compensate-footer">
+  <div class="row row-max-width">
     {% block container %}
       {% block messages %}
         {{ layout.messages() }}
@@ -84,12 +85,12 @@
     {% endblock %}
   </div>
 
-  <footer class="row-max-width">
-    <div class="medium-3 medium-offset-3 columns">
-      <ul class="inline-list">
-      </ul>
-    </div>
-  </footer>
+{#  <footer class="row-max-width">#}
+{#    <div class="medium-3 medium-offset-3 columns">#}
+{#      <ul class="inline-list">#}
+{#      </ul>#}
+{#    </div>#}
+{#  </footer>#}
 
 
 {% block js_btm %}
