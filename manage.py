@@ -10,6 +10,7 @@
 import urllib.parse
 from subprocess import call
 
+import click
 import flask
 import pip
 import sqlalchemy_utils
@@ -18,6 +19,7 @@ from flask_script import Manager, Shell
 
 from app.extensions import db
 from app.factory import create_app
+from fixtures import fixtures
 
 
 def _make_context():
@@ -50,6 +52,15 @@ def createdb():
     app = flask.current_app
     if not _dbexists(app):
         sqlalchemy_utils.create_database(app.config['SQLALCHEMY_DATABASE_URI'])
+
+
+@manager.command
+def emptydb():
+    """Empty the datbase of all contents."""
+    meta = db.metadata
+    for table in reversed(meta.sorted_tables):
+        db.session.execute(table.delete())
+    db.session.commit()
 
 
 def _dbexists(app):
@@ -86,6 +97,16 @@ def upgrade_all_packages():
     """Upgrade all of the packages using pip."""
     for dist in pip.get_installed_distributions():
         call("pip install --upgrade " + dist.project_name, shell=True)
+
+
+@manager.command
+def load_fixtures():
+    if click.confirm('Loading the fixtures will destroy all the data in your '
+                     'database, are you sure you want to continue?',
+                     default=True):
+        emptydb()
+        fixtures.load_fixtures()
+
 
 manager.add_option('-c', '--config', dest='config', required=False)
 
