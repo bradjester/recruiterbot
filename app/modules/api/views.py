@@ -34,4 +34,4 @@ def update_candidate(candidate_id):
         return jsonify(error="No candidate found for id: {}".format(
             candidate_id)), 404
     candidates_service.update(candidate, **data)
-    return jsonify(data="Rating updated")
+    return '', 204
