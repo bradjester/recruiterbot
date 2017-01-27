@@ -8,13 +8,14 @@
             <h4>for {{ job_title }}</h4>
             <hr/>
             <h5 class="auto-rating">Auto Rating: 0</h5>
-            <h5 class="manual-rating">Manual Rating: {{ candidate.rating }}</h5>
+{#            <h5 class="manual-rating">Manual Rating: {{ candidate.rating }}</h5>#}
+            <div id="manual-rating"></div>
             <br/>
             <br/>
             <span class="button small radius candidate">
                 <a href="{{ candidate.resume_key }}" download><i class="fi-download"></i> Download Resume</a>
             </span>
-            <span class="button small radius candidate success">
+            <span class="button small radius candidate success back">
                 <i class="fa fa-reply"></i> Back
             </span>
 
@@ -45,3 +46,29 @@
         </div>
     </div>
 {% endblock %}
+{% block extra_js %}
+    <script type="text/javascript">
+    $( function () {
+        function save_rating(data) {
+            $.ajax({
+                url: '/api/candidate/{}/set_rating/{}'.format({{ candidate.id }}, data),
+                error: function() {
+                    $("#manual-rating").notify("Error when updating rating", "error");
+                }
+            })
+        }
+         var rating = parseInt({{ candidate.rating }}, 10);
+
+      $("#manual-rating").ratings({
+          stars: 5,
+          default_stars: rating,
+          on_select: save_rating
+      });
+      $('.back').click( function(){
+		parent.history.back();
+		return false;
+	  });
+    } );
+  </script>
+{% endblock %}
+

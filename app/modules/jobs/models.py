@@ -76,4 +76,4 @@ class Candidate(Base):
     resume_key = db.Column(db.String(1024))
     session_id = db.Column(db.String(1024), nullable=False)
     status = db.Column(db.String(255), default="New", nullable=False)
-    rating = db.Column(db.Integer())
+    rating = db.Column(db.Integer(), default=0, server_default=sa.text("'0'"))

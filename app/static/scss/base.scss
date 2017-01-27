@@ -247,5 +247,34 @@ a.job_title {
 
   }
 }
-
 @import "chat";
+
+// Ratings
+.rate_star:before {
+    content: "\f1ee";
+    font-family: 'foundation-icons' !important;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.rate_star{
+    color: #cccccc;
+    cursor: pointer;
+    font-size: 2rem;
+    padding-left: .5rem;
+}
+.rate_star.over{
+    color: #f9e431;
+}
+.rate_star.checked{
+    color: #F9D932;
+}
+.rate_star.disable{
+    cursor:not-allowed;
+    pointer-events: none;
+    color: #9C9B9B;
+}
