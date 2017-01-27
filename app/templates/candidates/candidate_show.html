@@ -8,8 +8,25 @@
             <h4>for {{ job_title }}</h4>
             <hr/>
             <h5 class="auto-rating">Auto Rating: 0</h5>
-{#            <h5 class="manual-rating">Manual Rating: {{ candidate.rating }}</h5>#}
             <div id="manual-rating"></div>
+            <br/>
+            <div>
+                <div class="columns medium-3"><label for="status">Status</label></div>
+                <div class="columns medium-9">
+                    <select id="status" name="status">
+                        <option value="New" {% if candidate.status == "New" %}selected{% endif %}>New</option>
+                        <option value="Reviewed" {% if candidate.status == "Reviewed" %}selected{% endif %}>Reviewed</option>
+                        <option value="Scheduled" {% if candidate.status == "Scheduled" %}selected{% endif %}>Scheduled</option>
+                        <option value="Interviewed" {% if candidate.status == "Interviewed" %}selected{% endif %}>Interviewed</option>
+                        <option value="Offer Made" {% if candidate.status == "Offer Made" %}selected{% endif %}>Offer Made</option>
+                        <option value="Hired" {% if candidate.status == "Hired" %}selected{% endif %}>Hired</option>
+                        <option value="Shortlisted" {% if candidate.status == "Shortlisted" %}selected{% endif %}>Shortlisted</option>
+                        <option value="Rejected" {% if candidate.status == "Rejected" %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+            </div>
+            <br id="msg"/>
+            <br/>
             <br/>
             <br/>
             <span class="button small radius candidate">
@@ -49,29 +66,42 @@
 {% block extra_js %}
     <script type="text/javascript">
     $( function () {
-        function save_rating(rating) {
+        function update_candidate(key, value) {
+            var obj = {};
+            obj[key] = value;
             $.ajax({
                 type: 'PUT',
                 url: '{{ url_for('api.put_candidate', candidate_id=candidate.id) }}',
-                data: JSON.stringify({rating: parseInt(rating, 10)}),
+                data: JSON.stringify(obj),
                 contentType: "application/json",
                 dataType: 'json',
                 error: function() {
-                    $("#manual-rating").notify("Error when updating rating", "error");
+                    $("#msg").notify("Error while updating rating", "error");
                 }
             })
         }
-         var rating = parseInt({{ candidate.rating }}, 10);
+        function save_rating(data) {
+            update_candidate("rating", data);
+        }
+        function save_status(data) {
+            var option = $(this).find('option:selected').val();
+            update_candidate("status", option);
+        }
+        var rating = parseInt({{ candidate.rating }}, 10);
+        var status = "{{ candidate.status }}",
+            $status = $("#status");
 
-      $("#manual-rating").ratings({
-          stars: 5,
-          default_stars: rating,
-          on_select: save_rating
-      });
-      $('.back').click( function(){
-		parent.history.back();
-		return false;
-	  });
+        $status.on('change', save_status);
+
+        $("#manual-rating").ratings({
+            stars: 5,
+            default_stars: rating,
+            on_select: save_rating
+        });
+        $('.back').click( function(){
+		    window.history.back();
+		    return false;
+	    });
     } );
   </script>
 {% endblock %}
