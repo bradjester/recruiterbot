@@ -11,6 +11,24 @@
 {#            <h5 class="manual-rating">Manual Rating: {{ candidate.rating }}</h5>#}
             <div id="manual-rating"></div>
             <br/>
+            <div>
+                <div class="columns medium-3"><label for="status">Status</label></div>
+                <div class="columns medium-9">
+                    <select id="status" name="status">
+                        <option value="New">New</option>
+                        <option value="Reviewed">Reviewed</option>
+                        <option value="Scheduled">Scheduled</option>
+                        <option value="Interviewed">Interviewed</option>
+                        <option value="Offer Made">Offer Made</option>
+                        <option value="Hired">Hired</option>
+                        <option value="Shortlisted">Shortlisted</option>
+                        <option value="Rejected">Rejected</option>
+                   </select>
+                </div>
+            </div>
+            <br id="msg"/>
+            <br/>
+            <br/>
             <br/>
             <span class="button small radius candidate">
                 <a href="{{ candidate.resume_key }}" download><i class="fi-download"></i> Download Resume</a>
@@ -49,29 +67,42 @@
 {% block extra_js %}
     <script type="text/javascript">
     $( function () {
-        function save_rating(rating) {
+        function update_candidate(key, value) {
+            var obj = {};
+            obj[key] = value;
             $.ajax({
                 type: 'PUT',
                 url: '{{ url_for('api.put_candidate', candidate_id=candidate.id) }}',
-                data: JSON.stringify({rating: parseInt(rating, 10)}),
+                data: JSON.stringify(obj),
                 contentType: "application/json",
                 dataType: 'json',
                 error: function() {
-                    $("#manual-rating").notify("Error when updating rating", "error");
+                    $("#msg").notify("Error while updating rating", "error");
                 }
             })
         }
-         var rating = parseInt({{ candidate.rating }}, 10);
+        function save_rating(data) {
+            update_candidate("rating", data);
+        }
+        function save_status(data) {
+            var option = $(this).find('option:selected').val();
+            update_candidate("status", option);
+        }
+        var rating = parseInt({{ candidate.rating }}, 10);
+        var status = "{{ candidate.status }}",
+            $status = $("#status");
 
-      $("#manual-rating").ratings({
-          stars: 5,
-          default_stars: rating,
-          on_select: save_rating
-      });
-      $('.back').click( function(){
-		window.history.back();
-		return false;
-	  });
+        $status.on('change', save_status);
+
+        $("#manual-rating").ratings({
+            stars: 5,
+            default_stars: rating,
+            on_select: save_rating
+        });
+        $('.back').click( function(){
+		    window.history.back();
+		    return false;
+	    });
     } );
   </script>
 {% endblock %}
