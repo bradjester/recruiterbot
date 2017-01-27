@@ -8,22 +8,21 @@
             <h4>for {{ job_title }}</h4>
             <hr/>
             <h5 class="auto-rating">Auto Rating: 0</h5>
-{#            <h5 class="manual-rating">Manual Rating: {{ candidate.rating }}</h5>#}
             <div id="manual-rating"></div>
             <br/>
             <div>
                 <div class="columns medium-3"><label for="status">Status</label></div>
                 <div class="columns medium-9">
                     <select id="status" name="status">
-                        <option value="New">New</option>
-                        <option value="Reviewed">Reviewed</option>
-                        <option value="Scheduled">Scheduled</option>
-                        <option value="Interviewed">Interviewed</option>
-                        <option value="Offer Made">Offer Made</option>
-                        <option value="Hired">Hired</option>
-                        <option value="Shortlisted">Shortlisted</option>
-                        <option value="Rejected">Rejected</option>
-                   </select>
+                        <option value="New" {% if candidate.status == "New" %}selected{% endif %}>New</option>
+                        <option value="Reviewed" {% if candidate.status == "Reviewed" %}selected{% endif %}>Reviewed</option>
+                        <option value="Scheduled" {% if candidate.status == "Scheduled" %}selected{% endif %}>Scheduled</option>
+                        <option value="Interviewed" {% if candidate.status == "Interviewed" %}selected{% endif %}>Interviewed</option>
+                        <option value="Offer Made" {% if candidate.status == "Offer Made" %}selected{% endif %}>Offer Made</option>
+                        <option value="Hired" {% if candidate.status == "Hired" %}selected{% endif %}>Hired</option>
+                        <option value="Shortlisted" {% if candidate.status == "Shortlisted" %}selected{% endif %}>Shortlisted</option>
+                        <option value="Rejected" {% if candidate.status == "Rejected" %}selected{% endif %}>Rejected</option>
+                    </select>
                 </div>
             </div>
             <br id="msg"/>
