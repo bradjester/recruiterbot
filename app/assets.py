@@ -30,6 +30,7 @@ app_js = Bundle(
     'vendor/notify/notify.js',
     'vendor/string-format.js',
     'vendor/clipboard.min.js',
+    'js/ratings.js',
     filters="jsmin",
     output="jsmin/app.min.js"
 )
