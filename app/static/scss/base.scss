@@ -236,3 +236,16 @@ td > span.button{
 a.job_title {
   font-weight: bold;
 }
+
+.button > a {
+  color: $white;
+}
+
+.button.candidate {
+  min-width: 180px;
+  &.back {
+
+  }
+}
+
+@import "chat";

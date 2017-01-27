@@ -44,7 +44,7 @@ def candidate_show(candidate_id):
         'candidates/candidate_show.html',
         candidate=candidate,
         job_title=candidate.bot.job.title,
-        messages=messages
+        messages=messages[1:]
     )
 
 
