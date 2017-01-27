@@ -76,6 +76,9 @@ class BotsService(Service):
     def find_bot_by_motionai_bot_id(self, bot_id):
         return self.first(bot_id=bot_id)
 
+    def find_all_for_job(self, job_id):
+        return self.find_all(job_id=job_id)
+
 
 class MessagesService(Service):
     __model__ = Message

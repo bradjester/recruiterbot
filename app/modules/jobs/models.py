@@ -28,6 +28,7 @@ class Job(Base):
 
     title = db.Column(db.String(255), nullable=False)
     hiring_company = db.Column(db.String(255))
+    position_title = db.Column(db.String(255))
     location = db.Column(db.String(255))
     work_type = db.Column(db.String(255))
     expected_salary = db.Column(db.String(255))

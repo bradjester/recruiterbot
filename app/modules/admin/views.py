@@ -7,6 +7,10 @@
 """
 from datetime import datetime
 
+from flask import redirect
+from flask import render_template
+from flask import request
+from flask import url_for
 from flask_admin import expose
 from flask_admin import AdminIndexView
 from flask_admin.contrib import sqla
@@ -18,9 +22,13 @@ from sqlalchemy import func
 from app.extensions import db
 from app.helpers import format_datetime
 from app.models import User, Role
+from app.modules.admin.forms import AdminJobForm
 from app.modules.jobs.models import Job, Candidate
+from app.modules.motionai.constants import BOT_FB_CHAN_TYPE, \
+    BOT_ACTIVE_CHAT_TYPE, BOT_PASSIVE_CHAT_TYPE, BOT_WEB_CHAN_TYPE
 from app.modules.motionai.models import Bot
 from app.modules.users.models import Company
+from app.services import jobs_service, bots_service
 
 
 class AdminBlocker(object):
@@ -212,6 +220,77 @@ class JobModelView(AdminBlocker, sqla.ModelView):
             .group_by(Job.id)
         )
 
-    @expose('/edit/', methods=('GET', 'POST'))
+    @expose('/edit/', methods=['GET', 'PUT'])
     def edit_job(self):
-        return self.render('/admin/job_edit.html')
+        job_id = request.args.get('id')
+        job = jobs_service.get_or_404(job_id)
+        if request.method == 'PUT':
+            form = AdminJobForm(request.form)
+
+            if not form.validate():
+                return self._show_job_edit_template(form, job.id), 400
+
+            # TODO: Create or update the bots.
+
+            job.is_published = form.is_published.data
+            job.hiring_company = form.hiring_company.data
+            job.position_title = form.position_title.data
+            job.location = form.location.data
+            job.work_type = form.work_type.data
+            job.expected_salary = form.expected_salary.data
+            jobs_service.save(job)
+
+            # Redirect to GET to prevent a form resubmission on refresh
+            return redirect(url_for("job_admin.index_view"))
+
+        bots = bots_service.find_all_for_job(job.id)
+
+        form = AdminJobForm()
+        form.job_id.data = job.id
+        form.is_published.data = job.is_published
+        form.hiring_company.data = job.hiring_company
+        form.position_title.data = job.position_title
+        form.location.data = job.location
+        form.work_type.data = job.work_type
+        form.expected_salary.data = job.expected_salary
+
+        for bot in bots:
+            if bot.channel_type == BOT_FB_CHAN_TYPE:
+                if bot.chat_type == BOT_ACTIVE_CHAT_TYPE:
+                    form.active_fb_bot_url.data = bot.bot_url
+                    form.active_fb_bot_id.data = bot.bot_id
+                if bot.chat_type == BOT_PASSIVE_CHAT_TYPE:
+                    form.passive_fb_bot_url.data = job.id
+                    form.passive_fb_bot_id.data = job.id
+            if bot.channel_type == BOT_WEB_CHAN_TYPE:
+                if bot.chat_type == BOT_ACTIVE_CHAT_TYPE:
+                    form.active_web_bot_url.data = bot.bot_url
+                    form.active_web_bot_id.data = bot.bot_id
+                if bot.chat_type == BOT_PASSIVE_CHAT_TYPE:
+                    form.passive_web_bot_url.data = job.id
+                    form.passive_web_bot_id.data = job.id
+
+        return self._show_job_edit_template(form, job.id)
+
+    @expose('/edit/', methods=['PUT'])
+    def job_update(self):
+        job_id = request.args.get('id')
+        job = jobs_service.find_by_id_company(job_id)
+
+        form = AdminJobForm(request.form)
+
+        if not form.validate():
+            return self._show_job_edit_template(form, job.id), 400
+
+        # TODO: Create or update the bots.
+
+        job.is_published = form.is_published.data
+        job.hiring_company = form.hiring_company.data
+        job.position_title = form.position_title.data
+        job.location = form.location.data
+        job.work_type = form.work_type.data
+        job.expected_salary = form.expected_salary.data
+        jobs_service.save(job)
+
+    def _show_job_edit_template(self, form, job_id):
+        return self.render("/admin/job_edit.html", form=form, job_id=job_id)
