@@ -266,15 +266,15 @@ a.job_title {
     cursor: pointer;
     font-size: 2rem;
     padding-left: .5rem;
+  &.small {
+    font-size: 1.2rem;
+    padding-left: .25rem;
+    cursor: default;
+  }
 }
 .rate_star.over{
     color: #f9e431;
 }
 .rate_star.checked{
     color: #F9D932;
-}
-.rate_star.disable{
-    cursor:not-allowed;
-    pointer-events: none;
-    color: #9C9B9B;
 }

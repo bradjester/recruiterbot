@@ -22,7 +22,7 @@
                         </td>
                         <td>{{ candidate.bot.chat_type|title }}</td>
                         <td>0</td>
-                        <td>{{ candidate.bot.rating }}</td>
+                        <td>{{ candidate.rating }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -55,7 +55,23 @@
                 },
                 {
                     title: "Manual Rating",
-                    orderable: true
+                    orderable: true,
+                    render: function( data, type, full, meta ) {
+                        var checked = data,
+                            unchecked = 5 - checked,
+                            i;
+                        var $stars = $("<div>"),
+                            $s;
+
+                        for (i = 0; i < 5; i ++) {
+                            $s = $('<span>').addClass("rate_star small");
+                            if ( i + unchecked < 5) {
+                               $s.addClass("checked");
+                            }
+                            $stars.append($s);
+                        }
+                        return $stars.html();
+                    }
                 }
             ];
 
