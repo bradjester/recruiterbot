@@ -32,16 +32,16 @@
     // append stars to the selector element
     function append_stars(ratings){
         $(ratings.target).each(function(){
+            var i, j, step, iteration;
 
             if (ratings.stars > 1 && ratings.range == '' && ratings.count == 1){
-                for (var i = 1; i <= ratings.stars; i++){
+                for (i = 1; i <= ratings.stars; i++){
                    $(this).append("<span class='" + ratings.star +"' data-value='" + i + "'></span>");
                 }
                 $(this).append("<input type='hidden' class='" + ratings.input_class + "' value=''>");
             } else if (ratings.stars > 1 && ratings.range == '' && ratings.count > 1){
-
-                var i = 1, step = i;
-                for (i; i <= ratings.stars; i++){
+                step = 1;
+                for (i = 1; i <= ratings.stars; i++){
                     $(this).append("<span class='" + ratings.star +"' data-value='" + step + "'></span>");  // set data-value attributes with incremented steps
                     step += ratings.count;
                 }
@@ -49,9 +49,8 @@
             }
 
             if (ratings.range && ratings.range.length == 2 && ratings.count == 1){
-
-                var iteration = 0;
-                for (var j = ratings.range[0]; j < ratings.range[1]; j++){
+                iteration = 0;
+                for (j = ratings.range[0]; j < ratings.range[1]; j++){
                     $(this).append("<span class='" + ratings.star +"' data-value='" + j + "'></span>"); // set data-value attributes
                     iteration++;
                 }
@@ -59,7 +58,9 @@
 
             } else if (ratings.range && ratings.range.length == 2 && ratings.count > 1){
 
-                var j = ratings.range[0], step  = j, iteration = 0;
+                j = ratings.range[0];
+                step  = j;
+                iteration = 0;
                 for (j; j < ratings.range[1]; j++){
                     $(this).append("<span class='" + ratings.star +"' data-value='" + step + "'></span>");  // set data-value attributes with incremented steps
                     step += ratings.count;
@@ -76,9 +77,9 @@
 
         if (ratings.stars) {
 
-            var star_id;
+            var star_id = null;
 
-            $(ratings.target + ' .' + ratings.star).each(function (key, value) {
+            $(ratings.target + ' .' + ratings.star).each(function () {
 
                 $(this).hover( // change star's color after mouse hover
                     function () {

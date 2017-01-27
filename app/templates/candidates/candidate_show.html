@@ -49,9 +49,13 @@
 {% block extra_js %}
     <script type="text/javascript">
     $( function () {
-        function save_rating(data) {
+        function save_rating(rating) {
             $.ajax({
-                url: '/api/candidate/{}/set_rating/{}'.format({{ candidate.id }}, data),
+                type: 'PUT',
+                url: '{{ url_for('api.put_candidate', candidate_id=candidate.id) }}',
+                data: JSON.stringify({rating: parseInt(rating, 10)}),
+                contentType: "application/json",
+                dataType: 'json',
                 error: function() {
                     $("#manual-rating").notify("Error when updating rating", "error");
                 }

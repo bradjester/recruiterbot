@@ -34,6 +34,7 @@ BLUEPRINTS = [
 ]
 
 BLUEPRINTS_NO_CSRF = [
+    api_bp,
     webhook_bp
 ]
 
