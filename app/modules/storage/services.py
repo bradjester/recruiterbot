@@ -10,7 +10,7 @@ import os
 import magic
 from flask import current_app
 
-from .constants import USER_CV_PATH_FMT, JOB_DESCRIPTION_PATH_FMT
+from .constants import JOB_CANDIDATE_RESUME_PATH_FMT, JOB_DESCRIPTION_PATH_FMT
 from .errors import AppUploadFailedFileExistsError
 
 
@@ -25,34 +25,32 @@ class StaticStorageService(object):
         return self.s3_service.generate_object_signed_url(self._bucket, key)
 
     def generate_job_description_signed_post(
-            self, uuid, file_name, overwrite=False, content_type=None):
-        key = self.get_job_description_key(uuid, file_name)
+            self, job_uuid, file_name, overwrite=False, content_type=None):
+        key = self.get_job_description_key(job_uuid, file_name)
         return self.generate_signed_post(
             key, overwrite=overwrite, content_type=content_type)
 
-    def get_job_description_key(self, uuid, file_name):
+    def get_job_description_key(self, job_uuid, file_name):
         return JOB_DESCRIPTION_PATH_FMT.format(
-            uuid, self.s3_service.sanitize_key(file_name))
+            job_uuid, self.s3_service.sanitize_key(file_name))
 
-    def generate_user_cv_signed_post(
-            self, client, file_name, overwrite=False, content_type=None):
-        key = self.get_user_cv_key(client, file_name)
+    def generate_job_candidate_resume_signed_post(
+        self, job_uuid, session_id, file_name, overwrite=False,
+            content_type=None):
+        key = self.get_job_candidate_resume_key(job_uuid, session_id,
+                                                file_name)
         return self.generate_signed_post(
             key, overwrite=overwrite, content_type=content_type)
 
-    def get_user_cv_key(self, client, file_name):
-        return USER_CV_PATH_FMT.format(
-            client.id, self.s3_service.sanitize_key(file_name))
+    def get_job_candidate_resume_key(self, job_uuid, session_id, file_name):
+        return JOB_CANDIDATE_RESUME_PATH_FMT.format(
+            job_uuid, session_id, self.s3_service.sanitize_key(file_name))
 
     def generate_signed_post(self, key, overwrite=False, content_type=None):
         if not overwrite:
             self._error_if_exists(key)
         return self.s3_service.generate_signed_post(
             self._bucket, key, content_type=content_type)
-
-    def upload_user_cv(self, filename, client, overwrite=False):
-        key = USER_CV_PATH_FMT.format(client.id, self._basename(filename))
-        return self._upload_file(filename, key, overwrite=overwrite)
 
     @staticmethod
     def _basename(filename):

@@ -15,12 +15,24 @@ api_bp = Blueprint('api', __name__, template_folder="templates",
                    url_prefix="/api")
 
 
-@route(api_bp, '/job_description/<uuid>/signed-post/<filename>')
-def get_job_description_signed_post(uuid, filename):
+@route(api_bp, '/jobs/<job_uuid>/descriptions/signed-post/<filename>',
+       endpoint='get_job_description_signed_post')
+def get_job_description_signed_post(job_uuid, filename):
     content_type = request.args.get('content-type')
-    # Always overwrite existing individual images.
     data = static_storage_service.generate_job_description_signed_post(
-        uuid, filename, overwrite=True, content_type=content_type)
+        job_uuid, filename, overwrite=True, content_type=content_type)
+    return jsonify(data=data)
+
+
+# This route is intentionally insecure.
+@api_bp.route('/jobs/<job_uuid>/candidates/<session_id>/resumes'
+              '/signed-post/<filename>',
+              endpoint='get_job_candidate_resume_signed_post')
+def get_job_description_signed_post(job_uuid, session_id, filename):
+    content_type = request.args.get('content-type')
+    data = static_storage_service.generate_job_candidate_resume_signed_post(
+        job_uuid, session_id, filename, overwrite=True,
+        content_type=content_type)
     return jsonify(data=data)
 
 

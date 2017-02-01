@@ -1,0 +1,39 @@
+{% extends 'layouts/base.html' %}
+
+{% set page_title = job.company.name + ' - ' + job.title %}
+{% block body %}
+  <!-- TODO: Add the dropzone for CVs if the session_id is set on the query string. -->
+
+  <!-- TODO: Add the image for the job with the company name and job title overlaid. -->
+
+  <div>
+    <div>
+      <h3>{{ job.company.name }}</h3>
+      <h4>{{ job.title }}</h4>
+    </div>
+  </div>
+
+  <div>
+    <h4>Basic Info</h4>
+
+    <div>
+      <b>Location:</b> {{ job.location }}
+    </div>
+    <div>
+      <b>Type:</b> {{ job.work_type }}
+    </div>
+    <div>
+      <b>Pay:</b> {% if job.expected_salary %} {{ job.expected_salary }} {% else %} - {% endif %}
+    </div>
+    <div>
+      <b>Posted:</b> {% if job.is_published %} {{ job.published_at }} {% else %} Unpublished {% endif %}
+    </div>
+  </div>
+  <div>
+    <h4>Job Description</h4>
+
+    <div>
+      {{ job.description }}
+    </div>
+  </div>
+{% endblock %}
