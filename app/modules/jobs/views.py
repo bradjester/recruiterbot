@@ -112,9 +112,9 @@ def _show_job_edit_template(form, job):
 
 
 # This page intentionally has no security.
-@job_bp.route('/<string:uuid>', endpoint='show')
-def job_show(uuid):
-    job = jobs_service.find_by_uuid(uuid)
+@job_bp.route('/<string:job_uuid>', endpoint='show')
+def job_show(job_uuid):
+    job = jobs_service.find_by_uuid(job_uuid)
     if not job:
         return '', 404
 

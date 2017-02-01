@@ -42,10 +42,11 @@
                 class="button primary tiny success radius">
             Save
         </button>
-        <button type="button" id="preview-job"
-                class="button primary tiny right radius">
+        <a type="button" id="preview-job"
+                class="button primary tiny right radius"
+        href="{{ url_for("job.show", job_uuid=form.uuid.data) }}" target="_blank">
             Preview
-        </button>
+        </a>
         </div>
         <div class="columns medium-8">
             <textarea id="description" name="description" title="description">{{ form.description.data }}</textarea>

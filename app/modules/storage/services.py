@@ -50,7 +50,7 @@ class StaticStorageService(object):
             content_type=None):
         key = self.get_job_candidate_resume_key(job_uuid, session_id,
                                                 file_name)
-        return self.generate_job_candidate_resume_signed_post(
+        return self.generate_signed_post(
             key, overwrite=overwrite, content_type=content_type)
 
     def get_job_candidate_resume_key(self, job_uuid, session_id, file_name):
