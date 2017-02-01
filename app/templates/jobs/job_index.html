@@ -34,7 +34,7 @@
                             {% if not job.jd_file_key %}
                                 None
                             {% else %}
-                                <a href="{{ job.jd_file_key }}" download>View</a>
+                                <a href="{{ generate_signed_url(job.jd_file_key) }}" download>View</a>
                             {% endif %}
                         </td>
                         <td>{% if job.is_published %}

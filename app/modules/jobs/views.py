@@ -21,8 +21,7 @@ candidates_bp = Blueprint('candidates', __name__, template_folder="templates",
                           url_prefix='/candidates')
 
 
-@candidates_bp.route('/job/<string:job_id>', methods=['GET'],
-                     endpoint='index')
+@candidates_bp.route('/job/<int:job_id>', methods=['GET'], endpoint='index')
 def job_candidate_index(job_id):
     job = jobs_service.find_by_id_company(job_id, current_user.company_id)
     candidates_service.update_candidates_with_no_name(job.id)
@@ -110,3 +109,13 @@ def job_edit(id):
 
 def _show_job_edit_template(form, job):
     return render_template("jobs/job_edit.html", form=form, job_id=job.id)
+
+
+# This page intentionally has no security.
+@job_bp.route('/<string:uuid>', endpoint='show')
+def job_show(uuid):
+    job = jobs_service.find_by_uuid(uuid)
+    if not job:
+        return '', 404
+
+    return render_template("jobs/job_show.html", job=job)

@@ -71,29 +71,23 @@ class CandidatesService(Service):
 class JobsService(Service):
     __model__ = Job
 
-    def __init__(self, candidates_service, static_storage_service):
+    def __init__(self, candidates_service):
         super(JobsService, self).__init__()
         self.candidates_service = candidates_service
-        self.static_storage_service = static_storage_service
 
     def get_jobs_data(self, company_id):
         jobs = self.find_all_by_company(company_id)
         return [self._get_job_data(j) for j in jobs]
 
-    def _get_job_data(self, job):
+    @staticmethod
+    def _get_job_data(job):
         candidate_count = 0
-        if job.jd_file_key is not None:
-            jd_file_key = self.static_storage_service.generate_signed_url(
-                job.jd_file_key)
-        else:
-            jd_file_key = None
-
         job_data = dict(
             id=job.id,
             title=job.title,
             is_published=job.is_published,
-            jd_file_key=jd_file_key
-            )
+            jd_file_key=job.jd_file_key
+        )
         for bot in job.bots:
             candidate_count += bot.candidates.count()
             url_key = bot.channel_type + '_' + bot.chat_type + '_url'
@@ -107,10 +101,11 @@ class JobsService(Service):
     def find_all_by_company(self, company_id):
         return self.find_all(company_id=company_id)
 
-    def find_by_uuid(self, uuid, company_id):
-        return self.first(uuid=uuid, company_id=company_id)
+    def find_by_uuid(self, uuid):
+        return self.first(uuid=uuid)
 
     def get_by_session_id(self, session_id):
-        candidate = self.candidates_service.find_candidate_by_session_id(session_id)
+        candidate = self.candidates_service.find_candidate_by_session_id(
+            session_id)
         return candidate.bot.job if candidate else None
 

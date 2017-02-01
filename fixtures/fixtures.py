@@ -60,8 +60,9 @@ def _create_job(company, title, hiring_company, is_published=True,
         expected_salary="50000",
         is_published=is_published,
         uuid=uuid4(),
-        jd_file_key="job_description/59d870a7-0493-48be-8c51-c94ac8e2bb5f/"
+        jd_file_key="jobs/59d870a7-0493-48be-8c51-c94ac8e2bb5f/descriptions/"
                     "chicken.pdf",
+        published_at=utc_now() if is_published else None,
         commit=False,
     )
 
@@ -111,7 +112,7 @@ def _create_candidate(bot, company, status="New", rating=None, messages=None):
         bot=bot,
         company=company,
         name="Candidate {}".format(_create_candidate.counter),
-        resume_key="job_description/59d870a7-0493-48be-8c51-c94ac8e2bb5f/"
+        resume_key="jobs/59d870a7-0493-48be-8c51-c94ac8e2bb5f/descriptions/"
                    "chicken.pdf",
         session_id="{}".format(_create_candidate.counter),
         status=status,

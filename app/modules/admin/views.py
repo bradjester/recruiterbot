@@ -19,7 +19,7 @@ from flask_security import current_user
 from sqlalchemy import func
 
 from app.extensions import db
-from app.helpers import format_datetime
+from app.helpers import format_datetime, utc_now
 from app.models import User, Role
 from app.modules.admin.forms import AdminJobForm
 from app.modules.jobs.models import Job, Candidate
@@ -280,12 +280,17 @@ class JobModelView(AdminBlocker, sqla.ModelView):
     def _save_job_and_bots_from_form(form, job, commit=True):
         JobModelView._create_or_update_bots_from_form(form, job, commit=False)
 
+        if form.is_published.data and not job.is_published:
+            # If the job wasn't published and is now, then set time.
+            job.published_at = utc_now()
+
         job.is_published = form.is_published.data
         job.hiring_company = form.hiring_company.data
         job.position_title = form.position_title.data
         job.location = form.location.data
         job.work_type = form.work_type.data
         job.expected_salary = form.expected_salary.data
+
         jobs_service.save(job, commit=commit)
 
     @staticmethod

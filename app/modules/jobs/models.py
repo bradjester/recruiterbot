@@ -6,9 +6,11 @@
     Jobs module models
 """
 import sqlalchemy as sa
+from sqlalchemy import func
 from sqlalchemy.dialects import mysql
 
 from app.extensions import db
+from app.helpers import UTCDateTime
 from app.modules.base import Base
 
 
@@ -39,6 +41,7 @@ class Job(Base):
         default=False,
         nullable=False
     )
+    published_at = db.Column(UTCDateTime())
     uuid = db.Column(db.String(36), unique=True, nullable=False)
     jd_file_key = db.Column(db.String(1024))
 
