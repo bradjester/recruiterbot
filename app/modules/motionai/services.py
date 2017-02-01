@@ -79,6 +79,41 @@ class BotsService(Service):
     def find_all_for_job(self, job_id):
         return self.find_all(job_id=job_id)
 
+    def create_or_update(self, job_id, company_id, channel_type, chat_type,
+                         bot_id=None, bot_url=None, commit=True):
+        bot = self._find_for_job_channel_type_chat_type(
+            job_id,
+            channel_type,
+            chat_type,
+        )
+        if bot:
+            bot = self.update(
+                bot,
+                bot_id=bot_id,
+                bot_url=bot_url,
+                commit=commit,
+            )
+        else:
+            bot = self.create(
+                job_id=job_id,
+                company_id=company_id,
+                bot_id=bot_id,
+                bot_url=bot_url,
+                channel_type=channel_type,
+                chat_type=chat_type,
+                commit=commit,
+            )
+
+        return bot
+
+    def _find_for_job_channel_type_chat_type(self, job_id, channel_type,
+                                             chat_type):
+        return self.first(
+            job_id=job_id,
+            channel_type=channel_type,
+            chat_type=chat_type
+        )
+
 
 class MessagesService(Service):
     __model__ = Message

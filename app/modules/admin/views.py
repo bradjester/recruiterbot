@@ -8,7 +8,6 @@
 from datetime import datetime
 
 from flask import redirect
-from flask import render_template
 from flask import request
 from flask import url_for
 from flask_admin import expose
@@ -222,23 +221,14 @@ class JobModelView(AdminBlocker, sqla.ModelView):
 
     @expose('/edit/', methods=['GET', 'PUT'])
     def edit_job(self):
-        job_id = request.args.get('id')
-        job = jobs_service.get_or_404(job_id)
+        job = jobs_service.get_or_404(request.args.get('id'))
         if request.method == 'PUT':
             form = AdminJobForm(request.form)
 
             if not form.validate():
                 return self._show_job_edit_template(form, job.id), 400
 
-            # TODO: Create or update the bots.
-
-            job.is_published = form.is_published.data
-            job.hiring_company = form.hiring_company.data
-            job.position_title = form.position_title.data
-            job.location = form.location.data
-            job.work_type = form.work_type.data
-            job.expected_salary = form.expected_salary.data
-            jobs_service.save(job)
+            self._save_job_and_bots_from_form(form, job)
 
             # Redirect to GET to prevent a form resubmission on refresh
             return redirect(url_for("job_admin.index_view"))
@@ -274,15 +264,21 @@ class JobModelView(AdminBlocker, sqla.ModelView):
 
     @expose('/edit/', methods=['PUT'])
     def job_update(self):
-        job_id = request.args.get('id')
-        job = jobs_service.find_by_id_company(job_id)
+        job = jobs_service.find_by_id_company(request.args.get('id'))
 
         form = AdminJobForm(request.form)
 
         if not form.validate():
             return self._show_job_edit_template(form, job.id), 400
 
-        # TODO: Create or update the bots.
+        self._save_job_and_bots_from_form(form, job)
+
+    def _show_job_edit_template(self, form, job_id):
+        return self.render("/admin/job_edit.html", form=form, job_id=job_id)
+
+    @staticmethod
+    def _save_job_and_bots_from_form(form, job, commit=True):
+        JobModelView._create_or_update_bots_from_form(form, job, commit=False)
 
         job.is_published = form.is_published.data
         job.hiring_company = form.hiring_company.data
@@ -290,7 +286,50 @@ class JobModelView(AdminBlocker, sqla.ModelView):
         job.location = form.location.data
         job.work_type = form.work_type.data
         job.expected_salary = form.expected_salary.data
-        jobs_service.save(job)
+        jobs_service.save(job, commit=commit)
 
-    def _show_job_edit_template(self, form, job_id):
-        return self.render("/admin/job_edit.html", form=form, job_id=job_id)
+    @staticmethod
+    def _create_or_update_bots_from_form(form, job, commit=True):
+        if form.active_fb_bot_id.data and form.active_fb_bot_url.data:
+            bots_service.create_or_update(
+                job.id,
+                job.company_id,
+                BOT_FB_CHAN_TYPE,
+                BOT_ACTIVE_CHAT_TYPE,
+                bot_id=form.active_fb_bot_id.data,
+                bot_url=form.active_fb_bot_url.data,
+                commit=commit,
+            )
+
+        if form.passive_fb_bot_id.data and form.passive_fb_bot_url.data:
+            bots_service.create_or_update(
+                job.id,
+                job.company_id,
+                BOT_FB_CHAN_TYPE,
+                BOT_ACTIVE_CHAT_TYPE,
+                bot_id=form.passive_fb_bot_id.data,
+                bot_url=form.passive_fb_bot_url.data,
+                commit=commit,
+            )
+
+        if form.active_web_bot_id.data and form.active_web_bot_url.data:
+            bots_service.create_or_update(
+                job.id,
+                job.company_id,
+                BOT_WEB_CHAN_TYPE,
+                BOT_ACTIVE_CHAT_TYPE,
+                bot_id=form.active_web_bot_id.data,
+                bot_url=form.active_web_bot_url.data,
+                commit=commit,
+            )
+
+        if form.passive_web_bot_id.data and form.passive_web_bot_url.data:
+            bots_service.create_or_update(
+                job.id,
+                job.company_id,
+                BOT_WEB_CHAN_TYPE,
+                BOT_ACTIVE_CHAT_TYPE,
+                bot_id=form.passive_web_bot_id.data,
+                bot_url=form.passive_web_bot_url.data,
+                commit=commit,
+            )
