@@ -243,6 +243,10 @@ class JobModelView(AdminBlocker, sqla.ModelView):
         form.location.data = job.location
         form.work_type.data = job.work_type
         form.expected_salary.data = job.expected_salary
+        form.title.data = job.title
+        form.banner_file_key.data = job.banner_file_key
+        form.uuid.data = job.uuid
+        form.description.data = job.description
 
         for bot in bots:
             if bot.channel_type == BOT_FB_CHAN_TYPE:
@@ -250,28 +254,17 @@ class JobModelView(AdminBlocker, sqla.ModelView):
                     form.active_fb_bot_url.data = bot.bot_url
                     form.active_fb_bot_id.data = bot.bot_id
                 if bot.chat_type == BOT_PASSIVE_CHAT_TYPE:
-                    form.passive_fb_bot_url.data = job.id
-                    form.passive_fb_bot_id.data = job.id
+                    form.passive_fb_bot_url.data = bot.bot_url
+                    form.passive_fb_bot_id.data = bot.bot_id
             if bot.channel_type == BOT_WEB_CHAN_TYPE:
                 if bot.chat_type == BOT_ACTIVE_CHAT_TYPE:
                     form.active_web_bot_url.data = bot.bot_url
                     form.active_web_bot_id.data = bot.bot_id
                 if bot.chat_type == BOT_PASSIVE_CHAT_TYPE:
-                    form.passive_web_bot_url.data = job.id
-                    form.passive_web_bot_id.data = job.id
+                    form.passive_web_bot_url.data = bot.bot_url
+                    form.passive_web_bot_id.data = bot.bot_id
 
         return self._show_job_edit_template(form, job.id)
-
-    @expose('/edit/', methods=['PUT'])
-    def job_update(self):
-        job = jobs_service.find_by_id_company(request.args.get('id'))
-
-        form = AdminJobForm(request.form)
-
-        if not form.validate():
-            return self._show_job_edit_template(form, job.id), 400
-
-        self._save_job_and_bots_from_form(form, job)
 
     def _show_job_edit_template(self, form, job_id):
         return self.render("/admin/job_edit.html", form=form, job_id=job_id)
@@ -290,7 +283,8 @@ class JobModelView(AdminBlocker, sqla.ModelView):
         job.location = form.location.data
         job.work_type = form.work_type.data
         job.expected_salary = form.expected_salary.data
-
+        job.banner_file_key = form.banner_file_key.data
+        job.description = form.description.data
         jobs_service.save(job, commit=commit)
 
     @staticmethod
@@ -311,7 +305,7 @@ class JobModelView(AdminBlocker, sqla.ModelView):
                 job.id,
                 job.company_id,
                 BOT_FB_CHAN_TYPE,
-                BOT_ACTIVE_CHAT_TYPE,
+                BOT_PASSIVE_CHAT_TYPE,
                 bot_id=form.passive_fb_bot_id.data,
                 bot_url=form.passive_fb_bot_url.data,
                 commit=commit,
@@ -333,7 +327,7 @@ class JobModelView(AdminBlocker, sqla.ModelView):
                 job.id,
                 job.company_id,
                 BOT_WEB_CHAN_TYPE,
-                BOT_ACTIVE_CHAT_TYPE,
+                BOT_PASSIVE_CHAT_TYPE,
                 bot_id=form.passive_web_bot_id.data,
                 bot_url=form.passive_web_bot_url.data,
                 commit=commit,

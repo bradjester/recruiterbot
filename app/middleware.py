@@ -49,7 +49,6 @@ class HTTPMethodOverrideMiddleware(object):
         method = self._get_method_override(environ).upper()
 
         if method in self.allowed_methods:
-            method = method.encode('ascii', 'replace')
             environ['REQUEST_METHOD'] = method
 
         if method in self.bodyless_methods:

@@ -1,7 +1,7 @@
 """empty message
 
 Revision ID: 7844519423c0
-Revises: 82ff64640992
+Revises: ddeda6053bad
 Create Date: 2017-02-01 16:08:58.074079
 
 """
@@ -12,7 +12,7 @@ from app.helpers import UTCDateTime
 
 # revision identifiers, used by Alembic.
 revision = '7844519423c0'
-down_revision = '82ff64640992'
+down_revision = 'ddeda6053bad'
 branch_labels = None
 depends_on = None
 

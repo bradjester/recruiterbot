@@ -17,7 +17,7 @@
       {% if (field.type != 'HiddenField' and field.type !='CSRFTokenField') and label_visible %}
           <div class="columns medium-4">{{ field.label(class_='right') }}</div>
       {% endif %}
-      <div class="columns medium-8">
+      <div class="columns medium-{% if label_visible %}8{% else %}12{% endif %}">
         {% if field.errors %}
             {{ field(class_="error " + presetClass, **kwargs) }}
             {% for e in field.errors if e not in ignore_errors %}

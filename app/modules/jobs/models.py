@@ -44,6 +44,7 @@ class Job(Base):
     published_at = db.Column(UTCDateTime())
     uuid = db.Column(db.String(36), unique=True, nullable=False)
     jd_file_key = db.Column(db.String(1024))
+    banner_file_key = db.Column(db.String(1024))
 
 
 class Candidate(Base):

@@ -6,9 +6,9 @@
     {%- endassets %}
 {% endblock %}
 
-{% set page_title = "Job Vacancy" %}
+{% set page_title = "Job Vacancy: " + form.title.data + " at " + form.hiring_company.data %}
 {% block body %}
-  <div class="columns medium-8 medium-offset-2">
+  <div class="columns medium-10 medium-offset-1">
     <h3>{{ page_title }}</h3>
     {% include 'admin/_job_form.html' %}
   </div>

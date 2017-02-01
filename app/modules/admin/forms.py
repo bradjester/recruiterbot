@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from flask_wtf import FlaskForm
-from wtforms import validators, IntegerField, BooleanField
-from wtforms.widgets import HiddenInput
+from wtforms import validators, IntegerField, BooleanField, HiddenField, \
+    StringField
+from wtforms.widgets import HiddenInput, TextArea
 
 from app.modules.forms import NullStringField
 
@@ -12,9 +13,15 @@ class AdminJobForm(FlaskForm):
         widget=HiddenInput()
     )
 
+    title = HiddenField(
+        label=u'Name',
+        validators=[
+            validators.Length(max=255)
+        ]
+    )
+
     is_published = BooleanField(
-        validators=[validators.DataRequired()],
-        widget=HiddenInput(),
+        label="Publish",
         default=False
     )
 
@@ -44,40 +51,51 @@ class AdminJobForm(FlaskForm):
     )
 
     active_fb_bot_url = NullStringField(
-        label=u'Active Facebook Bot URL',
+        label=u'FB URL',
         validators=[validators.Length(max=1024)]
     )
 
     active_fb_bot_id = IntegerField(
-        label=u'Active Facebook Bot ID'
+        label=u'FB ID'
     )
 
     passive_fb_bot_url = NullStringField(
-        label=u'Passive Facebook Bot URL',
+        label=u'FB URL',
         validators=[validators.Length(max=1024)]
     )
 
     passive_fb_bot_id = IntegerField(
-        label=u'Passive Facebook Bot ID'
+        label=u'FB ID'
     )
 
     active_web_bot_url = NullStringField(
-        label=u'Active Web Bot URL',
+        label=u'Web URL',
         validators=[validators.Length(max=1024)]
     )
 
     active_web_bot_id = IntegerField(
-        label=u'Active Web Bot ID'
+        label=u'Web ID'
     )
 
     passive_web_bot_url = NullStringField(
-        label=u'Passive Web Bot URL',
+        label=u'Web URL',
         validators=[validators.Length(max=1024)]
     )
 
     passive_web_bot_id = IntegerField(
-        label=u'Passive Web Bot ID'
+        label=u'Web ID'
     )
+
+    banner_file_key = HiddenField(
+        label=u'Banner Key',
+        validators=[validators.Length(max=1024)])
+
+    uuid = HiddenField(
+        label=u'UUID',
+        validators=[validators.DataRequired(), validators.Length(max=36)])
+
+    description = StringField(
+        label=u'Description', widget=TextArea())
 
     def validate(self):
         valid = FlaskForm.validate(self)

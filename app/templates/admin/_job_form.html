@@ -1,156 +1,149 @@
 {% from 'macros/_foundation_forms.html' import render_field, render_checkbox_field %}
-
-<form name="job-form" id="job-form" method="POST" action="{{ url_for('job_admin.job_update') }}{% if job_id %}{{ job_id }}?__METHOD__=PUT{% endif %}" role="form">
-    {{ form.hidden_tag() if form.hidden_tag }}
-    <div class="row">
-      <div class="columns medium-6">
-        {{ render_field(form.hiring_company) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.position_title) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.location) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.work_type) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.expected_salary) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.active_fb_bot_url) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.active_fb_bot_id) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.passive_fb_bot_url) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.passive_fb_bot_id) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.active_web_bot_url) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.active_web_bot_id) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.passive_web_bot_url) }}
-      </div>
-      <div class="columns medium-6">
-        {{ render_field(form.passive_web_bot_id) }}
-      </div>
-    </div>
-</form>
 <div class="row">
-    <div class="columns medium-6">
-      <fieldset>
-        <legend>Banner photo</legend>
-        <span id="file-name"></span>
-        <form action="/" id="drop" class="dropzone columns medium-12">
-          <div class="dz-message" data-dz-message><span>Drop banner photo here.</span></div>
-        </form>
-      </fieldset>
+    <div class="columns medium-12">
+        <fieldset>
+            <legend>Banner photo</legend>
+            <span id="file-name"></span>
+            <form action="/" id="drop" class="dropzone columns medium-12">
+                <span id="file-name"></span>
+                <div class="dz-message" data-dz-message><span>Drop banner photo here.</span>
+                </div>
+            </form>
+        </fieldset>
     </div>
 </div>
-    <div class="row">
-      <div class="column medium-6">
-        <button type="button" id="save-job" class="button primary right tiny radius">
+<div class="row">
+    <form name="job-form" id="job-form" method="POST" action="
+
+            {{ url_for('job_admin.edit_job') }}{% if job_id %}?id={{ job_id }}&__METHOD__=PUT{% endif %}"
+          role="form">
+        <div class="columns medium-4">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            {{ form.hidden_tag() if form.hidden_tag }}
+            {{ render_field(form.hiring_company, label_visible=false, placeholder="Enter Company Name") }}
+            {{ render_field(form.position_title, label_visible=false, placeholder="Enter Position Title") }}
+            {{ render_field(form.location, label_visible=false, placeholder="Enter Location") }}
+            {{ render_field(form.work_type, label_visible=false, placeholder="EnterWork Type") }}
+            {{ render_field(form.expected_salary, label_visible=false, placeholder="Enter Expected Salary") }}
+            <h5>Active Candidate Bots</h5>
+            {{ render_field(form.active_web_bot_url) }}
+            {{ render_field(form.active_web_bot_id) }}
+            {{ render_field(form.active_fb_bot_url) }}
+            {{ render_field(form.active_fb_bot_id) }}
+            <h5>Passive Candiate Bots</h5>
+            {{ render_field(form.passive_web_bot_url) }}
+            {{ render_field(form.passive_web_bot_id) }}
+            {{ render_field(form.passive_fb_bot_url) }}
+            {{ render_field(form.passive_fb_bot_id) }}
+            <br/>
+            {{ render_checkbox_field(form.is_published) }}
+            <br/>
+        <button type="button" id="save-job"
+                class="button primary tiny success radius">
             Save
         </button>
-        <button type="button" id="preview-job" class="button primary right tiny radius">
+        <button type="button" id="preview-job"
+                class="button primary tiny right radius">
             Preview
         </button>
-        <button type="button" id="publish-job" class="button primary right tiny radius">
-            Publish
-        </button>
-      </div>
-    </div>
-
-{% include 'errors/_upload_errors.html' %}
+        </div>
+        <div class="columns medium-8">
+            <textarea id="description" name="description" title="description">{{ form.description.data }}</textarea>
+        </div>
+    </form>
+</div>
+<br/>
 
 <script type="text/javascript">
-  (function(){
-    document.addEventListener("DOMContentLoaded", function(event) {
+    (function () {
+        document.addEventListener( "DOMContentLoaded", function ( event ) {
 
-        Dropzone.options.drop = false;
+            Dropzone.options.drop = false;
 
-        var $DROP = $("form#drop"),
-            $FILE_URL = $("input#jd_file_key"),
-            $FILE_NAME = $("#file-name"),
-            drop;
+            var $DROP     = $( "form#drop" ),
+                $FILE_URL = $( "input#banner_file_key" ),
+                $FILE_NAME = $("#file-name"),
+                drop,
+                fields;
 
-{#        var uuid = "{{ form.uuid.data }}";#}
+            var uuid = "{{ form.uuid.data }}";
 
-        function get_filename(url) {
-            var i = url.lastIndexOf('/');
-            return i >= 0 ? url.slice(i + 1) : url;
-        }
+            function get_filename(url) {
+                var i = url.lastIndexOf('/');
+                return i >= 0 ? url.slice(i + 1) : url;
+            }
 
-        // FILE UPLOADS
-        // This process needs two steps:
-        // 1. Get an AWS signed post that contains the Key and access information.
-        //    This is done through a get requests to the API
-        // 2. Once this information has been obtained, dropzone can initiate the
-        //    actual upload to the S3 servers.
-        drop = $DROP.dropzone( {
-            init: function () {
-                this.on( "addedfile", function ( file ) {
-{#                    this.options.url = "/api/job_description/{}/signed-post/{}?content-type={}".format(#}
-{#                            uuid, file.name, file.type );#}
-                    $.getJSON( this.options.url )
-                            .done( _onRequestDone )
-                            .fail( _onRequestFail );
-                } );
-            },
-            autoProcessQueue: false,
-            uploadMultiple: false,
-            maxFiles: 1,
-            success: function ( file ) {
-                $DROP.notify( "File uploaded.", "success" );
-                $FILE_URL.val( fields.key );
-                $FILE_NAME.text(get_filename( fields.key ));
-            },
-            error: function ( file ) {
-                this.removeFile( file );
-                fields = null;
-                $DROP.notify( "File upload failed.", "error" );
-            },
-            sending: function ( file, xhr, formData ) {
-                // Set the needed params for S3
-                for ( var prop in fields ) {
-                    if ( fields.hasOwnProperty( prop ) ) {
-                        formData.append( prop, fields[ prop ] );
+            // FILE UPLOADS
+            // This process needs two steps:
+            // 1. Get an AWS signed post that contains the Key and access information.
+            //    This is done through a get requests to the API
+            // 2. Once this information has been obtained, dropzone can initiate the
+            //    actual upload to the S3 servers.
+            drop = $DROP.dropzone( {
+                init: function () {
+                    this.on( "addedfile", function ( file ) {
+                        this.options.url = "/api/image/{}/signed-post/{}?content-type={}".format(
+                                uuid, file.name, file.type );
+                        $.getJSON( this.options.url )
+                                .done( _onRequestDone )
+                                .fail( _onRequestFail );
+                    } );
+                },
+                autoProcessQueue: false,
+                uploadMultiple: false,
+                maxFiles: 1,
+                success: function ( file ) {
+                    $DROP.notify( "File uploaded.", "success" );
+                    $FILE_URL.val( fields.key );
+                    $FILE_NAME.text(get_filename( fields.key ));
+                },
+                error: function ( file ) {
+                    this.removeFile( file );
+                    fields = null;
+                    $DROP.notify( "File upload failed.", "error" );
+                },
+                sending: function ( file, xhr, formData ) {
+                    // Set the needed params for S3
+                    for ( var prop in fields ) {
+                        if ( fields.hasOwnProperty( prop ) ) {
+                            formData.append( prop, fields[ prop ] );
+                        }
                     }
                 }
+            } ).get( 0 ).dropzone;
+
+            function _onRequestDone( json ) {
+                fields = json.data.fields;
+                drop.options.url = json.data.url;
+                drop.processQueue();
             }
-        } ).get( 0 ).dropzone;
 
-        function _onRequestDone( json ) {
-            fields = json.data.fields;
-            drop.options.url = json.data.url;
-            drop.processQueue();
-        }
-
-        function _onRequestFail() {
-            this.removeFile( file );
-            fields = null;
-            $DROP.notify( "File upload failed.", "error" )
-        }
-
-        if ( $FILE_URL.val().length > 0 ) {
-            $FILE_NAME.text(get_filename( $FILE_URL.val() ));
-        }
-
-        $("#submit-job").on('click', function() {
-            if ( $FILE_URL.val().length < 1) {
-                $DROP.notify( "You must add a job description", "error" )
-            } else {
-                $("#job-form").submit();
+            function _onRequestFail() {
+                this.removeFile( file );
+                fields = null;
+                $DROP.notify( "File upload failed.", "error" )
             }
-        });
-    });
-  })();
+
+            tinymce.init({
+                selector: '#description',
+                menubar: false,
+                plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen',
+                    'insertdatetime media table contextmenu paste code'
+                ],
+                toolbar: 'undo redo | insert | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                height: 630,
+                elementpath: false
+            });
+
+            if ( $FILE_URL.val().length > 0 ) {
+                $FILE_NAME.text(get_filename( $FILE_URL.val() ));
+            }
+
+            $( "#save-job" ).on( 'click', function () {
+                $( "#job-form" ).submit();
+            } );
+        } );
+    })();
 </script>
