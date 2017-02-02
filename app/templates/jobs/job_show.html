@@ -10,19 +10,18 @@
             {% else %}
                 <img src="{{ url_for("static", filename="images/banner.png") }}">
             {% endif %}
-            <h2>{{ job.company.name }}</h2>
+            <h2>{{ job.hiring_company }}</h2>
             <h3>{{ job.position_title }}</h3>
         </div>
         <br/>
         <div class="columns info_block">
             <h4>Basic Info</h4>
             <div class="column medium-4"><b>Location:</b></div>
-            <div class="column medium-8">{{ job.location }}</div>
+            <div class="column medium-8">{% if job.location %}{{ job.location }} {% else %} - {% endif %}</div>
             <div class="column medium-4"><b>Type:</b></div>
-            <div class="column medium-8">{{ job.work_type }}</div>
+            <div class="column medium-8">{% if job.work_type %}{{ job.work_type }} {% else %} - {% endif %}</div>
             <div class="column medium-4"><b>Pay:</b></div>
-            <div class="column medium-8">{% if job.expected_salary %}
-                {{ job.expected_salary }} {% else %} - {% endif %}</div>
+            <div class="column medium-8">{% if job.expected_salary %}{{ job.expected_salary }} {% else %} - {% endif %}</div>
             <div class="column medium-4"><b>Posted:</b></div>
             <div class="column medium-8" id="posted"></div>
         </div>

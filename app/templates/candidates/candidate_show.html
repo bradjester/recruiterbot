@@ -100,7 +100,7 @@
             on_select: save_rating
         });
         $('.back').click( function(){
-		    window.location = "{{ url_for('candidates.index', job_id=candidate.bot.job.id) }}";
+		    window.location.replace("{{ url_for('candidates.index', job_id=candidate.bot.job.id) }}");
 		    return false;
 	    });
     } );
