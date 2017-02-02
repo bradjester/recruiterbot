@@ -5,7 +5,7 @@
 
     User forms
 """
-from flask.ext.security import RegisterForm
+from flask_security import RegisterForm
 from wtforms import StringField
 from wtforms import validators
 
