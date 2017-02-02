@@ -6,7 +6,13 @@
     {%- endassets %}
 {% endblock %}
 
-{% set page_title = "Job Vacancy: " + form.title.data + " at " + form.hiring_company.data %}
+{% set page_title = "Job Vacancy" %}
+{% if form.title.data %}
+    {% set page_title = page_title +": " + form.title.data %}
+{%  endif %}
+{% if form.hiring_company.data %}
+    {% set page_title = page_title +" at " + form.hiring_company.data %}
+{%  endif %}
 {% block body %}
   <div class="columns medium-10 medium-offset-1">
     <h3>{{ page_title }}</h3>

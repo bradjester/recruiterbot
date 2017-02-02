@@ -34,8 +34,9 @@
                             {% if not job.jd_file_key %}
                                 None
                             {% else %}
-                                <a href="{{ generate_signed_url(job.jd_file_key) }}" download>View</a>
+                                <a href="{{ generate_signed_url(job.jd_file_key) }}" download>Download</a><br>
                             {% endif %}
+                                <a href="{{ url_for("job.show", job_uuid=job.uuid) }}" target="_blank">Preview</a>
                         </td>
                         <td>{% if job.is_published %}
                             {% if job['web_passive_url'] %}

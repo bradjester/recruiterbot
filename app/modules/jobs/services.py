@@ -86,7 +86,8 @@ class JobsService(Service):
             id=job.id,
             title=job.title,
             is_published=job.is_published,
-            jd_file_key=job.jd_file_key
+            jd_file_key=job.jd_file_key,
+            uuid=job.uuid
         )
         for bot in job.bots:
             candidate_count += bot.candidates.count()
