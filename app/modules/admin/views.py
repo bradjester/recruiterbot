@@ -80,8 +80,7 @@ class UserModelView(AdminBlocker, sqla.ModelView):
 
     column_list = (
         User.id.name,
-        User.first_name.name,
-        User.surname.name,
+        User.name.name,
         User.email.name,
         User.active.name,
         User.roles.key,
@@ -96,8 +95,7 @@ class UserModelView(AdminBlocker, sqla.ModelView):
     )
 
     column_labels = dict(
-        first_name=u'Given Name',
-        surname=u'Surname',
+        name=u'Name',
         current_login_at=u'Login Timestamp',
         last_login_at=u'Last Login Timestamp',
         created_at=u'Created Timestamp',
@@ -105,8 +103,7 @@ class UserModelView(AdminBlocker, sqla.ModelView):
     )
 
     form_columns = (
-        User.first_name.name,
-        User.surname.name,
+        User.name.name,
         User.active.name,
         User.roles.key,
         User.company.key,

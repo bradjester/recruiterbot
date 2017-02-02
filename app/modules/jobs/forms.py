@@ -9,13 +9,15 @@ class JobForm(FlaskForm):
     title = NullStringField(
         label=u'Name',
         validators=[
-            validators.InputRequired(),
+            validators.DataRequired(),
             validators.Length(max=255)
         ]
     )
     jd_file_key = HiddenField(
         label=u'Job Description Key',
-        validators=[validators.DataRequired(), validators.Length(max=1024)])
+        validators=[validators.DataRequired(), validators.Length(max=1024)]
+    )
     uuid = HiddenField(
         label=u'UUID',
-        validators=[validators.DataRequired(), validators.Length(max=36)])
+        validators=[validators.DataRequired(), validators.Length(max=36)]
+    )
