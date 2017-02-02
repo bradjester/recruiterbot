@@ -59,9 +59,9 @@ class AWSS3Service(object):
         return clean_key
 
     def copy_from_url(self, url, bucket, prefix, extra_args=None):
-        key = self.sanitize_key(urlparse(url).path)
+        key = self.sanitize_key(prefix + urlparse(url).path)
         with urllib.request.urlopen(url) as data:
-            self.aws_service.s3.upload_fileobj(
+            self.aws_service.s3.meta.client.upload_fileobj(
                 data, bucket, key, extra_args=extra_args)
         return key
 
