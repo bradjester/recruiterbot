@@ -27,12 +27,12 @@ class AdminJobForm(FlaskForm):
 
     hiring_company = NullStringField(
         label=u'Hiring Company',
-        validators=[validators.Length(max=255)]
+        validators=[validators.Length(max=255), validators.DataRequired()]
     )
 
     position_title = NullStringField(
         label=u'Position Title',
-        validators=[validators.Length(max=255)]
+        validators=[validators.Length(max=255), validators.DataRequired()]
     )
 
     location = NullStringField(
@@ -56,7 +56,8 @@ class AdminJobForm(FlaskForm):
     )
 
     active_fb_bot_id = IntegerField(
-        label=u'FB ID'
+        label=u'FB ID',
+        validators=[validators.optional()],
     )
 
     passive_fb_bot_url = NullStringField(
@@ -65,7 +66,8 @@ class AdminJobForm(FlaskForm):
     )
 
     passive_fb_bot_id = IntegerField(
-        label=u'FB ID'
+        label=u'FB ID',
+        validators=[validators.optional()],
     )
 
     active_web_bot_url = NullStringField(
@@ -74,7 +76,8 @@ class AdminJobForm(FlaskForm):
     )
 
     active_web_bot_id = IntegerField(
-        label=u'Web ID'
+        label=u'Web ID',
+        validators=[validators.optional()],
     )
 
     passive_web_bot_url = NullStringField(
@@ -83,7 +86,8 @@ class AdminJobForm(FlaskForm):
     )
 
     passive_web_bot_id = IntegerField(
-        label=u'Web ID'
+        label=u'Web ID',
+        validators=[validators.optional()],
     )
 
     banner_file_key = HiddenField(
