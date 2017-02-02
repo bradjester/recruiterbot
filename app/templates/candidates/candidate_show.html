@@ -31,7 +31,7 @@
             <br/>
             <br/>
             <span class="button small radius candidate">
-                <a href="{{ candidate.resume_key }}" download><i class="fi-download"></i> Download Resume</a>
+                <a href="{{ generate_signed_url(candidate.resume_key) }}" target="_blank"><i class="fi-download"></i> Download Resume</a>
             </span>
             <span class="button small radius candidate success back">
                 <i class="fa fa-reply"></i> Back
