@@ -16,6 +16,7 @@ from flask_admin.contrib import sqla
 from flask_admin.contrib.sqla import typefmt as sqla_typefmt
 from flask_admin.model import typefmt
 from flask_security import current_user
+from markupsafe import Markup
 from sqlalchemy import func
 
 from app.extensions import db
@@ -194,6 +195,17 @@ class JobModelView(AdminBlocker, sqla.ModelView):
     can_create = False
     can_edit = True
 
+    def _title_formatter(view, context, model, name):
+        return Markup(
+            '<a href="%s" target="_blank">%s</a>' % (
+                url_for('job.show', job_uuid=model.uuid),
+                model.title
+            )
+        )
+
+    column_formatters = dict(
+        title=_title_formatter
+    )
     column_type_formatters = DEFAULT_FORMATTERS
 
     column_list = (
@@ -207,6 +219,7 @@ class JobModelView(AdminBlocker, sqla.ModelView):
             self.session.query(
                 Job.id.label("id"),
                 Job.title.label("title"),
+                Job.uuid.label("uuid"),
                 Company.name.label("company_name"),
                 func.count(Candidate.id).label("candidate_count"),
             )

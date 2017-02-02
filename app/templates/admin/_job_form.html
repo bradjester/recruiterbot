@@ -39,14 +39,9 @@
             {{ render_checkbox_field(form.is_published) }}
             <br/>
         <button type="button" id="save-job"
-                class="button primary tiny success radius">
+                class="button primary tiny success right radius">
             Save
         </button>
-        <a type="button" id="preview-job"
-                class="button primary tiny right radius"
-        href="{{ url_for("job.show", job_uuid=form.uuid.data) }}" target="_blank">
-            Preview
-        </a>
         </div>
         <div class="columns medium-8">
             <textarea id="description" name="description" title="description">{{ form.description.data }}</textarea>
