@@ -136,7 +136,7 @@ def load_fixtures():
     user_role = roles_service.create(name="user", commit=False)
 
     users_service.create(
-        email="admin@jobrobin.com",
+        email="jobrobin+admin@droste.hk",
         password=encrypt_password("password"),
         active=True,
         confirmed_at=utc_now(),
@@ -150,7 +150,7 @@ def load_fixtures():
     acme_company = companies_service.create(name="Acme")
 
     users_service.create(
-        email="user1@acme.hk",
+        email="jobrobin+a1@droste.hk",
         password=encrypt_password("password"),
         active=True,
         confirmed_at=utc_now(),
@@ -162,7 +162,7 @@ def load_fixtures():
     )
 
     users_service.create(
-        email="user2@acme.hk",
+        email="jobrobin+a2@droste.hk",
         password=encrypt_password("password"),
         active=True,
         confirmed_at=utc_now(),
@@ -192,7 +192,7 @@ def load_fixtures():
     droste_company = companies_service.create(name="Droste", commit=False)
 
     users_service.create(
-        email="user1@droste.hk",
+        email="jobrobin+d1@droste.hk",
         password=encrypt_password("password"),
         active=True,
         confirmed_at=utc_now(),
@@ -204,7 +204,7 @@ def load_fixtures():
     )
 
     users_service.create(
-        email="user2@droste.hk",
+        email="jobrobin+d2@droste.hk",
         password=encrypt_password("password"),
         active=True,
         confirmed_at=utc_now(),
