@@ -81,6 +81,7 @@
 
                 var session_id = getParameterByName( 'session_id' );
                 if ( !_.isNull( session_id ) ) {
+                {% if job.is_published %}
                     $( "#resume" ).show();
                     var $DROP = $( "form#drop" ),
                         drop,
@@ -147,6 +148,9 @@
                         fields = null;
                         $DROP.notify( "File upload failed.", "error" )
                     }
+                {% else %}
+                    $('#resume').html("<h4>This job is currently not accepting CV submissions.</h4>").show();
+                {% endif %}
                 }
             } );
         })();
