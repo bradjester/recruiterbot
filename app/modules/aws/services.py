@@ -58,11 +58,10 @@ class AWSS3Service(object):
             raise AppUploadFailedError("Failed to upload file to S3") from e
         return clean_key
 
-    def copy_from_url(self, url, bucket, prefix, extra_args=None):
+    def copy_from_url(self, url, bucket, prefix):
         key = self.sanitize_key(prefix + urlparse(url).path)
         with urllib.request.urlopen(url) as data:
-            self.aws_service.s3.meta.client.upload_fileobj(
-                data, bucket, key, extra_args=extra_args)
+            self.aws_service.s3.meta.client.upload_fileobj(data, bucket, key)
         return key
 
 

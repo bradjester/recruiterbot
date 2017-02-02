@@ -23,6 +23,8 @@ class StaticStorageService(object):
         self.s3_service = s3_service
 
     def generate_signed_url(self, key):
+        if not key:
+            return None
         return self.s3_service.generate_object_signed_url(self._bucket, key)
 
     def generate_job_description_signed_post(
