@@ -1,10 +1,11 @@
 {% extends 'layouts/base.html' %}
 
-{% set page_title = candidate.name + ' for ' + job_title %}
+{% set candidate_name = candidate.name if candidate.name else 'Not Given' %}
+{% set page_title = candidate_name + ' for ' + job_title %}
 {% block body %}
     <div class="columns medium-10 medium-offset-1">
         <div class="columns medium-4">
-            <h3>{{ candidate.name }}</h3>
+            <h3>{{ candidate_name }}</h3>
             <h4>for {{ job_title }}</h4>
             <hr/>
             <h5 class="auto-rating">Auto Rating: 0</h5>
