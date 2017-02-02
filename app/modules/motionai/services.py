@@ -7,6 +7,7 @@
 """
 from datetime import datetime
 
+import logging
 from flask import current_app
 
 from app.core import Service
@@ -17,12 +18,15 @@ from .models import Message
 
 class WebhookService(Service):
     __model__ = Message
+    logger = logging.getLogger(__name__)
 
-    def __init__(self, bots_service, candidates_service, messages_service):
+    def __init__(self, bots_service, candidates_service, messages_service,
+                 static_storage_service):
         super(WebhookService, self).__init__()
         self.bots_service = bots_service
         self.candidates_service = candidates_service
         self.messages_service = messages_service
+        self.static_storage_service = static_storage_service
 
     def create_message(self, data_dict):
         if data_dict['secret'] != current_app.config.get('WEBHOOK_SECRET_KEY'):
@@ -34,6 +38,14 @@ class WebhookService(Service):
         session_id = data_dict.get('session')
         candidate = self.candidates_service.find_candidate_by_session_id(
             session_id)
+
+        media_url = data_dict.get('attachedMedia')
+        if media_url is not None:
+            try:
+                data_dict['attachedMedia'] = self.static_storage_service.\
+                    copy_from_url(media_url, bot.job.uuid, session_id)
+            except:
+                self.logger.exception("Failed to copy attachedMedia to S3")
 
         if candidate is None:
             # Create candidate with existing session_id

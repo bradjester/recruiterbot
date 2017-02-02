@@ -6,6 +6,8 @@
     AWS module services
 """
 import re
+import urllib.request
+from urllib.parse import urlparse
 
 import boto3
 from boto3.exceptions import S3UploadFailedError
@@ -55,6 +57,13 @@ class AWSS3Service(object):
         except S3UploadFailedError as e:
             raise AppUploadFailedError("Failed to upload file to S3") from e
         return clean_key
+
+    def copy_from_url(self, url, bucket, prefix, extra_args=None):
+        key = self.sanitize_key(urlparse(url).path)
+        with urllib.request.urlopen(url) as data:
+            self.aws_service.s3.upload_fileobj(
+                data, bucket, key, extra_args=extra_args)
+        return key
 
 
 class AWSSESService(object):

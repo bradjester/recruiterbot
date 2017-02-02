@@ -11,7 +11,7 @@ import magic
 from flask import current_app
 
 from .constants import JOB_CANDIDATE_RESUME_PATH_FMT, JOB_BANNER_PATH_FMT, \
-    JOB_DESCRIPTION_PATH_FMT
+    JOB_DESCRIPTION_PATH_FMT, JOB_CANDIDATE_FILES_PREFIX
 from .errors import AppUploadFailedFileExistsError
 
 
@@ -62,6 +62,10 @@ class StaticStorageService(object):
             self._error_if_exists(key)
         return self.s3_service.generate_signed_post(
             self._bucket, key, content_type=content_type)
+
+    def copy_from_url(self, url, job_uuid, session_id):
+        prefix = JOB_CANDIDATE_FILES_PREFIX.format(job_uuid, session_id)
+        return self.s3_service.copy_from_url(url, self._bucket, prefix)
 
     @staticmethod
     def _basename(filename):
