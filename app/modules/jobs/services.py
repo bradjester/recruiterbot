@@ -28,7 +28,7 @@ class CandidatesService(Service):
     def _find_no_name_candidates_by_job_id(job_id):
         # Filtering candidates by name == NULL and job_id
         return Candidate.query\
-            .filter(Bot.job_id == job_id, Candidate.name is None)\
+            .filter(Bot.job_id == job_id, Candidate.name.is_(None))\
             .join(Bot, Bot.id == Candidate.bot_id)\
             .all()
 
