@@ -56,10 +56,9 @@
             Dropzone.autoDiscover = false;
             document.addEventListener( "DOMContentLoaded", function ( ) {
 
-                var posted = {% if job.is_published %} "{{ job.published_at }}"
+                var posted = {% if job.is_published and job.published_at %} "{{ job.published_at }}"
                     ; {% else %} null; {% endif %}
-
-                if ( !_.isNull( posted ) ) {
+                if ( !_.isNull( posted ) && posted != "None") {
                     $( "#posted" ).text( moment( new Date( posted ) ).fromNow() );
                 } else {
                     $( "#posted" ).text( "Unpublished" );
