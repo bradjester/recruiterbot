@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 
-{% set page_title = 'Vacancy List for ' + company.name if company != None else 'Unknown Company' %}
+{% set page_title = 'Vacancy List for ' + company.name if company != None else 'Onboarding in progress' %}
 {% block body %}
     <div class="columns datatables-list medium-8 medium-offset-2">
         <h3 class="page-title">{{ page_title }}</h3>
@@ -36,7 +36,6 @@
                             {% else %}
                                 <a href="{{ generate_signed_url(job.jd_file_key) }}" target="_blank">Download</a><br>
                             {% endif %}
-                                <a href="{{ url_for("job.show", job_uuid=job.uuid) }}" target="_blank">Preview</a>
                         </td>
                         <td>{% if job.is_published %}
                             {% if job['web_passive_url'] %}
@@ -78,7 +77,12 @@
                 </tbody>
             </table>
         {% else %}
-            <h1 class="new">No jobs exist!</h1>
+            {% if company != None%}
+                <h1 class="new">No jobs found. Please add a new job</h1>
+            {% else %}
+                <h1 class="new">No jobs found</h1>
+            {% endif %}
+
         {% endif %}
     </div>
 {% endblock %}
