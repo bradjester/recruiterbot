@@ -43,12 +43,12 @@ def get_job_candidate_resume_signed_post(job_uuid, session_id, filename):
     return jsonify(data=data)
 
 
-@route(api_bp, '/image/<uuid>/signed-post/<filename>')
-def get_image_signed_post(uuid, filename):
+@route(api_bp, '/jobs/<job_uuid>/banner/signed-post/<filename>')
+def get_job_banner_signed_post(job_uuid, filename):
     content_type = request.args.get('content-type')
     # Always overwrite existing individual images.
-    data = static_storage_service.generate_job_image_signed_post(
-        uuid, filename, overwrite=True, content_type=content_type)
+    data = static_storage_service.generate_job_banner_signed_post(
+        job_uuid, filename, overwrite=True, content_type=content_type)
     return jsonify(data=data)
 
 

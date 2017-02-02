@@ -10,7 +10,7 @@ import os
 import magic
 from flask import current_app
 
-from .constants import JOB_CANDIDATE_RESUME_PATH_FMT, JOB_IMAGE_PATH_FMT, \
+from .constants import JOB_CANDIDATE_RESUME_PATH_FMT, JOB_BANNER_PATH_FMT, \
     JOB_DESCRIPTION_PATH_FMT
 from .errors import AppUploadFailedFileExistsError
 
@@ -35,14 +35,14 @@ class StaticStorageService(object):
         return JOB_DESCRIPTION_PATH_FMT.format(
             job_uuid, self.s3_service.sanitize_key(file_name))
 
-    def generate_job_image_signed_post(
+    def generate_job_banner_signed_post(
             self, job_uuid, file_name, overwrite=True, content_type=None):
-        key = self.get_job_image_key(job_uuid, file_name)
+        key = self.get_job_banner_key(job_uuid, file_name)
         return self.generate_signed_post(
             key, overwrite=overwrite, content_type=content_type)
 
-    def get_job_image_key(self, job_uuid, file_name):
-        return JOB_IMAGE_PATH_FMT.format(
+    def get_job_banner_key(self, job_uuid, file_name):
+        return JOB_BANNER_PATH_FMT.format(
             job_uuid, self.s3_service.sanitize_key(file_name))
 
     def generate_job_candidate_resume_signed_post(

@@ -83,7 +83,7 @@
             drop = $DROP.dropzone( {
                 init: function () {
                     this.on( "addedfile", function ( file ) {
-                        this.options.url = "/api/image/{}/signed-post/{}?content-type={}".format(
+                        this.options.url = "/api/jobs/{}/banner/signed-post/{}?content-type={}".format(
                                 uuid, file.name, file.type );
                         $.getJSON( this.options.url )
                                 .done( _onRequestDone )
