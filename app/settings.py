@@ -62,7 +62,6 @@ SECURITY_EMAIL_SUBJECT_PASSWORD_RESET = u'Instructions to reset your ' \
 
 
 # Mail configuration
-# TODO: Change the email address to admin@precruiter.co when AWS approves.
 BOUNCES_AND_COMPLAINTS_EMAIL = os.getenv(
     'BOUNCES_AND_COMPLAINTS_EMAIL', 'jobrobin@droste.hk')
 
