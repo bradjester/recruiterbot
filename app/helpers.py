@@ -55,13 +55,17 @@ class UTCDateTime(sqlalchemy.types.TypeDecorator):
 
     def process_bind_param(self, value, engine):
         if value is not None:
-            return value.astimezone(tzutc())
+            return datetime(value.year, value.month, value.day,
+                            value.hour, value.minute, value.second,
+                            value.microsecond, tzinfo=tzutc(),
+                            fold=value.fold)
 
     def process_result_value(self, value, engine):
         if value is not None:
             return datetime(value.year, value.month, value.day,
                             value.hour, value.minute, value.second,
-                            value.microsecond, tzinfo=tzutc())
+                            value.microsecond, tzinfo=tzutc(),
+                            fold=value.fold)
 
 
 def json_date_encoder(obj):
