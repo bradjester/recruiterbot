@@ -54,7 +54,7 @@
                         {% endif %}
                         <div class="messages">
                             {% if message.attached_media_url %}
-                                <a class="message_media" href="{{ message.attached_media_url }}">Download Media</a>
+                                <a class="message_media" href="{{ generate_signed_url(message.attached_media_url) }}">Download Media</a>
                             {% else %}
                                 {{ message.reply }}
                             {% endif %}
