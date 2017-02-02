@@ -66,8 +66,9 @@ DEFAULT_FORMATTERS.update({
 
 
 class AppAdminIndexView(AdminBlocker, AdminIndexView):
-    pass
-
+    def is_visible(self):
+        return False
+    
 
 class UserModelView(AdminBlocker, sqla.ModelView):
     def __init__(self):
