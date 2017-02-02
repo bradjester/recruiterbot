@@ -2,153 +2,156 @@
 
 {% set page_title = job.company.name + ' - ' + job.title %}
 {% block body %}
-  <!-- TODO: Add the dropzone for CVs if the session_id is set on the query string. -->
+    <div class="columns medium-8 medium-offset-2">
 
-  <!-- TODO: Add the image for the job with the company name and job title overlaid. -->
-<div class="columns medium-8 medium-offset-2">
-
-  <div id="banner" class="banner">
-      {% if job.banner_file_key %}
-      <img src="{{ generate_signed_url(job.banner_file_key) }}">
-      {% else %}
-      <img src="{{ url_for("static", filename="images/banner.png") }}">
-      {% endif %}
-      <h2>{{ job.company.name }}</h2>
-      <h3>{{ job.position_title }}</h3>
-  </div>
-  <br/>
-  <div class="columns info_block">
-      <h4>Basic Info</h4>
-      <div class="column medium-4"><b>Location:</b></div>
-      <div class="column medium-8">{{ job.location }}</div>
-      <div class="column medium-4"><b>Type:</b></div>
-      <div class="column medium-8">{{ job.work_type }}</div>
-      <div class="column medium-4"><b>Pay:</b></div>
-      <div class="column medium-8">{% if job.expected_salary %} {{ job.expected_salary }} {% else %} - {% endif %}</div>
-      <div class="column medium-4"><b>Posted:</b></div>
-      <div class="column medium-8" id="posted"></div>
-  </div>
-  <div class="columns">
-      &nbsp;
-      <br>
-  </div>
-  <div class="columns info_block">
-      <h4>Job Description</h4>
-      <div class="column medium-12" id="description">{{ job.description | safe }}</div>
-  </div>
-  <div class="columns">
-      &nbsp;
-      <br>
-  </div>
-  <div class="row" id="resume" style="display: none">
-      <form action="/" id="drop" class="dropzone columns medium-6 medium-offset-3">
-        <div class="dz-message" data-dz-message><span>Drop CV here.</span>
+        <div id="banner" class="banner">
+            {% if job.banner_file_key %}
+                <img src="{{ generate_signed_url(job.banner_file_key) }}">
+            {% else %}
+                <img src="{{ url_for("static", filename="images/banner.png") }}">
+            {% endif %}
+            <h2>{{ job.company.name }}</h2>
+            <h3>{{ job.position_title }}</h3>
         </div>
-    </form>
-  </div>
+        <br/>
+        <div class="columns info_block">
+            <h4>Basic Info</h4>
+            <div class="column medium-4"><b>Location:</b></div>
+            <div class="column medium-8">{{ job.location }}</div>
+            <div class="column medium-4"><b>Type:</b></div>
+            <div class="column medium-8">{{ job.work_type }}</div>
+            <div class="column medium-4"><b>Pay:</b></div>
+            <div class="column medium-8">{% if job.expected_salary %}
+                {{ job.expected_salary }} {% else %} - {% endif %}</div>
+            <div class="column medium-4"><b>Posted:</b></div>
+            <div class="column medium-8" id="posted"></div>
+        </div>
+        <div class="columns">
+            &nbsp;
+            <br>
+        </div>
+        <div class="columns info_block">
+            <h4>Job Description</h4>
+            <div class="column medium-12"
+                 id="description">{{ job.description | safe }}</div>
+        </div>
+        <div class="columns">
+            &nbsp;
+            <br>
+        </div>
+        <div class="row" id="resume" style="display: none">
+            <form action="/" id="drop"
+                  class="dropzone columns medium-6 medium-offset-3">
+                <div class="dz-message" data-dz-message>
+                    <span>Drop CV here.</span>
+                </div>
+            </form>
+        </div>
 
-</div>
+    </div>
 {% endblock %}
 {% block extra_js %}
-<script type="text/javascript">
-    (function () {
-        Dropzone.autoDiscover = false;
-        document.addEventListener( "DOMContentLoaded", function ( event ) {
+    <script type="text/javascript">
+        (function () {
+            Dropzone.autoDiscover = false;
+            document.addEventListener( "DOMContentLoaded", function ( ) {
 
-            var posted = {% if job.is_published %} "{{ job.published_at }}"; {% else %} null; {% endif %}
+                var posted = {% if job.is_published %} "{{ job.published_at }}"
+                    ; {% else %} null; {% endif %}
 
-            function get_filename(url) {
-                var i = url.lastIndexOf('/');
-                return i >= 0 ? url.slice(i + 1) : url;
-            }
-            if ( !_.isNull( posted ) ) {
-                $("#posted").text( moment(new Date(posted)).fromNow() );
-            } else {
-                $("#posted").text( "Unpublished" );
-            }
-
-            function getParameterByName(name, url) {
-                if (!url) {
-                  url = window.location.href;
+                if ( !_.isNull( posted ) ) {
+                    $( "#posted" ).text( moment( new Date( posted ) ).fromNow() );
+                } else {
+                    $( "#posted" ).text( "Unpublished" );
                 }
-                name = name.replace(/[\[\]]/g, "\\$&");
-                var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                    results = regex.exec(url);
-                if (!results) return null;
-                if (!results[2]) return '';
-                return decodeURIComponent(results[2].replace(/\+/g, " "));
-            }
 
-            var session_id = getParameterByName('session_id');
-            if ( !_.isNull( session_id )) {
-                $("#resume").show();
-                var $DROP = $( "form#drop" ),
-                    drop,
-                    fields;
-                // FILE UPLOADS
-                // This process needs two steps:
-                // 1. Get an AWS signed post that contains the Key and access information.
-                //    This is done through a get requests to the API
-                // 2. Once this information has been obtained, dropzone can initiate the
-                //    actual upload to the S3 servers.
-                drop = $DROP.dropzone( {
-                    init: function () {
-                        this.on( "addedfile", function ( file ) {
-                            this.options.url = "/api/jobs/{}/candidates/{}/resumes/signed-post/{}?content-type={}".format(
-                                    "{{ job.uuid }}", session_id, file.name, file.type );
-                            $.getJSON( this.options.url )
-                                    .done( _onRequestDone )
-                                    .fail( _onRequestFail );
-                        } );
-                    },
-                    autoProcessQueue: false,
-                    uploadMultiple: false,
-                    maxFiles: 1,
-                    success: function ( file ) {
-                        $DROP.notify( "File uploaded.", "success" );
-                        $.ajax({
-                            type: 'PUT',
-                            url: '{{ url_for('api.put_candidate_key') }}',
-                            data: JSON.stringify({
-                                session_id: session_id,
-                                job_uuid: '{{ job.uuid }}',
-                                resume_key: fields.key}),
-                            contentType: "application/json",
-                            dataType: 'json',
-                            error: function() {
-                                $("#msg").notify("Error while updating rating", "error");
-                            }
-                        })
-                    },
-                    error: function ( file ) {
-                        this.removeFile( file );
-                        fields = null;
-                        $DROP.notify( "File upload failed.", "error" );
-                    },
-                    sending: function ( file, xhr, formData ) {
-                        // Set the needed params for S3
-                        for ( var prop in fields ) {
-                            if ( fields.hasOwnProperty( prop ) ) {
-                                formData.append( prop, fields[ prop ] );
+                function getParameterByName( name, url ) {
+                    if ( !url ) {
+                        url = window.location.href;
+                    }
+                    name = name.replace( /[\[\]]/g, "\\$&" );
+                    var regex   = new RegExp( "[?&]" + name + "(=([^&#]*)|&|#|$)" ),
+                        results = regex.exec( url );
+                    if ( !results ) {
+                        return null;
+                    }
+                    if ( !results[ 2 ] ) {
+                        return '';
+                    }
+                    return decodeURIComponent( results[ 2 ].replace( /\+/g, " " ) );
+                }
+
+                var session_id = getParameterByName( 'session_id' );
+                if ( !_.isNull( session_id ) ) {
+                    $( "#resume" ).show();
+                    var $DROP = $( "form#drop" ),
+                        drop,
+                        fields;
+                    // FILE UPLOADS
+                    // This process needs two steps:
+                    // 1. Get an AWS signed post that contains the Key and access information.
+                    //    This is done through a get requests to the API
+                    // 2. Once this information has been obtained, dropzone can initiate the
+                    //    actual upload to the S3 servers.
+                    drop = $DROP.dropzone( {
+                        init: function () {
+                            this.on( "addedfile", function ( file ) {
+                                this.options.url = "/api/jobs/{}/candidates/{}/resumes/signed-post/{}?content-type={}".format(
+                                        "{{ job.uuid }}", session_id, file.name, file.type );
+                                $.getJSON( this.options.url )
+                                        .done( _onRequestDone )
+                                        .fail( _onRequestFail );
+                            } );
+                        },
+                        autoProcessQueue: false,
+                        uploadMultiple: false,
+                        maxFiles: 1,
+                        success: function ( ) {
+                            $DROP.notify( "File uploaded.", "success" );
+                            $.ajax( {
+                                type: 'PUT',
+                                url: '{{ url_for('api.put_candidate_key') }}',
+                                data: JSON.stringify( {
+                                    session_id: session_id,
+                                    job_uuid: '{{ job.uuid }}',
+                                    resume_key: fields.key
+                                } ),
+                                contentType: "application/json",
+                                dataType: 'json',
+                                error: function ( data ) {
+                                    $DROP.notify( "Error while updating candidate data: {}".format( data ), "error" );
+                                }
+                            } )
+                        },
+                        error: function ( file ) {
+                            this.removeFile( file );
+                            fields = null;
+                            $DROP.notify( "File upload failed.", "error" );
+                        },
+                        sending: function ( file, xhr, formData ) {
+                            // Set the needed params for S3
+                            for ( var prop in fields ) {
+                                if ( fields.hasOwnProperty( prop ) ) {
+                                    formData.append( prop, fields[ prop ] );
+                                }
                             }
                         }
+                    } ).get( 0 ).dropzone;
+
+                    function _onRequestDone( json ) {
+                        fields = json.data.fields;
+                        drop.options.url = json.data.url;
+                        drop.processQueue();
                     }
-                } ).get( 0 ).dropzone;
 
-                function _onRequestDone( json ) {
-                    fields = json.data.fields;
-                    drop.options.url = json.data.url;
-                    drop.processQueue();
+                    function _onRequestFail() {
+                        this.removeFile( file );
+                        fields = null;
+                        $DROP.notify( "File upload failed.", "error" )
+                    }
                 }
-
-                function _onRequestFail() {
-                    this.removeFile( file );
-                    fields = null;
-                    $DROP.notify( "File upload failed.", "error" )
-                }
-            }
-        } );
-    })();
-</script>
+            } );
+        })();
+    </script>
 {% endblock %}
 
