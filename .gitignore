@@ -84,7 +84,7 @@ venv
 
 # Generated JS/CSS
 app/static/cssmin
-app/static/jsmin
+# app/static/jsmin
 vendor.min.js
 style.css
 admin.css
