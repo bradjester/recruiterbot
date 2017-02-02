@@ -62,8 +62,7 @@ SECURITY_EMAIL_SUBJECT_PASSWORD_RESET = u'Instructions to reset your ' \
 
 
 # Mail configuration
-BOUNCES_AND_COMPLAINTS_EMAIL = os.getenv(
-    'BOUNCES_AND_COMPLAINTS_EMAIL', 'jobrobin@droste.hk')
+RETURN_EMAIL = os.getenv('RETURN_EMAIL', 'admin@precruiter.co')
 
 # Flask-Login
 # https://flask-login.readthedocs.org/en/latest/#protecting-views

@@ -88,7 +88,7 @@ class AWSSESService(object):
                     )
                 )
             ),
-            ReturnPath=config.get('BOUNCES_AND_COMPLAINTS_EMAIL')
+            ReturnPath=config.get('RETURN_EMAIL')
         )
         if msg.reply_to:
             params['ReplyToAddresses'] = [msg.reply_to]
