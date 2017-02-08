@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %}
 
-{% set page_title = 'Vacancy List for ' + company.name if company != None else 'Onboarding in progress' %}
+{% set page_title = 'Vacancy List for ' + company.name if company != None else 'Awaiting administrator approval' %}
 {% block body %}
     <div class="columns datatables-list medium-8 medium-offset-2">
         <h3 class="page-title">{{ page_title }}</h3>
@@ -78,9 +78,9 @@
             </table>
         {% else %}
             {% if company != None%}
-                <h1 class="new">No jobs found. Please add a new job</h1>
+                <h3 class="new">No listings - Please add a vacancy</h3>
             {% else %}
-                <h1 class="new">No jobs found</h1>
+                <h3 class="new">We will email you when your account has been activated</h3>
             {% endif %}
 
         {% endif %}
