@@ -1,0 +1,13 @@
+<p>Hi {{ user.name }},</p>
+
+<p>Thanks for registering to try out JobRobin’s recruiting tool, Precruiter. Someone from the
+JobRobin team will be in touch shortly to finalize the setup of your account.</p>
+<br>
+{% if security.confirmable %}
+<p>You can confirm your email through the link below:</p>
+
+<p><a href="{{ confirmation_link }}">Confirm my account</a></p>
+{% endif %}
+<br>
+<p>Thanks,</p>
+<p>JobRobin Team</p>
