@@ -98,6 +98,7 @@ class UserModelView(AdminBlocker, sqla.ModelView):
 
     column_labels = dict(
         name=u'Name',
+        roles=u'Permissions',
         current_login_at=u'Login Timestamp',
         last_login_at=u'Last Login Timestamp',
         created_at=u'Created Timestamp',
@@ -134,7 +135,7 @@ class UserModelView(AdminBlocker, sqla.ModelView):
 class RoleModelView(AdminBlocker, sqla.ModelView):
     def __init__(self):
         super(RoleModelView, self).__init__(
-            Role, db.session, name=u'Roles')
+            Role, db.session, name=u'Permissions')
 
     can_delete = False
     can_create = False
@@ -213,6 +214,13 @@ class JobModelView(AdminBlocker, sqla.ModelView):
         "company_name",
         "candidate_count",
         "title",
+        "created_at",
+        "updated_at",
+    )
+
+    column_labels = dict(
+        created_at=u'Created Timestamp',
+        updated_at=u'Updated Timestamp'
     )
 
     def get_query(self):
@@ -221,6 +229,8 @@ class JobModelView(AdminBlocker, sqla.ModelView):
                 Job.id.label("id"),
                 Job.title.label("title"),
                 Job.uuid.label("uuid"),
+                Job.created_at.label("created_at"),
+                Job.updated_at.label("updated_at"),
                 Company.name.label("company_name"),
                 func.count(Candidate.id).label("candidate_count"),
             )
