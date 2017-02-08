@@ -77,12 +77,13 @@
                 </tbody>
             </table>
         {% else %}
-            {% if company != None%}
+            <div class="no-jobs">
+            {% if company != None %}
                 <h3 class="new">No listings - Please add a vacancy</h3>
             {% else %}
                 <h3 class="new">We will email you when your account has been activated</h3>
             {% endif %}
-
+            </div>
         {% endif %}
     </div>
 {% endblock %}
