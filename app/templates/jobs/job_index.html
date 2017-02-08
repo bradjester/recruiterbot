@@ -3,7 +3,7 @@
 {% set page_title = 'Vacancy List for ' + company.name if company != None else 'Awaiting administrator approval' %}
 {% block body %}
     <div class="columns datatables-list medium-8 medium-offset-2">
-        <h3 class="page-title">{{ page_title }}</h3>
+        <h3 class="page-title vacancies">{{ page_title }}</h3>
         {% if company != None %}
           <div class="columns controls small-2">
               <a class="button tiny primary radius"
@@ -24,12 +24,12 @@
                 <tbody>
                 {% for job in jobs %}
                     <tr {% if not job.is_published %}class="not-published"{% endif %}>
+                        <td>{{ job.title }}</td>
                         <td>{% if job.is_published %}
-                            <a class="job_title" href={{ url_for("candidates.index", job_id=job.id) }}>{{ job.title }}</a>
+                            <a class="job_title" href={{ url_for("candidates.index", job_id=job.id) }}>{{ job.candidate_count }}</a>
                         {% else %}
-                            {{ job.title }}
+                            {{ job.candidate_count }}
                         {% endif %}
-                        </td><td>{{ job.candidate_count }}</td>
                         <td>
                             {% if not job.jd_file_key %}
                                 None

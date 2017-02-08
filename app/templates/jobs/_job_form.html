@@ -24,6 +24,9 @@
         <button type="button" id="submit-job" class="button primary right tiny radius">
             Create Job
         </button>
+        <button type="button" id="cancel-job" class="button secondary left tiny radius">
+            Cancel
+        </button>
       </div>
     </div>
 
@@ -108,6 +111,9 @@
             } else {
                 $("#job-form").submit();
             }
+        });
+        $("#cancel-job").on('click', function() {
+		    window.location.replace("{{ url_for('job.index') }}");
         });
     });
   })();

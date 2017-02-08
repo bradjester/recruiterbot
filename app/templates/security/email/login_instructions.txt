@@ -1,0 +1,7 @@
+Hi {{ user.name.split()[0] }},
+
+Thanks for registering to try out JobRobin’s recruiting tool, Precruiter. Someone from the
+JobRobin team will be in touch shortly to finalize the setup of your account.
+
+Thanks,
+JobRobin Team
