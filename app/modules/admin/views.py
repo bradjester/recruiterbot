@@ -262,16 +262,20 @@ class JobModelView(AdminBlocker, sqla.ModelView):
         for bot in bots:
             if bot.channel_type == BOT_FB_CHAN_TYPE:
                 if bot.chat_type == BOT_ACTIVE_CHAT_TYPE:
+                    form.active_fb_bot_pk.data = bot.id
                     form.active_fb_bot_url.data = bot.bot_url
                     form.active_fb_bot_id.data = bot.bot_id
                 if bot.chat_type == BOT_PASSIVE_CHAT_TYPE:
+                    form.passive_fb_bot_pk.data = bot.id
                     form.passive_fb_bot_url.data = bot.bot_url
                     form.passive_fb_bot_id.data = bot.bot_id
             if bot.channel_type == BOT_WEB_CHAN_TYPE:
                 if bot.chat_type == BOT_ACTIVE_CHAT_TYPE:
+                    form.active_web_bot_pk.data = bot.id
                     form.active_web_bot_url.data = bot.bot_url
                     form.active_web_bot_id.data = bot.bot_id
                 if bot.chat_type == BOT_PASSIVE_CHAT_TYPE:
+                    form.passive_web_bot_pk.data = bot.id
                     form.passive_web_bot_url.data = bot.bot_url
                     form.passive_web_bot_id.data = bot.bot_id
 

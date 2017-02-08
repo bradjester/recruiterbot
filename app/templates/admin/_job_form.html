@@ -26,13 +26,17 @@
             {{ render_field(form.work_type, label_visible=false, placeholder="Enter Work Type") }}
             {{ render_field(form.expected_salary, label_visible=false, placeholder="Enter Expected Salary") }}
             <h5>Active Candidate Bots</h5>
+            {{ render_field(form.active_web_bot_pk) }}
             {{ render_field(form.active_web_bot_url) }}
             {{ render_field(form.active_web_bot_id) }}
+            {{ render_field(form.active_fb_bot_pk) }}
             {{ render_field(form.active_fb_bot_url) }}
             {{ render_field(form.active_fb_bot_id) }}
             <h5>Passive Candiate Bots</h5>
+            {{ render_field(form.passive_web_bot_pk) }}
             {{ render_field(form.passive_web_bot_url) }}
             {{ render_field(form.passive_web_bot_id) }}
+            {{ render_field(form.passive_fb_bot_pk) }}
             {{ render_field(form.passive_fb_bot_url) }}
             {{ render_field(form.passive_fb_bot_id) }}
             <br/>
