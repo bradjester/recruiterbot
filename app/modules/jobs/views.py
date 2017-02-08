@@ -15,6 +15,7 @@ from flask_login import current_user
 
 from app.helpers import route
 from app.modules.jobs.forms import JobForm
+from app.modules.jobs.helpers import process_messages
 from app.services import jobs_service, candidates_service, messages_service
 
 candidates_bp = Blueprint('candidates', __name__, template_folder="templates",
@@ -43,7 +44,7 @@ def candidate_show(candidate_id):
         'candidates/candidate_show.html',
         candidate=candidate,
         job_title=candidate.bot.job.title,
-        messages=messages[1:]
+        messages=process_messages(messages[1:])
     )
 
 
