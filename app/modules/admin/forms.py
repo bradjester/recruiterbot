@@ -4,7 +4,9 @@ from wtforms import validators, IntegerField, BooleanField, HiddenField, \
     StringField
 from wtforms.widgets import HiddenInput, TextArea
 
-from app.modules.forms import NullStringField
+from app.extensions import db
+from app.modules.forms import NullStringField, Unique
+from app.modules.motionai.models import Bot
 
 
 class AdminJobForm(FlaskForm):
@@ -50,6 +52,8 @@ class AdminJobForm(FlaskForm):
         validators=[validators.Length(max=255)]
     )
 
+    active_fb_bot_pk = HiddenField()
+
     active_fb_bot_url = NullStringField(
         label=u'FB URL',
         validators=[validators.Length(max=1024)]
@@ -57,8 +61,18 @@ class AdminJobForm(FlaskForm):
 
     active_fb_bot_id = IntegerField(
         label=u'FB ID',
-        validators=[validators.optional()],
+        validators=[
+            validators.optional(),
+            Unique(
+                model=Bot,
+                pk_field_name='active_fb_bot_pk',
+                col_name=Bot.bot_id.name,
+                get_session=lambda: db,
+            ),
+        ],
     )
+
+    passive_fb_bot_pk = HiddenField()
 
     passive_fb_bot_url = NullStringField(
         label=u'FB URL',
@@ -67,8 +81,18 @@ class AdminJobForm(FlaskForm):
 
     passive_fb_bot_id = IntegerField(
         label=u'FB ID',
-        validators=[validators.optional()],
+        validators=[
+            validators.optional(),
+            Unique(
+                model=Bot,
+                pk_field_name='passive_fb_bot_pk',
+                col_name=Bot.bot_id.name,
+                get_session=lambda: db,
+            ),
+        ],
     )
+
+    active_web_bot_pk = HiddenField()
 
     active_web_bot_url = NullStringField(
         label=u'Web URL',
@@ -77,8 +101,18 @@ class AdminJobForm(FlaskForm):
 
     active_web_bot_id = IntegerField(
         label=u'Web ID',
-        validators=[validators.optional()],
+        validators=[
+            validators.optional(),
+            Unique(
+                model=Bot,
+                pk_field_name='active_web_bot_pk',
+                col_name=Bot.bot_id.name,
+                get_session=lambda: db,
+            ),
+        ],
     )
+
+    passive_web_bot_pk = HiddenField()
 
     passive_web_bot_url = NullStringField(
         label=u'Web URL',
@@ -87,7 +121,15 @@ class AdminJobForm(FlaskForm):
 
     passive_web_bot_id = IntegerField(
         label=u'Web ID',
-        validators=[validators.optional()],
+        validators=[
+            validators.optional(),
+            Unique(
+                model=Bot,
+                pk_field_name='passive_web_bot_pk',
+                col_name=Bot.bot_id.name,
+                get_session=lambda: db,
+            ),
+        ],
     )
 
     banner_file_key = HiddenField(
