@@ -138,12 +138,9 @@ def init_view_helpers(app):
             return s[:24] + u"…"
         return s
 
-    @app.template_filter('no_none')
-    def no_none_filter(s):
-
-        if "None" in str(s):
-            return str(s).replace("None", "")
-        return s
+    @app.template_filter('date_as_str')
+    def date_as_str(s):
+        return str(s)[:10]
 
     @app.context_processor
     def view_helpers():
