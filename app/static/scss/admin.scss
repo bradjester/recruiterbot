@@ -35,3 +35,10 @@ body {
 .navbar.navbar-default {
     border-radius: 0;
 }
+
+.admin-body {
+    width: 90vw;
+    max-width: 90vw;
+    overflow: auto;
+    margin: 0 auto;
+}
