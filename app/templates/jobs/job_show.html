@@ -52,6 +52,7 @@
 {% block extra_js %}
     <script type="text/javascript">
         (function () {
+            var $RESUME = $("#resume");
             Dropzone.autoDiscover = false;
             document.addEventListener( "DOMContentLoaded", function ( ) {
 
@@ -82,7 +83,7 @@
                 var session_id = getParameterByName( 'session_id' );
                 if ( !_.isNull( session_id ) ) {
                 {% if job.is_published %}
-                    $( "#resume" ).show();
+                    $RESUME.show();
                     var $DROP = $( "form#drop" ),
                         drop,
                         fields;
@@ -149,7 +150,7 @@
                         $DROP.notify( "File upload failed.", "error" )
                     }
                 {% else %}
-                    $('#resume').html("<h4>This job is currently not accepting CV submissions.</h4>").show();
+                    $RESUME.html("<h4>This job is currently not accepting CV submissions.</h4>").show();
                 {% endif %}
                 }
             } );

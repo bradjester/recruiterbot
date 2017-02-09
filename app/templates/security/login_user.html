@@ -1,10 +1,20 @@
 {% extends "layouts/base.html" %}
+{% block css_style %}
+    <style type="text/css">
+        body {
+            background: #fff url("{{ url_for("static", filename="images/login-bg.png") }}") center center no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+        }
+    </style>
+{% endblock %}
 
 {% from 'macros/_foundation_forms.html' import render_field, render_checkbox_field %}
 
 {% set page_title = 'Login' %}
 
 {% block body %}
+    <div class="row login-gb">
     <div class="columns medium-4 medium-offset-4 end login">
         <b>Please Sign In or <a href="{{ url_for_security('register') }}">Register</a></b>
         <br/>
@@ -19,5 +29,6 @@
           <br/>
           <button type="submit" class="button tiny radius">Sign in</button>
         </form>
+    </div>
     </div>
 {% endblock %}
