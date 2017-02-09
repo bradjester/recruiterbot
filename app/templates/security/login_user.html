@@ -1,12 +1,6 @@
 {% extends "layouts/base.html" %}
 {% block css_style %}
-    <style type="text/css">
-        body {
-            background: #fff url("{{ url_for("static", filename="images/login-bg.png") }}") center center no-repeat;
-            background-attachment: fixed;
-            background-size: cover;
-        }
-    </style>
+{% include 'security/_background.html' %}
 {% endblock %}
 
 {% from 'macros/_foundation_forms.html' import render_field, render_checkbox_field %}
