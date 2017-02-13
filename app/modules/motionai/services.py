@@ -66,6 +66,12 @@ class WebhookService(Service):
 
     def create_message_from_data(self, bot, candidate, company, data,
                                  commit=True):
+        # Remove URL encoding from reply and reply data.
+        reply = data.get('reply')
+        reply = urllib.parse.unquote(reply) if reply else reply
+        reply_d = data.get('replyData')
+        reply_d = urllib.parse.unquote(reply_d) if reply_d else reply_d
+
         return self.messages_service.create(
             bot=bot,
             company=company,
@@ -74,8 +80,8 @@ class WebhookService(Service):
                                           "%Y-%m-%dT%H:%M:%S.%fZ"),
             sender=data.get('from'),
             receiver=data.get('to'),
-            reply=urllib.parse.unquote(data.get('reply')),
-            reply_data=urllib.parse.unquote(data.get('replyData')),
+            reply=reply,
+            reply_data=reply_d,
             module_id=data.get('moduleID'),
             direction=data.get('direction'),
             attached_media_url=data.get('attachedMedia'),
