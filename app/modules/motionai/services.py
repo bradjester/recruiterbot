@@ -5,6 +5,7 @@
 
     MotionAI module services
 """
+import html
 from datetime import datetime
 
 import logging
@@ -73,8 +74,8 @@ class WebhookService(Service):
                                           "%Y-%m-%dT%H:%M:%S.%fZ"),
             sender=data.get('from'),
             receiver=data.get('to'),
-            reply=data.get('reply'),
-            reply_data=data.get('replyData'),
+            reply=html.unescape(data.get('reply')),
+            reply_data=html.unescape(data.get('replyData')),
             module_id=data.get('moduleID'),
             direction=data.get('direction'),
             attached_media_url=data.get('attachedMedia'),
