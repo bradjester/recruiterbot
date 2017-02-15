@@ -140,7 +140,7 @@ def init_view_helpers(app):
 
     @app.template_filter('date_as_str')
     def date_as_str(s):
-        return str(s)[:10]
+        return str(s)[:16]
 
     @app.context_processor
     def view_helpers():
