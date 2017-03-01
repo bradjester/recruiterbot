@@ -9,7 +9,8 @@ from flask import Blueprint, jsonify, request
 from flask_security import current_user
 
 from app.helpers import route
-from app.services import static_storage_service, candidates_service
+from app.services import static_storage_service, candidates_service, \
+    daxtra_candidates_service
 
 api_bp = Blueprint('api', __name__, template_folder="templates",
                    url_prefix="/api")
@@ -53,8 +54,8 @@ def get_job_banner_signed_post(job_uuid, filename):
 
 
 @api_bp.route('/candidate/resume_key',
-              methods=['PUT'], endpoint='put_candidate_key')
-def update_candidate_key():
+              methods=['PUT'], endpoint='put_candidate_resume_key')
+def update_candidate_resume_key():
     data = request.get_json()
     candidate = candidates_service.find_candidate_by_session_id(
         data['session_id'])
@@ -64,6 +65,7 @@ def update_candidate_key():
     if candidate.bot.job.uuid != data['job_uuid']:
         return jsonify(error="Candidate not associated with this job"), 404
 
+    daxtra_candidates_service.update_from_candidate(candidate)
     candidates_service.update(candidate, resume_key=data['resume_key'])
     return '', 204
 

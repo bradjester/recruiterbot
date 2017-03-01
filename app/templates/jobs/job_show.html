@@ -110,7 +110,7 @@
                             $DROP.notify( "File uploaded.", "success" );
                             $.ajax( {
                                 type: 'PUT',
-                                url: '{{ url_for('api.put_candidate_key') }}',
+                                url: '{{ url_for('api.put_candidate_resume_key') }}',
                                 data: JSON.stringify( {
                                     session_id: session_id,
                                     job_uuid: '{{ job.uuid }}',
