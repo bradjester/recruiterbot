@@ -85,6 +85,6 @@ WEBHOOK_SECRET_KEY = os.getenv('WEBHOOK_SECRET_KEY', 'precruiter_jobrobin')
 
 # AWS Configuration for local DEV ONLY. Values on EC2 will come from the
 # EC2 Metadata service via a role that is associated with the EC2 instance.
-DAXTRA_USERNAME = 'JobRobin'
+DAXTRA_USERNAME = os.getenv('DAXTRA_USERNAME', 'JobRobin')
 DAXTRA_PASSWORD = os.getenv('DAXTRA_PASSWORD', '')
-DAXTRA_DB_NAME = ''
+DAXTRA_DB_NAME = os.getenv('DAXTRA_DB_NAME', 'ws_JobRobin')

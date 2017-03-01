@@ -15,7 +15,8 @@ from flask import current_app
 import xmltodict
 import requests
 
-from .constants import DAXTRA_API_URL, DAXTRA_REQUEST_HEADERS
+from .constants import DAXTRA_REQUEST_HEADERS
+
 
 def base_64_encode_document(doc_url):
     cv_file_handle = urlopen(doc_url)
@@ -59,26 +60,30 @@ def get_base_daxtra_request_xml(action_string, options=None):
         options_elem.text = options
 
     username = SubElement(dx_request, 'Username')
-    username.text = current_app.get('DAXTRA_USERNAME')
+    username.text = current_app.config.get('DAXTRA_USERNAME')
 
     password = SubElement(dx_request, 'Password')
-    password.text = current_app.get('DAXTRA_PASSWORD')
+    password.text = current_app.config.get('DAXTRA_PASSWORD')
 
     database = SubElement(dx_request, 'Database')
-    database.text = current_app.get('DAXTRA_DB_NAME')
+    database.text = current_app.config.get('DAXTRA_DB_NAME')
 
     return dx_request
 
 
 def xml_to_dict(xml_response_str):
-    xmltodict.parse(xml_response_str)
+    return xmltodict.parse(xml_response_str)
+
+
+def dict_to_xml(dict):
+    return xmltodict.unparse(dict)
 
 
 def send_req_and_get_response_dict(dx_request_xml_obj):
 
     payload = prettify_xml(dx_request_xml_obj)
 
-    response = requests.post(DAXTRA_API_URL,
+    response = requests.post(current_app.config.get('DAXTRA_API_URL'),
                              headers=DAXTRA_REQUEST_HEADERS,
                              data=payload)
 

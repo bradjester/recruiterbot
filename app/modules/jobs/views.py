@@ -17,7 +17,7 @@ from app.helpers import route
 from app.modules.jobs.forms import JobForm
 from app.modules.jobs.helpers import process_messages
 from app.services import jobs_service, candidates_service, messages_service, \
-    daxtra_candidates_service
+    daxtra_candidates_service, daxtra_vacancies_service
 
 candidates_bp = Blueprint('candidates', __name__, template_folder="templates",
                           url_prefix='/candidates')
@@ -69,6 +69,8 @@ def job_index():
 
         # Set company to current before save.
         job.company = current_user.company
+        # Create a daxtra vacancy
+        daxtra_vacancies_service.create_from_job(job)
         jobs_service.save(job)
 
         # Redirect to GET to prevent a form resubmission on refresh

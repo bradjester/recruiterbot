@@ -5,14 +5,6 @@
 
     Daxtra constants
 """
-from flask import current_app
-
-DAXTRA_API_URL = 'http://es-demo.daxtra.com/ws/dispatch?username={}&password={}&database={}'.format(  # noqa
-    current_app.get('DAXTRA_USERNAME'),
-    current_app.get('DAXTRA_PASSWORD'),
-    current_app.get('DAXTRA_DB_NAME')
-)
-
 DAXTRA_REQUEST_HEADERS = {'Content-Type': 'text/xml'}
 
 # API Actions/Request Types

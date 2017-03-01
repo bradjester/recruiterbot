@@ -1,20 +1,81 @@
 # -*- coding: utf-8 -*-
-import logging
-from xml.etree.ElementTree import SubElement
 
-import requests
+import logging
+from abc import ABCMeta
+from xml.etree.ElementTree import SubElement
 
 from app.core import Service
 from app.extensions import db
 from app.modules.daxtra.models import DaxtraVacancy, DaxtraCandidate
-from .helpers import  get_base_daxtra_request_xml, base_64_encode_document,\
-    send_req_and_get_response_dict
+
+from .helpers import get_base_daxtra_request_xml, base_64_encode_document,\
+    send_req_and_get_response_dict, prettify_xml, dict_to_xml
 from .constants import ADD_CANDIDATE_ACTION, ADD_VACANCY_ACTION, \
     UPDATE_CANDIDATE_ACTION, UPDATE_VACANCY_ACTION, \
     MATCH_CANDIDATE_ACTION, OK_STATUS
+from .errors import DaxtraResponseIdNotFound, DaxtraResponseResultNotFound, \
+    DaxtraResponseStatusNotOkay
 
 
-class DaxtraVacanciesService(Service):
+class BaseDaxtraService(metaclass=ABCMeta, Service):
+
+    def _send_get_response_id_from_daxtra(self, dx_request,
+                                          vacancy_or_candidate_elem, file_url,
+                                          action):
+
+        if action == UPDATE_CANDIDATE_ACTION or action == ADD_CANDIDATE_ACTION:
+            profile_elem = SubElement(vacancy_or_candidate_elem, 'Profile')
+            profile_elem.text = base_64_encode_document(file_url)
+
+            response_dict = send_req_and_get_response_dict(dx_request)
+            try:
+                vacancy_id = self._get_id_from_response_dict(response_dict,
+                                                             action)
+                return vacancy_id
+            except (DaxtraResponseIdNotFound,
+                    DaxtraResponseStatusNotOkay):
+                logging.exception(self._get_pretty_action_req_resp_str(
+                    action, dx_request, response_dict)
+                )
+
+    @staticmethod
+    def _get_pretty_action_req_resp_str(action, req, resp_dict):
+        return '\n'.join(['Action : ',
+                          action,
+                          'Daxtra Request:',
+                          # only first 400 chars because req is large
+                          prettify_xml(req)[0:min(len(req)-1, 400)],
+                          'Daxtra Response: ',
+                          prettify_xml(dict_to_xml(resp_dict))]
+                         )
+
+    @staticmethod
+    def _get_id_from_response_dict(response_dict, action):
+        # API Response format docs :
+        # https://es-demo.daxtra.com/webservices/docs/add_vacancy.html
+        # https://es-demo.daxtra.com/webservices/docs/update_vacancy.html
+        # https://es-demo.daxtra.com/webservices/docs/add_candidate.html
+        # https://es-demo.daxtra.com/webservices/docs/update_candidate.html
+
+        vacancy_or_candidate = 'Vacancy' \
+            if (action == UPDATE_VACANCY_ACTION or
+                action == ADD_VACANCY_ACTION) else 'Candidate'
+
+        vacancy_or_candidate_id = vacancy_or_candidate + 'Id'
+
+        status_code = response_dict.get('DxResponse').get('Status').get('Code')
+        returned_id = response_dict.get('DxResponse').get(
+            vacancy_or_candidate).get(vacancy_or_candidate_id)
+
+        if status_code and status_code == OK_STATUS:
+            if not returned_id:
+                raise DaxtraResponseIdNotFound
+            return returned_id
+        else:
+            raise DaxtraResponseStatusNotOkay
+
+
+class DaxtraVacanciesService(BaseDaxtraService):
     __model__ = DaxtraVacancy
 
     def __init__(self, static_storage_service, daxtra_candidates_service):
@@ -35,7 +96,8 @@ class DaxtraVacanciesService(Service):
     def update_from_job(self, job):
         url = self.static_storage_service.generate_signed_url(job.jd_file_key)
         daxtra_vacancy = self.find(job_id=job.id)
-        ret_daxtra_id = self._update_daxtra_vacancy_and_get_id(url)
+        ret_daxtra_id = self._update_daxtra_vacancy_and_get_id(
+            daxtra_vacancy.daxtra_id, url)
 
         # Set the daxtra scores for this job.id to null
         if daxtra_vacancy.daxtra_id == ret_daxtra_id:  # all went well
@@ -44,56 +106,28 @@ class DaxtraVacanciesService(Service):
             )
 
     def _create_daxtra_vacancy_and_get_id(self, file_url):
-        dx_request = get_base_daxtra_request_xml(ADD_VACANCY_ACTION)
+        action = ADD_VACANCY_ACTION
+        dx_request = get_base_daxtra_request_xml(action)
 
-        vacancy = SubElement(dx_request, 'Vacancy')
+        vacancy_elem = SubElement(dx_request, 'Vacancy')
 
-        vacancy_jd = SubElement(vacancy, 'Profile')
-        vacancy_jd.text = base_64_encode_document(file_url)
-
-        response_dict = send_req_and_get_response_dict(dx_request)
-
-        return self._get_vacancy_id_from_response(response_dict,
-                                                  ADD_VACANCY_ACTION)
+        return self._send_get_response_id_from_daxtra(dx_request, vacancy_elem,
+                                                      file_url, action)
 
     def _update_daxtra_vacancy_and_get_id(self, daxtra_id, file_url):
-        dx_request = get_base_daxtra_request_xml(UPDATE_VACANCY_ACTION)
+        action = UPDATE_VACANCY_ACTION
+        dx_request = get_base_daxtra_request_xml(action)
 
-        vacancy = SubElement(dx_request, 'Vacancy')
+        vacancy_elem = SubElement(dx_request, 'Vacancy')
 
-        vacancy_id = SubElement(vacancy, 'VacancyId')
-        vacancy_id.text = daxtra_id
+        vacancy_id_elem = SubElement(vacancy_elem, 'VacancyId')
+        vacancy_id_elem.text = daxtra_id
 
-        vacancy_jd = SubElement(vacancy, 'Profile')
-        vacancy_jd.text = base_64_encode_document(file_url)
-
-        response_dict = send_req_and_get_response_dict(dx_request)
-
-        return self._get_vacancy_id_from_response(response_dict,
-                                                  UPDATE_VACANCY_ACTION)
-
-    @staticmethod
-    def _get_vacancy_id_from_response(response_dict, action_type):
-        # API Response format docs :
-        # https://es-demo.daxtra.com/webservices/docs/add_vacancy.html
-        # https://es-demo.daxtra.com/webservices/docs/update_vacancy.html
-
-        status_code = response_dict.get('DxResponse').get('Status').get('Code')
-        vacancy_id = response_dict.get('DxResponse').get('Vacancy').get(
-            'VacancyId')
-        if status_code and status_code == OK_STATUS:
-            if vacancy_id:
-                return vacancy_id
-            else:
-                logging.error('[{}] No Vacancy ID in Daxtra Response'.format(
-                    action_type))
-        else:
-            logging.error('[{}] Return Not Okay Status : {}'.format(
-                action_type,
-                response_dict.get('DxResponse').get('Status')))
+        return self._send_get_response_id_from_daxtra(dx_request, vacancy_elem,
+                                                      file_url, action)
 
 
-class DaxtraCandidatesService(Service):
+class DaxtraCandidatesService(BaseDaxtraService):
     __model__ = DaxtraCandidate
 
     def __init__(self, static_storage_service):
@@ -115,17 +149,15 @@ class DaxtraCandidatesService(Service):
         )
 
     def _create_daxtra_candidate_and_get_id(self, file_url):
-        dx_request = get_base_daxtra_request_xml(ADD_CANDIDATE_ACTION)
+        action = ADD_CANDIDATE_ACTION
+        dx_request = get_base_daxtra_request_xml(action)
 
-        vacancy = SubElement(dx_request, 'Candidate')
+        candidate_elem = SubElement(dx_request, 'Candidate')
 
-        vacancy_jd = SubElement(vacancy, 'Profile')
-        vacancy_jd.text = base_64_encode_document(file_url)
-
-        response_dict = send_req_and_get_response_dict(dx_request)
-
-        return self._get_candidate_id_from_response(response_dict,
-                                                    ADD_CANDIDATE_ACTION)
+        return self._send_get_response_id_from_daxtra(dx_request,
+                                                      candidate_elem,
+                                                      file_url,
+                                                      action)
 
     def update_from_candidate(self, candidate):
         url = self.static_storage_service.generate_signed_url(
@@ -133,7 +165,8 @@ class DaxtraCandidatesService(Service):
 
         daxtra_candidate = self.find(candidate_id=candidate.id)
 
-        ret_daxtra_id = self._update_daxtra_candidate_and_get_id(url)
+        ret_daxtra_id = self._update_daxtra_candidate_and_get_id(
+            daxtra_candidate.daxtra_id, url)
 
         # Set the daxtra scores for this candidate.id to null
         if daxtra_candidate.daxtra_id == ret_daxtra_id:  # all went well
@@ -144,20 +177,16 @@ class DaxtraCandidatesService(Service):
                           ' db. Id returned from daxtra is not the same.')
 
     def _update_daxtra_candidate_and_get_id(self, daxtra_id, file_url):
-        dx_request = get_base_daxtra_request_xml(UPDATE_CANDIDATE_ACTION)
+        action = UPDATE_CANDIDATE_ACTION
+        dx_request = get_base_daxtra_request_xml(action)
 
-        vacancy = SubElement(dx_request, 'Vacancy')
+        vacancy_elem = SubElement(dx_request, 'Vacancy')
 
-        vacancy_id = SubElement(vacancy, 'VacancyId')
-        vacancy_id.text = daxtra_id
+        vacancy_id_elem = SubElement(vacancy_elem, 'VacancyId')
+        vacancy_id_elem.text = daxtra_id
 
-        vacancy_jd = SubElement(vacancy, 'Profile')
-        vacancy_jd.text = base_64_encode_document(file_url)
-
-        response_dict = send_req_and_get_response_dict(dx_request)
-
-        return self._get_candidate_id_from_response(response_dict,
-                                                    UPDATE_CANDIDATE_ACTION)
+        return self._send_get_response_id_from_daxtra(dx_request, vacancy_elem,
+                                                      file_url, action)
 
     def update_missing_scores(self, job_id):
         daxtra_candidates = DaxtraCandidate.query\
@@ -173,7 +202,8 @@ class DaxtraCandidatesService(Service):
         db.session.commit()
 
     def update_score(self, daxtra_candidate, commit=True):
-        self._fetch_daxtra_score_for_candidate(daxtra_candidate)
+        daxtra_candidate.score = self._fetch_daxtra_score_for_candidate(
+            daxtra_candidate)
         return self.save(daxtra_candidate, commit=commit)
 
     def _fetch_daxtra_score_for_candidate(self, daxtra_candidate):
@@ -185,19 +215,26 @@ class DaxtraCandidatesService(Service):
 
         candidate_elem = SubElement(dx_request, 'Candidate')
 
-        dx_candidate_id = SubElement(candidate_elem, 'CandidateId')
-        dx_candidate_id = daxtra_candidate.daxtra_id
+        dx_candidate_id_elem = SubElement(candidate_elem, 'CandidateId')
+        dx_candidate_id_elem.text = daxtra_candidate.daxtra_id
 
-        vacancy = SubElement(dx_request, 'Vacancy')
+        vacancy_elem = SubElement(dx_request, 'Vacancy')
+        structured_options = SubElement(vacancy_elem, 'StructuredOptions')
 
-        structured_options = SubElement(vacancy, 'StructuredOptions')
-
-        dx_vacancy_id = SubElement(structured_options, 'VacancyId')
-        dx_vacancy_id.text = daxtra_vacancy
+        dx_vacancy_id_elem = SubElement(structured_options, 'VacancyId')
+        dx_vacancy_id_elem.text = daxtra_vacancy
 
         response_dict = send_req_and_get_response_dict(dx_request)
 
-        return self._get_score_from_response(response_dict)
+        try:
+            return self._get_score_from_response(response_dict)
+        except (DaxtraResponseResultNotFound, DaxtraResponseStatusNotOkay):
+            logging.exception(self._get_pretty_action_req_resp_str(
+                MATCH_CANDIDATE_ACTION, dx_request, response_dict
+            ))
+
+        except ValueError:
+            logging.exception('Score obtained is not of type float')
 
     @staticmethod
     def _get_score_from_response(response_dict):
@@ -208,36 +245,13 @@ class DaxtraCandidatesService(Service):
         result = response_dict.get('DxResponse').get('Results').get('Result')
 
         if status_code and status_code == OK_STATUS:
-            if result:
-                return float(result.get('DxResponse').get(
-                    'Results').get('Result').get('Score'))
-            else:
-                logging.error('[match_candidate] No Result in Daxtra Response')
+            if not result:
+                raise DaxtraResponseResultNotFound
+            score = float(result.get('DxResponse').get(
+                'Results').get('Result').get('Score'))
+            return score
         else:
-            logging.error('[match_candidate] Return Not Okay Status : {}'
-                          .format(response_dict.get('DxResponse').get('Status')
-                                  )
-                          )
-
-    @staticmethod
-    def _get_candidate_id_from_response(response_dict, action_type):
-        # API Response format docs :
-        # https://es-demo.daxtra.com/webservices/docs/add_candidate.html
-        # https://es-demo.daxtra.com/webservices/docs/update_candidate.html
-
-        status_code = response_dict.get('DxResponse').get('Status').get('Code')
-        candidate_id = response_dict.get('DxResponse').get('Candidate').get(
-            'CandidateId')
-        if status_code and status_code == OK_STATUS:
-            if candidate_id:
-                return candidate_id
-            else:
-                logging.error('[{}] No Candidate ID in Daxtra Response'.format(
-                    action_type))
-        else:
-            logging.error('[{}] Return Not Okay Status : {}'.format(
-                action_type,
-                response_dict.get('DxResponse').get('Status')))
+            raise DaxtraResponseStatusNotOkay
 
     def set_scores_to_null_for_daxtra_vacancy_id(self, daxtra_vacancy_id):
         daxtra_candidates = DaxtraCandidate.query.filter(
