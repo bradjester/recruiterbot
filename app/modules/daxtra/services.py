@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import logging
-from abc import ABCMeta
 from xml.etree.ElementTree import SubElement
 
 from app.core import Service
@@ -17,7 +16,7 @@ from .errors import DaxtraResponseIdNotFound, DaxtraResponseResultNotFound, \
     DaxtraResponseStatusNotOkay
 
 
-class BaseDaxtraService(metaclass=ABCMeta, Service):
+class BaseDaxtraService(Service):
 
     def _send_get_response_id_from_daxtra(self, dx_request,
                                           vacancy_or_candidate_elem, file_url,
