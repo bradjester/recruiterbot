@@ -65,8 +65,13 @@ def update_candidate_resume_key():
     if candidate.bot.job.uuid != data['job_uuid']:
         return jsonify(error="Candidate not associated with this job"), 404
 
-    daxtra_candidates_service.update_from_candidate(candidate)
     candidates_service.update(candidate, resume_key=data['resume_key'])
+
+    if daxtra_candidates_service.get_by_candidate_id(candidate.id):
+        daxtra_candidates_service.update_from_candidate(candidate)
+    else:
+        daxtra_candidates_service.create_from_candidate(candidate)
+
     return '', 204
 
 

@@ -69,8 +69,10 @@ def job_index():
 
         # Set company to current before save.
         job.company = current_user.company
+
         # Create a daxtra vacancy
         daxtra_vacancies_service.create_from_job(job)
+
         jobs_service.save(job)
 
         # Redirect to GET to prevent a form resubmission on refresh
