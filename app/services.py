@@ -39,5 +39,6 @@ webhook_service = WebhookService(bots_service, candidates_service,
                                  messages_service, static_storage_service)
 
 # Daxtra Services
-daxtra_vacancies_service = DaxtraVacanciesService(static_storage_service)
 daxtra_candidates_service = DaxtraCandidatesService(static_storage_service)
+daxtra_vacancies_service = DaxtraVacanciesService(static_storage_service,
+                                                  daxtra_candidates_service)
