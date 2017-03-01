@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 from app.modules.aws.services import AWSService, AWSS3Service, AWSSESService
+from app.modules.daxtra.services import DaxtraVacanciesService, \
+    DaxtraCandidatesService
 from app.modules.jobs.services import CandidatesService, JobsService
 from app.modules.motionai.services import WebhookService, BotsService, \
     MessagesService
@@ -35,3 +37,7 @@ jobs_service = JobsService(candidates_service)
 # MotionAI Webhook Service
 webhook_service = WebhookService(bots_service, candidates_service,
                                  messages_service, static_storage_service)
+
+# Daxtra Services
+daxtra_vacancies_service = DaxtraVacanciesService(static_storage_service)
+daxtra_candidates_service = DaxtraCandidatesService(static_storage_service)
