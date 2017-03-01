@@ -18,9 +18,10 @@ class DaxtraVacancy(Base):
 
     job = db.relationship(
         "Job",
+        single_parent=True,
         foreign_keys=job_id,
         backref=db.backref(
-            'daxtra_vacancies',
+            'daxtra_vacancy',
             lazy='dynamic',
             cascade="all, delete-orphan"
         )
@@ -64,12 +65,9 @@ class DaxtraCandidate(Base):
 
     candidate = db.relationship(
         "Candidate",
+        single_parent=True,
         foreign_keys=candidate_id,
-        backref=db.backref(
-            'daxtra_candidates',
-            lazy='dynamic',
-            cascade="all, delete-orphan"
-        )
+        backref=db.backref('daxtra_candidate', uselist=False)
     )
 
     daxtra_id = db.Column(db.String(255), nullable=False)

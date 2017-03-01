@@ -23,7 +23,7 @@
                           <a class="candidate_name" href={{ url_for("candidates.show", candidate_id=candidate.id) }}>{% if candidate.name %} {{ candidate.name }} {% else %} Not Given {% endif %}</a>
                         </td>
                         <td>{{ candidate.bot.chat_type }}</td>
-                        <td>0</td>
+                        <td>{{ candidate.daxtra_candidate.score if candidate.daxtra_candidate and candidate.daxtra_candidate.score else "Unknown" }}</td>
                         <td>{{ candidate.rating }}</td>
                         <td>{{ candidate.status }}</td>
                         <td>{{ candidate.created_at | date_as_str }}</td>

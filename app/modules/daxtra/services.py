@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from app.core import Service
+from app.extensions import db
 from app.modules.daxtra.models import DaxtraVacancy, DaxtraCandidate
 
 
@@ -34,5 +35,18 @@ class DaxtraCandidatesService(Service):
     def update_from_candidate(self, candidate):
         pass
 
-    def update_score(self, daxtra_candidate):
+    def update_missing_scores(self, job_id):
+        daxtra_candidates = DaxtraCandidate.query\
+            .join(
+                DaxtraVacancy,
+                DaxtraCandidate.daxtra_vacancy_id == DaxtraVacancy.id
+            ).filter(
+                DaxtraVacancy.job_id == job_id,
+                DaxtraCandidate.score is None
+            )
+        for daxtra_candidate in daxtra_candidates:
+            self.update_score(daxtra_candidate, commit=False)
+        db.session.commit()
+
+    def update_score(self, daxtra_candidate, commit=True):
         pass
