@@ -26,7 +26,7 @@ class DaxtraVacancy(Base):
         )
     )
 
-    daxtra_id = db.Column(db.String(255))
+    daxtra_id = db.Column(db.String(255), nullable=False)
 
 
 class DaxtraCandidate(Base):
@@ -72,5 +72,5 @@ class DaxtraCandidate(Base):
         )
     )
 
-    daxtra_id = db.Column(db.String(255))
+    daxtra_id = db.Column(db.String(255), nullable=False)
     score = db.Column(db.Float())

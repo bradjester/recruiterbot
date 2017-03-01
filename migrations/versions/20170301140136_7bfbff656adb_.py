@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 43d4e336e556
+Revision ID: 7bfbff656adb
 Revises: 57cad9cb9070
-Create Date: 2017-03-01 13:34:53.043212
+Create Date: 2017-03-01 14:01:36.618623
 
 """
 from alembic import op
@@ -11,7 +11,7 @@ from app.helpers import UTCDateTime
 
 
 # revision identifiers, used by Alembic.
-revision = '43d4e336e556'
+revision = '7bfbff656adb'
 down_revision = '57cad9cb9070'
 branch_labels = None
 depends_on = None
@@ -24,7 +24,7 @@ def upgrade():
     sa.Column('created_at', UTCDateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('updated_at', UTCDateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('job_id', sa.Integer(), nullable=False),
-    sa.Column('daxtra_id', sa.String(length=255), nullable=True),
+    sa.Column('daxtra_id', sa.String(length=255), nullable=False),
     sa.ForeignKeyConstraint(['job_id'], ['jobs.id'], name='daxtra_vacancy_job_fk', onupdate='CASCADE', ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
@@ -34,7 +34,7 @@ def upgrade():
     sa.Column('updated_at', UTCDateTime(), server_default=sa.text('CURRENT_TIMESTAMP'), nullable=False),
     sa.Column('daxtra_vacancy_id', sa.Integer(), nullable=False),
     sa.Column('candidate_id', sa.Integer(), nullable=False),
-    sa.Column('daxtra_id', sa.String(length=255), nullable=True),
+    sa.Column('daxtra_id', sa.String(length=255), nullable=False),
     sa.Column('score', sa.Float(), nullable=True),
     sa.ForeignKeyConstraint(['candidate_id'], ['candidates.id'], name='daxtra_candidate_candidate_fk', onupdate='CASCADE', ondelete='CASCADE'),
     sa.ForeignKeyConstraint(['daxtra_vacancy_id'], ['daxtra_vacancies.id'], name='daxtra_candidate_daxtra_vacancy_fk', onupdate='CASCADE', ondelete='CASCADE'),
