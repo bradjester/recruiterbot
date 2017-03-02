@@ -16,7 +16,8 @@ from flask_login import current_user
 from app.helpers import route
 from app.modules.jobs.forms import JobForm
 from app.modules.jobs.helpers import process_messages
-from app.services import jobs_service, candidates_service, messages_service
+from app.services import jobs_service, candidates_service, messages_service, \
+    daxtra_candidates_service, daxtra_vacancies_service
 
 candidates_bp = Blueprint('candidates', __name__, template_folder="templates",
                           url_prefix='/candidates')
@@ -26,6 +27,7 @@ candidates_bp = Blueprint('candidates', __name__, template_folder="templates",
 def job_candidate_index(job_id):
     job = jobs_service.find_by_id_company(job_id, current_user.company_id)
     candidates_service.update_candidates_with_no_name(job.id)
+    daxtra_candidates_service.update_missing_scores(job.id)
     candidates = candidates_service.find_candidates_by_job_id(
         job.id, current_user.company_id)
     return render_template('candidates/job_candidates_index.html',
@@ -36,6 +38,9 @@ def job_candidate_index(job_id):
 def candidate_show(candidate_id):
     candidate = candidates_service.find_by_id_company(
         candidate_id, current_user.company_id)
+    daxtra_candidate = candidate.daxtra_candidate
+    if daxtra_candidate is not None and daxtra_candidate.score is None:
+        daxtra_candidates_service.update_score(daxtra_candidate)
     messages = messages_service.get_sorted_messages_by_candidate_id(
         candidate_id, current_user.company_id)
     # Could possible convert messages into json
@@ -64,6 +69,10 @@ def job_index():
 
         # Set company to current before save.
         job.company = current_user.company
+
+        # Create a daxtra vacancy
+        daxtra_vacancies_service.create_from_job(job)
+
         jobs_service.save(job)
 
         # Redirect to GET to prevent a form resubmission on refresh

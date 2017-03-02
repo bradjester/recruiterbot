@@ -55,6 +55,7 @@ def create_app(config=None):
     configure_before_request_security(app)
     Babel(app)
     init_db(app)
+    init_daxtra(app)
     assets.init_app(app)
     init_security(app, users_service, BLUEPRINTS_NO_CSRF)
     init_security_send_mail(app)
@@ -101,6 +102,14 @@ def init_db(app):
 
     db.init_app(app)
     migrate.init_app(app, db)
+
+
+def init_daxtra(app):
+    api_url = 'http://es-demo.daxtra.com/ws/dispatch?username={}&password={}&database={}'.format(  # noqa
+        app.config['DAXTRA_USERNAME'],
+        app.config['DAXTRA_PASSWORD'],
+        app.config['DAXTRA_DB_NAME'])
+    app.config['DAXTRA_API_URL'] = api_url
 
 
 def init_security_send_mail(app):
