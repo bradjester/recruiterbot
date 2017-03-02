@@ -156,7 +156,7 @@ class DaxtraCandidatesService(BaseDaxtraService):
                                daxtra_vacancy=daxtra_vacancy,
                                candidate=candidate,
                                daxtra_id=daxtra_id
-        )
+                               )
 
     def _create_daxtra_candidate_and_get_id(self, file_url):
         action = ADD_CANDIDATE_ACTION
@@ -205,7 +205,7 @@ class DaxtraCandidatesService(BaseDaxtraService):
                 DaxtraCandidate.daxtra_vacancy_id == DaxtraVacancy.id
             ).filter(
                 DaxtraVacancy.job_id == job_id,
-                DaxtraCandidate.score == None #
+                DaxtraCandidate.score == None
             ).all()
         for daxtra_candidate in daxtra_candidates:
             self.update_score(daxtra_candidate, commit=False)

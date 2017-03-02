@@ -5,7 +5,7 @@
 
     Daxtra module helpers
 """
-from xml.etree.ElementTree import Element, SubElement, Comment, tostring
+from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 
 from urllib.request import urlopen
@@ -75,13 +75,13 @@ def xml_to_dict(xml_response_str):
     return xmltodict.parse(xml_response_str)
 
 
-def dict_to_xml(dict):
-    return xmltodict.unparse(dict)
+def dict_to_xml(_dict):
+    return xmltodict.unparse(_dict)
 
 
 def send_req_and_get_response_dict(dx_request_xml_obj):
 
-    payload = prettify_xml(dx_request_xml_obj)
+    payload = tostring(dx_request_xml_obj, encoding='utf-8')
 
     response = requests.post(current_app.config.get('DAXTRA_API_URL'),
                              headers=DAXTRA_REQUEST_HEADERS,
