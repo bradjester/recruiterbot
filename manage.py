@@ -130,7 +130,7 @@ def init_daxtra():
     candidates = candidates_service.all()
     for candidate in candidates:
         candidate_id = candidate.id
-        if (candidate.resume_key and candidate.job.daxtra_vacancy and
+        if (candidate.resume_key and candidate.bot.job.daxtra_vacancy and
                 not candidate.daxtra_candidate):
             try:
                 daxtra_candidates_service.create_from_candidate(candidate)
