@@ -118,6 +118,9 @@ def init_daxtra():
         if not job.daxtra_vacancy:
             daxtra_vacancies_service.create_from_job(job, commit=False)
 
+    print('Committing changes to database')
+    db.session.commit()
+
     print('Initializing Daxtra for Candidates')
     candidates = candidates_service.all()
     for candidate in candidates:
