@@ -90,7 +90,7 @@ class DaxtraVacanciesService(BaseDaxtraService):
         self.static_storage_service = static_storage_service
         self.daxtra_candidates_service = daxtra_candidates_service
 
-    def create_from_job(self, job, commit=False):
+    def create_from_job(self, job, commit=True):
         url = self.static_storage_service.generate_signed_url(job.jd_file_key)
 
         daxtra_id = self._create_daxtra_vacancy_and_get_id(url)
