@@ -149,7 +149,7 @@ class DaxtraCandidatesService(BaseDaxtraService):
 
         daxtra_id = self._create_daxtra_candidate_and_get_id(url)
 
-        daxtra_vacancy = candidate.bot.job.daxtra_vacancy.first()
+        daxtra_vacancy = candidate.bot.job.daxtra_vacancy
 
         if daxtra_id:
             return self.create(commit=commit,

@@ -20,11 +20,7 @@ class DaxtraVacancy(Base):
         "Job",
         single_parent=True,
         foreign_keys=job_id,
-        backref=db.backref(
-            'daxtra_vacancy',
-            lazy='dynamic',
-            cascade="all, delete-orphan"
-        )
+        backref=db.backref('daxtra_vacancy', uselist=False)
     )
 
     daxtra_id = db.Column(db.String(255), nullable=False)
