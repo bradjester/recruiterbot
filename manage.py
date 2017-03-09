@@ -116,22 +116,27 @@ def init_daxtra():
     jobs = jobs_service.all()
     for job in jobs:
         if not job.daxtra_vacancy:
-            daxtra_vacancies_service.create_from_job(job, commit=False)
-
-    print('Committing changes to database')
-    db.session.commit()
+            try:
+                daxtra_vacancies_service.create_from_job(job)
+            except Exception as e:
+                print("Failed to create job for id {}: {}".format(
+                    job.id,
+                    str(e)
+                ))
 
     print('Initializing Daxtra for Candidates')
     candidates = candidates_service.all()
     for candidate in candidates:
-        if candidate.resume_key and not candidate.daxtra_candidate:
-            daxtra_candidates_service.create_from_candidate(
-                candidate,
-                commit=False
-            )
+        if (candidate.resume_key and candidate.job.daxtra_vacancy and
+                not candidate.daxtra_candidate):
+            try:
+                daxtra_candidates_service.create_from_candidate(candidate)
+            except Exception as e:
+                print("Failed to create candidate for id {}: {}".format(
+                    candidate.id,
+                    str(e)
+                ))
 
-    print('Committing changes to database')
-    db.session.commit()
     print('Finished initializing Daxtra')
 
 
