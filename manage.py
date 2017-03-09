@@ -120,6 +120,7 @@ def init_daxtra():
             try:
                 daxtra_vacancies_service.create_from_job(job)
             except Exception as e:
+                db.session.rollback()
                 print("Failed to create job for id {}: {}".format(
                     job_id,
                     str(e)
@@ -134,6 +135,7 @@ def init_daxtra():
             try:
                 daxtra_candidates_service.create_from_candidate(candidate)
             except Exception as e:
+                db.session.rollback()
                 print("Failed to create candidate for id {}: {}".format(
                     candidate_id,
                     str(e)
