@@ -19,6 +19,8 @@ from flask_script import Manager, Shell
 
 from app.extensions import db
 from app.factory import create_app
+from app.services import jobs_service, daxtra_vacancies_service, \
+    candidates_service, daxtra_candidates_service
 from fixtures import fixtures
 
 
@@ -106,6 +108,28 @@ def load_fixtures():
                      default=True):
         emptydb()
         fixtures.load_fixtures()
+
+
+@manager.command
+def init_daxtra():
+    print('Initializing Daxtra for Jobs')
+    jobs = jobs_service.all()
+    for job in jobs:
+        if not job.daxtra_vacancy:
+            daxtra_vacancies_service.create_from_job(job, commit=False)
+
+    print('Initializing Daxtra for Candidates')
+    candidates = candidates_service.all()
+    for candidate in candidates:
+        if candidate.resume_key and not candidate.daxtra_candidate:
+            daxtra_candidates_service.create_from_candidate(
+                candidate,
+                commit=False
+            )
+
+    print('Committing changes to database')
+    db.session.commit()
+    print('Finished initializing Daxtra')
 
 
 manager.add_option('-c', '--config', dest='config', required=False)
